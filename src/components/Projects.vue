@@ -28,7 +28,7 @@
     <v-card-text class="pa-0">
       <template>
         <v-data-table :headers="headers" :items="projects" :search="search" class="elevation-0">
-          <!-- <template v-slot:body="{ items }">
+          <template v-slot:body="{ items }">
             <tbody>
               <tr v-for="item in items" :key="item.name">
                 <td>{{ item.name }}</td>
@@ -52,19 +52,35 @@
                 </td>
               </tr>
             </tbody>
-          </template>-->
+          </template>
         </v-data-table>
       </template>
       <v-divider></v-divider>
     </v-card-text>
+
+    <!-- <v-alert v-if="iserror" type="error">{{error}}</v-alert> -->
+
+    <v-snackbar
+      v-model="iserror"
+      :bottom="true"
+      color="red"
+      :multi-line="true"
+      :right="true"
+      :timeout="5000"
+    >
+      {{ error }}
+      <v-btn dark text @click="iserror = false">Close</v-btn>
+    </v-snackbar>
   </v-card>
 </template>
 
 <script>
-// import { Projects } from "@/api/project"
+import axios from "axios";
 export default {
   data() {
     return {
+      iserror: false,
+      error: "",
       loading: false,
       // projects: [],
       projects: mockProjects,
@@ -89,18 +105,45 @@ export default {
   },
   created() {
     return;
-    fetch(
-      // "http://fs.haodai.net/t/projects.json",
-      // "https://jsonplaceholder.typicode.com/users",
-      "http://192.168.10.234:8089/api/projects"
-    )
-      .then(response => response.json())
-      .then(json => (this.projects = json))
-      .catch(error => console.log("getProjects err", error));
+    // fetch(
+    //   // "http://fs.haodai.net/t/projects.json",
+    //   // "https://jsonplaceholder.typicode.com/users",
+    //   "http://192.168.10.234:8089/api/projects"
+    // )
+    //   .then(response => response.json())
+    //   .then(json => (this.projects = json))
+    //   .catch(error => {
+    //     console.log("getProjects err", error);
+    //   });
   },
   methods: {
-    enableProject: function(project) {
-      console.log("enableProject", project);
+    // call project init
+    enableProject(project) {
+      console.log("enableProject4", project);
+      // + project.id
+
+      // fetch("http://192.168.10.234:8089/api/projects/" + project.id)
+      this.$POST(
+        "http://192.168.10.234:8089/api/projects/" + project.id,
+        { name: "foo", surname: "bar" }
+        //  {
+        //   name: "hello" //project.name
+        // }
+      )
+
+        // axios
+        //   .post("http://192.168.10.234:8090/api/projects/" + project.id, {
+        //     name: "hello" //project.name
+        //   })
+        .then(res => {
+          console.log("called", res);
+        })
+        .catch(err => {
+          console.log(err.result_msg);
+          this.iserror = true;
+          this.error = err.result_msg;
+          project.state = false;
+        });
     }
   }
 };
@@ -108,6 +151,7 @@ export default {
 // for dev phase
 var mockProjects = [
   {
+    id: 1,
     username: "Dessie",
     avatar:
       "https://s3.amazonaws.com/uifaces/faces/twitter/ludwiczakpawel/128.jpg",
@@ -117,6 +161,7 @@ var mockProjects = [
     color: "pink"
   },
   {
+    id: 2,
     username: "config-deploy",
     avatar:
       "https://s3.amazonaws.com/uifaces/faces/twitter/ludwiczakpawel/128.jpg",

@@ -19,7 +19,7 @@
   <v-app id="inspire">
     <v-navigation-drawer v-model="drawer" app clipped>
       <v-list dense>
-        <router-link to="/">
+        <router-link v-ripple to="/">
           <v-list-item @click>
             <!-- <v-list-item-action>
               <v-icon>mdi-view-dashboard</v-icon>
@@ -41,7 +41,7 @@
           </v-list-item-content>
         </v-list-item>-->
 
-        <router-link to="/about">
+        <router-link v-ripple to="/about">
           <v-list-item @click>
             <!-- <v-list-item-action>
             <v-icon>mdi-settings</v-icon>
@@ -95,7 +95,7 @@
     </v-content>
 
     <v-footer app>
-      <span>&copy; haodai.com 2019</span>
+      <div text-right>&copy; haodai.com 2019</div>
     </v-footer>
   </v-app>
 </template>
