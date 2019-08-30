@@ -1,9 +1,8 @@
 <template>
-  <!-- <HelloWorld /> -->
   <v-container grid-list-xl fluid>
     <v-layout row wrap>
       <v-flex lg sm12 xs12>
-        <plain-table></plain-table>
+        <projects />
       </v-flex>
       <!-- <v-flex lg5 sm12 xs12>
           <plain-table-order></plain-table-order>
@@ -13,11 +12,11 @@
 </template>
 
 <script>
-import PlainTable from "../components/PlainTable";
+import Projects from "../components/Projects";
 
 export default {
   components: {
-    PlainTable
+    Projects
   }
 };
 </script>

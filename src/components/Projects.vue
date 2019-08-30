@@ -1,8 +1,8 @@
 <template>
   <v-card>
-    <!-- <v-switch :loading="loading" label></v-switch> -->
+    <!-- <v-switch v-model="item.state" :loading="loading" label="sw ${item.state}"></v-switch> -->
 
-    <v-toolbar card dense color="transparent">
+    <v-toolbar dense color="transparent">
       <v-toolbar-title>
         <h4>Projects</h4>
       </v-toolbar-title>
@@ -24,33 +24,35 @@
       </v-btn>-->
     </v-toolbar>
     <v-divider></v-divider>
+
     <v-card-text class="pa-0">
       <template>
         <v-data-table :headers="headers" :items="projects" :search="search" class="elevation-0">
-          <template slot="items" slot-scope="props">
-            <!-- <td>
-              <v-avatar size="36px">
-                <img :src="props.item.avatar" :alt="props.item.username" />
-              </v-avatar>
-            </td>-->
-            <td>{{ props.item.name }}</td>
-            <td class="text-xs-left">
-              <a :href="props.item.git">{{ props.item.git }}</a>
-            </td>
-            <td class="text-xs-left">
-              <!-- <v-progress-linear :value="props.item.progress" height="5" :color="props.item.color"></v-progress-linear> -->
-              <v-switch v-model="switch1" :label="`Switch 1: ${switch1.toString()}`"></v-switch>
-              <!-- <v-switch v-model="props.item.state" :loading="loading" label></v-switch> -->
-            </td>
-            <td class="text-xs-right">
-              <v-btn flat icon color="grey">
-                <v-icon>edit</v-icon>
-              </v-btn>
-              <v-btn flat icon color="grey">
-                <v-icon>delete</v-icon>
-              </v-btn>
-            </td>
-          </template>
+          <!-- <template v-slot:body="{ items }">
+            <tbody>
+              <tr v-for="item in items" :key="item.name">
+                <td>{{ item.name }}</td>
+
+                <td class="text-xs-left">
+                  <a :href="item.git" target="_blank">{{ item.git }}</a>
+                </td>
+                <td>
+                  <v-switch
+                    v-model="item.state"
+                    :loading="loading"
+                    @change="enableProject(item)"
+                    slabel
+                  ></v-switch>
+                </td>
+
+                <td class="text-xs-left">
+                  <v-btn text icon color="grey">
+                    <v-icon>mdi-settings</v-icon>setting
+                  </v-btn>
+                </td>
+              </tr>
+            </tbody>
+          </template>-->
         </v-data-table>
       </template>
       <v-divider></v-divider>
@@ -64,7 +66,8 @@ export default {
   data() {
     return {
       loading: false,
-      projects: [],
+      // projects: [],
+      projects: mockProjects,
       search: "",
       headers: [
         // {
@@ -80,31 +83,47 @@ export default {
         },
         { text: "Git Address", value: "git" },
         { text: "State", value: "state" },
-        { text: "Action", value: "action", align: "right" }
+        { text: "Action", value: "action" }
       ]
     };
   },
   created() {
+    return;
     fetch(
       // "http://fs.haodai.net/t/projects.json",
       // "https://jsonplaceholder.typicode.com/users",
       "http://192.168.10.234:8089/api/projects"
-      // {
-      //   mode: "cors"
-      // }
     )
       .then(response => response.json())
       .then(json => (this.projects = json))
-      // {
-      //   // p = json
-      //   // Projects.concat(json)
-      //   // console.log("get before1 ok", Projects)
-      //   // Projects = json
-      //   // console.log("get after1 ok", Projects)
-      //   this.projects = json
-      // })
       .catch(error => console.log("getProjects err", error));
   },
-  methods: {}
+  methods: {
+    enableProject: function(project) {
+      console.log("enableProject", project);
+    }
+  }
 };
+
+// for dev phase
+var mockProjects = [
+  {
+    username: "Dessie",
+    avatar:
+      "https://s3.amazonaws.com/uifaces/faces/twitter/ludwiczakpawel/128.jpg",
+    name: "kubernetes",
+    git: "https://g.haodai.net/yunwei/kubernetes",
+    state: false,
+    color: "pink"
+  },
+  {
+    username: "config-deploy",
+    avatar:
+      "https://s3.amazonaws.com/uifaces/faces/twitter/ludwiczakpawel/128.jpg",
+    name: "config-deploy",
+    git: "https://g.haodai.net/yunwei/config-deploy",
+    state: true,
+    color: "pink"
+  }
+];
 </script>
