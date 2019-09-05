@@ -22,7 +22,7 @@
         <v-card-title outline>
           <span class="headline">Resource Binding for project: {{ project.name }}</span>
         </v-card-title>
-        <!-- <ResourceTable :items="existResource" /> -->
+
         <v-card-text>
           <!-- <v-row>
             <v-col v-for="resourceType in resourceTypes" :key="resourceType">
@@ -126,11 +126,9 @@
 import Mysql from "./resource/Mysql";
 import Redis from "./resource/Redis";
 import Nfs from "./resource/Nfs";
-import ResourceTable from "./resource/ResourceTable";
 import { debuglog } from "util";
 export default {
   components: {
-    ResourceTable,
     Mysql,
     Redis,
     Nfs
