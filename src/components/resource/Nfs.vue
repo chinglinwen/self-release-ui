@@ -56,7 +56,7 @@
             <v-select
               @change="updateselect"
               :items="items"
-              label="mysql select"
+              label="nfs select"
               name="item"
               outlined
               v-model="itemname"
@@ -67,10 +67,10 @@
 
         <v-container v-if="'name' in item">
           <v-row>
-            <v-text-field label v-model="item.name"></v-text-field>
-            <v-text-field label v-model="item.path"></v-text-field>
-            <v-text-field label v-model="item.server"></v-text-field>
-            <v-text-field label v-model="item.mountPath"></v-text-field>
+            <v-text-field label="name" v-model="item.name"></v-text-field>
+            <v-text-field label="src path" v-model="item.path"></v-text-field>
+            <v-text-field label="server ip or hostname" v-model="item.server"></v-text-field>
+            <v-text-field label="mount path" v-model="item.mountPath"></v-text-field>
           </v-row>
           <v-row class="float-right">
             <v-btn text @click="cancelCreate(item)">cancel</v-btn>
@@ -84,6 +84,8 @@
 </template>
 
 <script>
+import { join } from "path";
+import { stringify } from "querystring";
 export default {
   props: {
     exist: false,
@@ -107,10 +109,10 @@ export default {
     ],
     item: {},
     defaultItem: {
-      name: "?",
-      path: "?",
-      server: "?",
-      mountPath: "?"
+      // name: "?",
+      // path: "?",
+      // server: "?",
+      mountPath: "/apps/? /www/Public"
     },
     itemname: ""
     // default value
@@ -152,11 +154,8 @@ export default {
   },
   methods: {
     updateselect() {
-      // this.item = this.items.find(item => item.name == this.itemname);
-      // create new variable, avoid change to existItem.
-      let a = Object.assign({}, this.defaultItem);
-      a.name = this.itemname;
-      this.item = a;
+      this.item = this.items.find(item => item.name == this.itemname);
+      this.item.mountPath = this.defaultItem.mountPath;
     },
     // updateenv() {
     //   console.log("update env", this.host, this.port);
@@ -173,12 +172,12 @@ export default {
     },
 
     editMode(item) {
-      this.cacheditem = Object.assign({}, item);
+      // this.cacheditem = Object.assign({}, item);
       this.editing = item.id;
     },
 
     cancelEdit(item) {
-      Object.assign(item, this.cacheditem);
+      // Object.assign(item, this.cacheditem);
       this.editing = null;
     },
     cancelCreate(item) {

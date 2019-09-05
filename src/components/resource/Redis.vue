@@ -9,7 +9,6 @@
             <!-- <td v-if="editing === item.id">
               <v-text-field label v-model="item.id"></v-text-field>
             </td>-->
-            <td>{{ item.name }}</td>
 
             <td v-if="editing === item.id">
               <v-text-field label v-model="item.hostkey"></v-text-field>
@@ -66,14 +65,16 @@
               name="item"
               outlined
               v-model="itemname"
-              item-text="host"
+              item-text="name"
             ></v-select>
           </div>
         </v-row>
 
-        <v-container v-if="'host' in item">
+        <v-container v-if="'name' in item">
           <v-row>
+            <v-text-field :label="hostkeylabel" v-model="item.hostkey"></v-text-field>
             <v-text-field :label="hostlabel" v-model="item.host"></v-text-field>
+            <v-text-field :label="portkeylabel" v-model="item.portkey"></v-text-field>
             <v-text-field :label="portlabel" v-model="item.port"></v-text-field>
           </v-row>
           <v-row class="float-right">
@@ -112,11 +113,8 @@ export default {
     ],
     item: {},
     defaultItem: {
-      host: "HOST",
-      port: "PORT",
-      database: "DATABASE",
-      username: "USERNAME",
-      password: "PASSWORD"
+      hostkey: "HOST",
+      portkey: "PORT"
     },
     itemname: ""
     // default value
@@ -130,17 +128,25 @@ export default {
   }),
   computed: {
     // itemlabel: item => {
-    //   return item.name;
+    //   return item.host;
     // },
     hostlabel() {
       // debugger;
-      let t = "";
-      if (!this.exist) {
-        t = "(default)";
-      }
-      return "host env name: " + t;
+      return "host name: ";
     },
     portlabel() {
+      return "port name: ";
+    },
+
+    hostkeylabel() {
+      // debugger;
+      // let t = "";
+      // if (!this.exist) {
+      //   t = "(default)";
+      // }
+      return "host env name: ";
+    },
+    portkeylabel() {
       return "port env name: ";
     },
     databaselabel() {
@@ -158,11 +164,9 @@ export default {
   },
   methods: {
     updateselect() {
-      // this.item = this.items.find(item => item.name == this.itemname);
-      // create new variable, avoid change to existItem.
-      let a = Object.assign({}, this.defaultItem);
-      a.name = this.itemname;
-      this.item = a;
+      this.item = this.items.find(item => item.host == this.itemname);
+      this.item.hostkey = this.defaultItem.hostkey;
+      this.item.portkey = this.defaultItem.portkey;
     },
     // updateenv() {
     //   console.log("update env", this.host, this.port);
@@ -171,12 +175,12 @@ export default {
       console.log("show detail div", this.itemname);
       return this.itemname != undefined && this.itemname != "";
     },
-    itemExist(item) {
-      if (this.existItems.find(e => (e.name = item.id)) != undefined) {
-        return false;
-      }
-      return true;
-    },
+    // itemExist(item) {
+    //   if (this.existItems.find(e => (e.name = item.id)) != undefined) {
+    //     return false;
+    //   }
+    //   return true;
+    // },
 
     editMode(item) {
       this.cacheditem = Object.assign({}, item);
@@ -192,7 +196,7 @@ export default {
     },
 
     editItem(item) {
-      if (item.id === "" || item.name === "") return;
+      if (item.id === "" || item.host === "") return;
       this.$emit("edit:item", item.id, item);
       this.editing = null;
     },
@@ -214,7 +218,7 @@ export default {
         this.creating = false;
       }
 
-      if (item.name === "") {
+      if (item.host === "") {
         this.error = true;
         return;
       }

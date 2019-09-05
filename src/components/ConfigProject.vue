@@ -43,15 +43,15 @@
           <Redis
             :existItems="existRedis"
             :items="Redises"
-            @add:item="mysqlSubmit"
-            @delete:item="mysqlDelete"
+            @add:item="redisSubmit"
+            @delete:item="redisDelete"
           />
 
           <Nfs
             :existItems="existNfs"
             :items="nfses"
-            @add:item="mysqlSubmit"
-            @delete:item="mysqlDelete"
+            @add:item="nfsSubmit"
+            @delete:item="nfsDelete"
           />
 
           <!-- <Redis :items="Redises" />
@@ -183,6 +183,7 @@ export default {
     Redises: [
       {
         id: 0,
+        name: "Redis-proxy-flow-center-loanapi.Redis-cluster",
         host: "Redis-proxy-flow-center-loanapi.Redis-cluster",
         port: "19000"
       }
@@ -242,7 +243,25 @@ export default {
     },
     mysqlSubmit(item) {
       console.log("add mysql", item);
-      this.existMysql.push(item);
+      this.existMysql.push(Object.assign({}, item));
+    },
+    redisDelete(item) {
+      this.existRedis = this.existRedis.filter(value => {
+        return value.id != item.id;
+      });
+    },
+    redisSubmit(item) {
+      console.log("add redis", item);
+      this.existRedis.push(Object.assign({}, item));
+    },
+    nfsDelete(item) {
+      this.existNfs = this.existNfs.filter(value => {
+        return value.id != item.id;
+      });
+    },
+    nfsSubmit(item) {
+      console.log("add nfs", item);
+      this.existNfs.push(Object.assign({}, item));
     },
     getResource(project) {
       // return json array
