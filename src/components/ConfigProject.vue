@@ -105,7 +105,7 @@
           <!-- <div class="flex-grow-1"></div> -->
 
           <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-          <v-btn color="blue darken-1" text @click="dialog = false">Save</v-btn>
+          <v-btn color="blue darken-1" text @click="submitall">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -201,6 +201,7 @@ export default {
     this.existResource = this.getResource("a");
     this.existMysql = this.existResource.mysql;
     this.existMysql.forEach((element, i) => {
+      console.log("mysql id incr");
       element.id = i + 1;
     });
 
@@ -243,7 +244,11 @@ export default {
     },
     mysqlSubmit(item) {
       console.log("add mysql", item);
-      this.existMysql.push(Object.assign({}, item));
+      let a = this.existMysql.find(e => e.id === item.id);
+      if (!a) {
+        this.existMysql.push(Object.assign({}, item));
+      }
+      a = item;
     },
     redisDelete(item) {
       this.existRedis = this.existRedis.filter(value => {
@@ -252,7 +257,11 @@ export default {
     },
     redisSubmit(item) {
       console.log("add redis", item);
-      this.existRedis.push(Object.assign({}, item));
+      let a = this.existRedis.find(e => e.id === item.id);
+      if (!a) {
+        this.existRedis.push(Object.assign({}, item));
+      }
+      a = item;
     },
     nfsDelete(item) {
       this.existNfs = this.existNfs.filter(value => {
@@ -261,11 +270,22 @@ export default {
     },
     nfsSubmit(item) {
       console.log("add nfs", item);
-      this.existNfs.push(Object.assign({}, item));
+      let a = this.existNfs.find(e => e.id === item.id);
+      if (!a) {
+        this.existNfs.push(Object.assign({}, item));
+      }
+      a = item;
     },
     getResource(project) {
       // return json array
       return JSON.parse(_existResource);
+    },
+    submitall() {
+      let a = {};
+      a.mysql = this.existMysql;
+      a.codis = this.existRedis;
+      a.nfs = this.existNfs;
+      console.log("all", a);
     }
     // getExistMysql() {
     //   let as = [];

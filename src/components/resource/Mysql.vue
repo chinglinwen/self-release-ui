@@ -9,11 +9,11 @@
             <!-- <td v-if="editing === item.id">
               <v-text-field label v-model="item.id"></v-text-field>
             </td>-->
-            <td>{{ item.name }}</td>
+            <td>{{item.id}}-{{ item.name }}</td>
             <td v-if="editing === item.id">
               <v-text-field label v-model="item.host"></v-text-field>
             </td>
-            <td v-else>{{ item.host }}</td>
+            <td v-else>{{item.id}}-{{ item.host }}</td>
             <td v-if="editing === item.id">
               <v-text-field label v-model="item.port"></v-text-field>
             </td>
@@ -111,6 +111,7 @@ export default {
 
     creating: null,
     editing: null,
+
     search: "",
     headers: [
       { text: "Name", value: "name", align: "left" },
@@ -130,19 +131,8 @@ export default {
       password: "PASSWORD"
     },
     itemname: ""
-    // default value
-    // defaultItem: {
-    //   host: "HOST",
-    //   port: "PORT",
-    //   database: "DATABASE",
-    //   username: "USERNAME",
-    //   password: "PASSWORD"
-    // }
   }),
   computed: {
-    // itemlabel: item => {
-    //   return item.name;
-    // },
     hostlabel() {
       // debugger;
       let t = "";
@@ -165,7 +155,7 @@ export default {
     }
   },
   created() {
-    console.log("existItems", this.existItems);
+    // console.log("existItems", this.existItems);
   },
   methods: {
     updateselect() {
@@ -223,8 +213,13 @@ export default {
     handleSubmit(item, update) {
       this.clearStatus();
       this.submitting = true;
-      if (!update) {
+      if (update) {
         this.creating = false;
+      } else {
+        item.id = 1;
+        if (this.existItems.length != 0) {
+          item.id = this.existItems[this.existItems.length - 1].id + 1;
+        }
       }
 
       if (item.name === "") {
@@ -232,10 +227,6 @@ export default {
         return;
       }
 
-      item.id = 1;
-      if (this.existItems.length != 0) {
-        item.id = this.existItems[this.existItems.length - 1].id + 1;
-      }
       this.$emit("add:item", item);
 
       this.success = true;
@@ -246,6 +237,7 @@ export default {
     clearStatus() {
       this.success = false;
       this.error = false;
+      this.editing = null;
     }
   }
 };
