@@ -33,6 +33,13 @@
             </v-col>
           </v-row>-->
           <!-- <v-container> -->
+          <Env
+            :existItems="existEnvs"
+            :items="envs"
+            @add:item="envsSubmit"
+            @delete:item="envsDelete"
+          />
+
           <Mysql
             :existItems="existMysql"
             :items="mysqls"
@@ -124,6 +131,7 @@
 
 <script>
 import Mysql from "./resource/Mysql";
+import Env from "./resource/Env";
 import Redis from "./resource/Redis";
 import Nfs from "./resource/Nfs";
 import { debuglog } from "util";
@@ -131,7 +139,8 @@ export default {
   components: {
     Mysql,
     Redis,
-    Nfs
+    Nfs,
+    Env
   },
   props: {
     project: {
@@ -147,10 +156,12 @@ export default {
     dialog: false,
     // existResource: {},
     existMysql: {},
+    existEnvs: {},
     existRedis: {},
     existNfs: {},
     // cache
     _existMysql: {},
+    _existEnvs: {},
     _existRedis: {},
     _existNfs: {},
 
@@ -158,6 +169,7 @@ export default {
     updated: false,
     loading: false,
 
+    envs: [],
     mysqls: [
       {
         id: 0,
@@ -231,38 +243,61 @@ export default {
       element.id = i + 1;
     });
 
+    // envs
+    let e = resources.envs;
+    let envsKeys = Object.keys(e);
+    let envs = [];
+    let a = {};
+    for (let i = 0; i < envsKeys.length; i++) {
+      a.name = envsKeys[i];
+      a.value = e[envsKeys[i]];
+      envs.push(a);
+    }
+
+    this.existEnvs = envs;
+    this.existEnvs.forEach((element, i) => {
+      element.id = i + 1;
+    });
+    console.log("exist envs", this.existEnvs);
+
     // transform codis to array
     let r = resources.codis;
     let redisKeys = Object.keys(r);
     let redis = [];
-    let a = {};
+    let a2 = {};
     for (let i = 0; i < redisKeys.length; i++) {
       if (i % 2 == 0) {
-        a = {};
-        a.name = r[redisKeys[i]];
-        a.host = r[redisKeys[i]];
-        a.hostkey = redisKeys[i];
+        a2 = {};
+        a2.name = r[redisKeys[i]];
+        a2.host = r[redisKeys[i]];
+        a2.hostkey = redisKeys[i];
       } else {
-        a.port = r[redisKeys[i]];
-        a.portkey = redisKeys[i];
-        redis.push(a);
+        a2.port = r[redisKeys[i]];
+        a2.portkey = redisKeys[i];
+        redis.push(a2);
       }
     }
+
     // console.log("redis", redis);
     this.existRedis = redis;
     this.existRedis.forEach((element, i) => {
       element.id = i + 1;
     });
+    console.log("exist redis", this.existRedis);
+
     // nfs
     this.existNfs = resources.nfs;
     this.existNfs.forEach((element, i) => {
       element.id = i + 1;
     });
 
+    console.log("exist nfs", this.existNfs);
+
     // this.existResource = resources;
 
     // for later to compare
     this._existMysql = Object.assign({}, this.existMysql);
+    this._existEnvs = Object.assign({}, this.existEnvs);
     this._existRedis = Object.assign({}, this.existRedis);
     this._existNfs = Object.assign({}, this.existNfs);
 
@@ -290,6 +325,25 @@ export default {
       this.updated = true;
       this._existMysql = this.existMysql;
     },
+    envsDelete(item) {
+      this.existEnvs = this.existEnvs.filter(value => {
+        return value.id != item.id;
+      });
+      this.updated = true;
+    },
+    envsSubmit(item) {
+      console.log("add envs", item);
+      if (JSON.stringify(this._existEnvs) == JSON.stringify(this.existEnvs)) {
+        console.log("no need update envs");
+      }
+      let a = this.existEnvs.find(e => e.id === item.id);
+      if (!a) {
+        this.existEnvs.push(Object.assign({}, item));
+      }
+      a = item;
+      this.updated = true;
+      this._existEnvs = this.existEnvs;
+    },
     redisDelete(item) {
       this.existRedis = this.existRedis.filter(value => {
         return value.id != item.id;
@@ -299,7 +353,7 @@ export default {
     redisSubmit(item) {
       console.log("add redis", item);
       if (JSON.stringify(this._existRedis) == JSON.stringify(this.existRedis)) {
-        console.log("no need update mysql");
+        console.log("no need update redis");
       }
       let a = this.existRedis.find(e => e.id === item.id);
       if (!a) {
@@ -318,7 +372,7 @@ export default {
     nfsSubmit(item) {
       console.log("add nfs", item);
       if (JSON.stringify(this._existNfs) == JSON.stringify(this.existNfs)) {
-        console.log("no need update mysql");
+        console.log("no need update nfs");
       }
 
       let a = this.existNfs.find(e => e.id === item.id);
@@ -336,11 +390,13 @@ export default {
     },
     submitall() {
       let a = {};
+      a.envs = this.existEnvs;
       a.mysql = this.existMysql;
       a.codis = this.existRedis;
       a.nfs = this.existNfs;
       let j = JSON.stringify(a);
-      console.log("all", j, "need update2:", this.updated);
+      console.log("all", j);
+      console.log("need updateall:", this.updated);
 
       // call api
       this.loading = true;

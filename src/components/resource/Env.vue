@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card-title>NFS</v-card-title>
+    <v-card-title>Environments</v-card-title>
 
     <v-data-table :headers="headers" :items="existItems" :search="search" hide-default-footer>
       <template v-slot:body="{ items }">
@@ -9,20 +9,15 @@
             <!-- <td v-if="editing === item.id">
               <v-text-field label v-model="item.id"></v-text-field>
             </td>-->
-            <td>{{ item.name }}</td>
-            <td v-if="editing === item.id">
-              <v-text-field label v-model="item.path"></v-text-field>
-            </td>
-            <td v-else>{{ item.path }}</td>
-            <td v-if="editing === item.id">
-              <v-text-field label v-model="item.server"></v-text-field>
-            </td>
-            <td v-else>{{ item.server }}</td>
 
             <td v-if="editing === item.id">
-              <v-text-field label v-model="item.mountPath"></v-text-field>
+              <v-text-field label v-model="item.name"></v-text-field>
             </td>
-            <td v-else>{{ item.mountPath }}</td>
+            <td v-else>{{ item.name }}</td>
+            <td v-if="editing === item.id">
+              <v-text-field label v-model="item.value"></v-text-field>
+            </td>
+            <td v-else>{{ item.value }}</td>
 
             <td v-if="editing === item.id">
               <v-btn @click="cancelEdit(item)">
@@ -51,26 +46,24 @@
 
     <v-container>
       <div v-if="creating">
-        <v-row>
+        <!-- <v-row>
           <div class="d-flex">
             <v-select
               @change="updateselect"
               :items="items"
-              label="nfs select"
+              label="env select"
               name="item"
               outlined
               v-model="itemname"
               item-text="name"
             ></v-select>
           </div>
-        </v-row>
+        </v-row>-->
 
-        <v-container v-if="'name' in item">
+        <v-container>
           <v-row>
-            <v-text-field label="name" v-model="item.name"></v-text-field>
-            <v-text-field label="src path" v-model="item.path"></v-text-field>
-            <v-text-field label="server ip or hostname" v-model="item.server"></v-text-field>
-            <v-text-field label="mount path" v-model="item.mountPath"></v-text-field>
+            <v-text-field label="env key" v-model="item.name"></v-text-field>
+            <v-text-field label="env value" v-model="item.value"></v-text-field>
           </v-row>
           <v-row class="float-right">
             <v-btn text @click="cancelCreate(item)">cancel</v-btn>
@@ -79,13 +72,12 @@
         </v-container>
       </div>
     </v-container>
+
     <!-- <div class="flex-grow-1"></div> -->
   </div>
 </template>
 
 <script>
-import { join } from "path";
-import { stringify } from "querystring";
 export default {
   props: {
     exist: false,
@@ -101,18 +93,14 @@ export default {
     editing: null,
     search: "",
     headers: [
-      { text: "Name", value: "name", align: "left" },
-      { text: "Path", value: "path" },
-      { text: "Server", value: "server" },
-      { text: "MountPath", value: "mountPath" },
+      { text: "Key", value: "name", align: "left" },
+      { text: "Value", value: "value" },
       { text: "action", value: "" }
     ],
     item: {},
     defaultItem: {
-      // name: "?",
-      // path: "?",
-      // server: "?",
-      mountPath: "/apps/? /www/Public"
+      hostkey: "HOST",
+      portkey: "PORT"
     },
     itemname: ""
     // default value
@@ -126,17 +114,25 @@ export default {
   }),
   computed: {
     // itemlabel: item => {
-    //   return item.name;
+    //   return item.host;
     // },
     hostlabel() {
       // debugger;
-      let t = "";
-      if (!this.exist) {
-        t = "(default)";
-      }
-      return "host env name: " + t;
+      return "host name: ";
     },
     portlabel() {
+      return "port name: ";
+    },
+
+    hostkeylabel() {
+      // debugger;
+      // let t = "";
+      // if (!this.exist) {
+      //   t = "(default)";
+      // }
+      return "host env name: ";
+    },
+    portkeylabel() {
       return "port env name: ";
     },
     databaselabel() {
@@ -153,10 +149,11 @@ export default {
     console.log("existItems", this.existItems);
   },
   methods: {
-    updateselect() {
-      this.item = this.items.find(item => item.name == this.itemname);
-      this.item.mountPath = this.defaultItem.mountPath;
-    },
+    // updateselect() {
+    //   this.item = this.items.find(item => item.host == this.itemname);
+    //   this.item.hostkey = this.defaultItem.hostkey;
+    //   this.item.portkey = this.defaultItem.portkey;
+    // },
     // updateenv() {
     //   console.log("update env", this.host, this.port);
     // },
@@ -164,12 +161,12 @@ export default {
       console.log("show detail div", this.itemname);
       return this.itemname != undefined && this.itemname != "";
     },
-    itemExist(item) {
-      if (this.existItems.find(e => (e.name = item.id)) != undefined) {
-        return false;
-      }
-      return true;
-    },
+    // itemExist(item) {
+    //   if (this.existItems.find(e => (e.name = item.id)) != undefined) {
+    //     return false;
+    //   }
+    //   return true;
+    // },
 
     editMode(item) {
       this.cacheditem = Object.assign({}, item);
@@ -180,14 +177,13 @@ export default {
     cancelEdit(item) {
       Object.assign(item, this.cacheditem);
       this.editing = null;
-      this.creating = false;
     },
     cancelCreate(item) {
       this.creating = false;
     },
 
     editItem(item) {
-      if (item.id === "" || item.name === "") return;
+      if (item.id === "" || item.host === "") return;
       this.$emit("edit:item", item.id, item);
       this.editing = null;
     },
@@ -195,7 +191,7 @@ export default {
     // Duplicate keys detected: '10-107-3307-liuliang2'. This may cause an update error.
     // this is why using id
     deleteItem(item) {
-      if (item.id === "" || item.name === "") return;
+      if (item.id === "") return;
       console.log("delete", item);
       this.$emit("delete:item", item);
       this.editing = null;
@@ -212,10 +208,11 @@ export default {
         }
       }
 
-      if (item.name === "") {
+      if (item.host === "") {
         this.error = true;
         return;
       }
+
       this.$emit("add:item", item);
 
       this.success = true;

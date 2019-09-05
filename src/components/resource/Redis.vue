@@ -205,7 +205,7 @@ export default {
     // Duplicate keys detected: '10-107-3307-liuliang2'. This may cause an update error.
     // this is why using id
     deleteItem(item) {
-      if (item.id === "" || item.email === "") return;
+      if (item.id === "" || item.name === "") return;
       console.log("delete", item);
       this.$emit("delete:item", item);
       this.editing = null;
