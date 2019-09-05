@@ -20,7 +20,7 @@
           <v-icon>close</v-icon>
         </v-btn>
         <v-card-title outline>
-          <span class="headline">Resource Binding</span>
+          <span class="headline">Resource Binding for project: {{ project.name }}</span>
         </v-card-title>
         <!-- <ResourceTable :items="existResource" /> -->
         <v-card-text>
@@ -99,13 +99,30 @@
           </v-row>-->
           <!-- </v-container> -->
           <!-- <small>*indicates required field</small> -->
+
+          <v-progress-linear
+            v-if="loading"
+            color="deep-purple accent-4"
+            indeterminate
+            rounded
+            height="6"
+          ></v-progress-linear>
         </v-card-text>
 
+        <!-- <v-text-field v-if="loading" color="success" loading disabled></v-text-field> -->
+
+        <!-- <v-progress-linear
+          :active="loading"
+          :indeterminate="loading"
+          absolute
+          bottom
+          color="deep-purple accent-4"
+        ></v-progress-linear>-->
         <v-card-actions>
           <!-- <div class="flex-grow-1"></div> -->
 
-          <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-          <v-btn color="blue darken-1" text @click="submitall">Save</v-btn>
+          <v-btn color="blue darken-1" text @click="dialog = false;loading=false">Close</v-btn>
+          <v-btn color="blue darken-1" text @click="submitall">Save All</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -125,16 +142,31 @@ export default {
     Redis,
     Nfs
   },
+  props: {
+    project: {
+      type: Object,
+      required: true
+    }
+  },
   data: () => ({
-    resourceTypes: ["mysql", "Redis", "nfs"],
+    // resourceTypes: ["mysql", "Redis", "nfs"],
     selectedResource: "",
     showmysql: false,
     mysql: {},
     dialog: false,
-    existResource: {},
+    // existResource: {},
     existMysql: {},
     existRedis: {},
     existNfs: {},
+    // cache
+    _existMysql: {},
+    _existRedis: {},
+    _existNfs: {},
+
+    // see if need update
+    updated: false,
+    loading: false,
+
     mysqls: [
       {
         id: 0,
@@ -198,21 +230,22 @@ export default {
     ]
   }),
   created() {
-    this.existResource = this.getResource("a");
-    this.existMysql = this.existResource.mysql;
+    if (!this.project.name) this.project.name = "unknown";
+    console.log("project", this.project);
+
+    let resources = this.getResource("projecta");
+    // mysql
+    this.existMysql = resources.mysql;
     this.existMysql.forEach((element, i) => {
-      console.log("mysql id incr");
       element.id = i + 1;
     });
 
     // transform codis to array
-    let r = this.existResource.codis;
+    let r = resources.codis;
     let redisKeys = Object.keys(r);
     let redis = [];
     let a = {};
     for (let i = 0; i < redisKeys.length; i++) {
-      // let host = "";
-      // let port = "";
       if (i % 2 == 0) {
         a = {};
         a.name = r[redisKeys[i]];
@@ -224,15 +257,24 @@ export default {
         redis.push(a);
       }
     }
-    console.log("redis", redis);
+    // console.log("redis", redis);
     this.existRedis = redis;
     this.existRedis.forEach((element, i) => {
       element.id = i + 1;
     });
-    this.existNfs = this.existResource.nfs;
+    // nfs
+    this.existNfs = resources.nfs;
     this.existNfs.forEach((element, i) => {
       element.id = i + 1;
     });
+
+    // this.existResource = resources;
+
+    // for later to compare
+    this._existMysql = Object.assign({}, this.existMysql);
+    this._existRedis = Object.assign({}, this.existRedis);
+    this._existNfs = Object.assign({}, this.existNfs);
+
     // debugger;
   },
   // get projects exist resources
@@ -241,41 +283,62 @@ export default {
       this.existMysql = this.existMysql.filter(value => {
         return value.id != item.id;
       });
+      this.updated = true;
     },
     mysqlSubmit(item) {
       console.log("add mysql", item);
+
+      if (JSON.stringify(this._existMysql) == JSON.stringify(this.existMysql)) {
+        console.log("no need update mysql");
+      }
       let a = this.existMysql.find(e => e.id === item.id);
       if (!a) {
         this.existMysql.push(Object.assign({}, item));
       }
       a = item;
+      this.updated = true;
+      this._existMysql = this.existMysql;
     },
     redisDelete(item) {
       this.existRedis = this.existRedis.filter(value => {
         return value.id != item.id;
       });
+      this.updated = true;
     },
     redisSubmit(item) {
       console.log("add redis", item);
+      if (JSON.stringify(this._existRedis) == JSON.stringify(this.existRedis)) {
+        console.log("no need update mysql");
+      }
       let a = this.existRedis.find(e => e.id === item.id);
       if (!a) {
         this.existRedis.push(Object.assign({}, item));
       }
       a = item;
+      this.updated = true;
+      this._existRedis = this.existRedis;
     },
     nfsDelete(item) {
       this.existNfs = this.existNfs.filter(value => {
         return value.id != item.id;
       });
+      this.updated = true;
     },
     nfsSubmit(item) {
       console.log("add nfs", item);
+      if (JSON.stringify(this._existNfs) == JSON.stringify(this.existNfs)) {
+        console.log("no need update mysql");
+      }
+
       let a = this.existNfs.find(e => e.id === item.id);
       if (!a) {
         this.existNfs.push(Object.assign({}, item));
       }
       a = item;
+      this.updated = true;
+      this._existNfs = this.existNfs;
     },
+    // should be api call
     getResource(project) {
       // return json array
       return JSON.parse(_existResource);
@@ -285,7 +348,22 @@ export default {
       a.mysql = this.existMysql;
       a.codis = this.existRedis;
       a.nfs = this.existNfs;
-      console.log("all", a);
+      let j = JSON.stringify(a);
+      console.log("all", j, "need update2:", this.updated);
+
+      // call api
+      this.loading = true;
+      // update status
+
+      setTimeout(function() {
+        // alert("hello");
+        this.loading = false;
+        this.dialog = false;
+      }, 3000);
+
+      // this.dialog = false;
+      this.updated = false;
+      // this.loading = false;
     }
     // getExistMysql() {
     //   let as = [];

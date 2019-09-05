@@ -170,16 +170,16 @@ export default {
     // updateenv() {
     //   console.log("update env", this.host, this.port);
     // },
-    checkitem(item) {
-      console.log("show detail div", this.itemname);
-      return this.itemname != undefined && this.itemname != "";
-    },
-    itemExist(item) {
-      if (this.existItems.find(e => (e.name = item.id)) != undefined) {
-        return false;
-      }
-      return true;
-    },
+    // checkitem(item) {
+    //   console.log("show detail div", this.itemname);
+    //   return this.itemname != undefined && this.itemname != "";
+    // },
+    // itemExist(item) {
+    //   if (this.existItems.find(e => (e.name = item.id)) != undefined) {
+    //     return false;
+    //   }
+    //   return true;
+    // },
 
     editMode(item) {
       this.cacheditem = Object.assign({}, item);

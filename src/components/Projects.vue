@@ -2,7 +2,7 @@
   <v-card>
     <!-- <v-switch v-model="item.state" :loading="loading" label="sw ${item.state}"></v-switch> -->
 
-    <v-toolbar dense color="transparent">
+    <v-toolbar dense color="transparent" flat>
       <v-toolbar-title>
         <h4>Projects</h4>
       </v-toolbar-title>
@@ -46,7 +46,7 @@
                 </td>
 
                 <td class="text-xs-left">
-                  <config-project />
+                  <config-project :project="item" />
                 </td>
               </tr>
             </tbody>
@@ -102,7 +102,7 @@ export default {
         },
         { text: "Git Address", value: "git" },
         { text: "State", value: "state" },
-        { text: "Action", value: "action" }
+        { text: "Action", value: "action", align: "left" }
       ]
     };
   },

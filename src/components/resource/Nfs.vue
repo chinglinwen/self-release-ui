@@ -172,12 +172,12 @@ export default {
     },
 
     editMode(item) {
-      // this.cacheditem = Object.assign({}, item);
+      this.cacheditem = Object.assign({}, item);
       this.editing = item.id;
     },
 
     cancelEdit(item) {
-      // Object.assign(item, this.cacheditem);
+      Object.assign(item, this.cacheditem);
       this.editing = null;
     },
     cancelCreate(item) {
