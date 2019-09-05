@@ -9,11 +9,11 @@
             <!-- <td v-if="editing === item.id">
               <v-text-field label v-model="item.id"></v-text-field>
             </td>-->
-            <td>{{item.id}}-{{ item.name }}</td>
+            <td>{{ item.name }}</td>
             <td v-if="editing === item.id">
               <v-text-field label v-model="item.host"></v-text-field>
             </td>
-            <td v-else>{{item.id}}-{{ item.host }}</td>
+            <td v-else>{{ item.host }}</td>
             <td v-if="editing === item.id">
               <v-text-field label v-model="item.port"></v-text-field>
             </td>
