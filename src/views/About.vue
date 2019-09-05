@@ -1,7 +1,11 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
-    <!-- <ConfigProject /> -->
+    <v-container>
+      <h1>NewOps</h1>
+
+      <h2>Provide for self service.</h2>
+      <!-- <ConfigProject /> -->
+    </v-container>
   </div>
 </template>
 <script>
