@@ -17,7 +17,7 @@
       </template>
       <v-card>
         <v-btn @click="dialog = false">
-          <v-icon>close</v-icon>
+          <v-icon>arrow_back_ios</v-icon>
         </v-btn>
         <v-card-title outline>
           <span class="headline">Resource Binding for project: {{ project.name }}</span>
@@ -100,30 +100,23 @@
           <!-- </v-container> -->
           <!-- <small>*indicates required field</small> -->
 
-          <v-progress-linear
-            v-if="loading"
-            color="deep-purple accent-4"
-            indeterminate
-            rounded
-            height="6"
-          ></v-progress-linear>
-        </v-card-text>
+          <!-- <v-text-field v-if="loading" color="success" loading disabled></v-text-field> -->
 
-        <!-- <v-text-field v-if="loading" color="success" loading disabled></v-text-field> -->
-
-        <!-- <v-progress-linear
+          <!-- <v-progress-linear
           :active="loading"
           :indeterminate="loading"
           absolute
           bottom
           color="deep-purple accent-4"
-        ></v-progress-linear>-->
-        <v-card-actions>
-          <!-- <div class="flex-grow-1"></div> -->
+          ></v-progress-linear>-->
+          <v-card-actions>
+            <!-- <div class="flex-grow-1"></div> -->
+            <v-btn color="blue darken-1" text @click="dialog = false;loading=false">Close</v-btn>
+            <v-btn color="blue darken-1" text @click="submitall">Save All</v-btn>
+          </v-card-actions>
 
-          <v-btn color="blue darken-1" text @click="dialog = false;loading=false">Close</v-btn>
-          <v-btn color="blue darken-1" text @click="submitall">Save All</v-btn>
-        </v-card-actions>
+          <v-progress-linear v-if="loading" color="blue accent-4" indeterminate rounded height="2"></v-progress-linear>
+        </v-card-text>
       </v-card>
     </v-dialog>
   </v-row>

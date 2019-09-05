@@ -50,7 +50,7 @@
       </template>
     </v-data-table>
 
-    <v-btn @click="creating=!creating">
+    <v-btn @click="creating=!creating;editing = null">
       <v-icon>add</v-icon>
     </v-btn>
 
@@ -185,6 +185,7 @@ export default {
     editMode(item) {
       this.cacheditem = Object.assign({}, item);
       this.editing = item.id;
+      this.creating = false;
     },
 
     cancelEdit(item) {
@@ -214,9 +215,7 @@ export default {
     handleSubmit(item, update) {
       this.clearStatus();
       this.submitting = true;
-      if (update) {
-        this.creating = false;
-      } else {
+      if (!update) {
         item.id = 1;
         if (this.existItems.length != 0) {
           item.id = this.existItems[this.existItems.length - 1].id + 1;
@@ -239,6 +238,7 @@ export default {
       this.success = false;
       this.error = false;
       this.editing = null;
+      this.creating = false;
     }
   }
 };
