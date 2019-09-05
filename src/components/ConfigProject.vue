@@ -1,0 +1,311 @@
+<template>
+  <v-row justify="center">
+    <v-dialog
+      v-model="dialog"
+      persistent
+      max-width="600px"
+      fullscreen
+      hide-overlay
+      transition="dialog-bottom-transition"
+    >
+      <template v-slot:activator="{ on }">
+        <!-- <v-btn left text icon color="grey">
+          <v-icon>mdi-settings</v-icon>
+        </v-btn>-->
+        <!-- <v-btn color="primary" dark v-on="on">Open Dialog</v-btn> -->
+        <v-btn left color="primary" dark v-on="on">Set</v-btn>
+      </template>
+      <v-card>
+        <v-btn @click="dialog = false">
+          <v-icon>close</v-icon>
+        </v-btn>
+        <v-card-title outline>
+          <span class="headline">Resource Binding</span>
+        </v-card-title>
+        <!-- <ResourceTable :items="existResource" /> -->
+        <v-card-text>
+          <!-- <v-row>
+            <v-col v-for="resourceType in resourceTypes" :key="resourceType">
+              <v-btn @click="selectedResource=resourceType">
+                <v-icon>add</v-icon>
+                {{ resourceType }}
+              </v-btn>
+            </v-col>
+          </v-row>-->
+          <!-- <v-container> -->
+          <Mysql
+            :existItems="existMysql"
+            :items="mysqls"
+            @add:item="mysqlSubmit"
+            @delete:item="mysqlDelete"
+          />
+
+          <Redis
+            :existItems="existRedis"
+            :items="Redises"
+            @add:item="mysqlSubmit"
+            @delete:item="mysqlDelete"
+          />
+
+          <Nfs
+            :existItems="existNfs"
+            :items="nfses"
+            @add:item="mysqlSubmit"
+            @delete:item="mysqlDelete"
+          />
+
+          <!-- <Redis :items="Redises" />
+          <Nfs :items="mysqls" />-->
+          <!-- <Mysql :mysqls="mysqls" />
+          <Mysql :mysqls="mysqls" />-->
+
+          <!-- <v-card class="d-flex pa-2" outlined tile>
+              <div>Mysql</div>
+          </v-card>-->
+
+          <!-- <v-text-field :label="field.label" :value="field.model"></v-text-field>-->
+
+          <!-- show all mysql first -->
+          <!-- <v-row>
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field label="Legal first name*" required></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field label="Legal middle name" hint="example of helper text only on focus"></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" md="4">
+                <v-text-field
+                  label="Legal last name*"
+                  hint="example of persistent helper text"
+                  persistent-hint
+                  required
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field label="Email*" required></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field label="Password*" type="password" required></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-select :items="['0-17', '18-29', '30-54', '54+']" label="Age*" required></v-select>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-autocomplete
+                  :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
+                  label="Interests"
+                ></v-autocomplete>
+              </v-col>
+          </v-row>-->
+          <!-- </v-container> -->
+          <!-- <small>*indicates required field</small> -->
+        </v-card-text>
+
+        <v-card-actions>
+          <!-- <div class="flex-grow-1"></div> -->
+
+          <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
+          <v-btn color="blue darken-1" text @click="dialog = false">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-row>
+</template>
+
+<script>
+import Mysql from "./resource/Mysql";
+import Redis from "./resource/Redis";
+import Nfs from "./resource/Nfs";
+import ResourceTable from "./resource/ResourceTable";
+import { debuglog } from "util";
+export default {
+  components: {
+    ResourceTable,
+    Mysql,
+    Redis,
+    Nfs
+  },
+  data: () => ({
+    resourceTypes: ["mysql", "Redis", "nfs"],
+    selectedResource: "",
+    showmysql: false,
+    mysql: {},
+    dialog: false,
+    existResource: {},
+    existMysql: {},
+    existRedis: {},
+    existNfs: {},
+    mysqls: [
+      {
+        id: 0,
+        name: "10-107-3307-liuliang",
+        // the following are secret keys, not env value
+        host: "host1",
+        port: "port1",
+        database: "database",
+        username: "username",
+        password: "password"
+      },
+      {
+        id: 0,
+        name: "10-107-3307-liuliang2",
+        host: "host2",
+        port: "port2",
+        database: "database",
+        username: "username",
+        password: "password"
+      },
+      {
+        id: 0,
+        name: "10-107-3307-liuliang3",
+        host: "host2",
+        port: "port2",
+        database: "database",
+        username: "username",
+        password: "password"
+      },
+      {
+        id: 0,
+        name: "10-107-3307-liuliang4",
+        host: "host2",
+        port: "port2",
+        database: "database",
+        username: "username",
+        password: "password"
+      }
+      // {
+      //   id: 0,
+      //   name: "aa",
+      //   host: "",
+      //   port: ""
+      // }
+    ],
+    Redises: [
+      {
+        id: 0,
+        host: "Redis-proxy-flow-center-loanapi.Redis-cluster",
+        port: "19000"
+      }
+    ],
+    nfses: [
+      {
+        name: "loanapi-public",
+        path: "/data/staticfile_yjr/file_data/openapi",
+        server: "172.31.83.26",
+        mountPath: "/apps/loanapi/www/Public"
+      }
+    ]
+  }),
+  created() {
+    this.existResource = this.getResource("a");
+    this.existMysql = this.existResource.mysql;
+    this.existMysql.forEach((element, i) => {
+      element.id = i + 1;
+    });
+
+    // transform codis to array
+    let r = this.existResource.codis;
+    let redisKeys = Object.keys(r);
+    let redis = [];
+    let a = {};
+    for (let i = 0; i < redisKeys.length; i++) {
+      // let host = "";
+      // let port = "";
+      if (i % 2 == 0) {
+        a = {};
+        a.name = r[redisKeys[i]];
+        a.host = r[redisKeys[i]];
+        a.hostkey = redisKeys[i];
+      } else {
+        a.port = r[redisKeys[i]];
+        a.portkey = redisKeys[i];
+        redis.push(a);
+      }
+    }
+    console.log("redis", redis);
+    this.existRedis = redis;
+    this.existRedis.forEach((element, i) => {
+      element.id = i + 1;
+    });
+    this.existNfs = this.existResource.nfs;
+    this.existNfs.forEach((element, i) => {
+      element.id = i + 1;
+    });
+    // debugger;
+  },
+  // get projects exist resources
+  methods: {
+    mysqlDelete(item) {
+      this.existMysql = this.existMysql.filter(value => {
+        return value.id != item.id;
+      });
+    },
+    mysqlSubmit(item) {
+      console.log("add mysql", item);
+      this.existMysql.push(item);
+    },
+    getResource(project) {
+      // return json array
+      return JSON.parse(_existResource);
+    }
+    // getExistMysql() {
+    //   let as = [];
+    //   let mysql = this.existResource.mysql;
+    //   let name = "";
+    //   console.log("existMysql", mysql, "length", mysql.length);
+    //   for (let i = 0; i < mysql.length; i++) {
+    //     name = mysql[i].secret;
+    //     if (i == 0) {
+    //       let a = {};
+    //       a.name = name;
+    //     }
+    //     // console.log("mysql[i]:", );
+    //     // console.log("a[secret]:", a[secret]);
+    //     // console.log("a[mysql[i].secret]:", a[mysql[i].secret]);
+
+    //     let key = mysql[i].key;
+    //     // if (i == 0) {
+    //     //   a[secret] = {};
+    //     // }
+    //     // a[secret] = a[secret][key] ? {} : a[secret];
+    //     a[key] = mysql[i].name;
+    //     as.push(a);
+    //   }
+
+    //   console.log("as", as);
+    //   // debugger;
+    //   return as;
+    // }
+  }
+};
+
+var _existResource = `{
+   "envs": {
+      "EXAMPLE-KEY": "EXAMPLE-value"
+   },
+   "mysql": [
+      {
+         "name": "10-107-3307-liuliang",
+         "host": "DB_HOST",
+         "port": "DB_PORT",
+         "database": "DB_DATABASE",
+         "username": "DB_USERNAME",
+         "password": "DB_PASSWORD"
+      }
+   ],
+   "codis": {
+      "SESSION_REDIS_HOST": "codis-proxy-flow-center-loanapi.codis-cluster",
+      "SESSION_REDIS_PORT": "19000",
+      "REDIS_HOST": "192.168.10.99",
+      "REDIS_PORT": "7201"
+   },
+   "nfs": [
+      {
+         "name": "loanapi-public",
+         "path": "/data/staticfile_yjr/file_data/openapi",
+         "server": "172.31.83.26",
+         "mountPath": "/apps/loanapi/www/Public"
+      }
+   ]
+}`;
+</script>

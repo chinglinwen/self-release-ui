@@ -46,9 +46,7 @@
                 </td>
 
                 <td class="text-xs-left">
-                  <v-btn text icon color="grey">
-                    <v-icon>mdi-settings</v-icon>setting
-                  </v-btn>
+                  <config-project />
                 </td>
               </tr>
             </tbody>
@@ -76,7 +74,12 @@
 
 <script>
 import axios from "axios";
+import ConfigProject from "./ConfigProject.vue";
+
 export default {
+  components: {
+    ConfigProject
+  },
   data() {
     return {
       iserror: false,

@@ -19,8 +19,8 @@
   <v-app id="inspire">
     <v-navigation-drawer v-model="drawer" app clipped>
       <v-list dense>
-        <router-link v-ripple to="/">
-          <v-list-item @click>
+        <router-link to="/">
+          <v-list-item v-ripple @click>
             <!-- <v-list-item-action>
               <v-icon>mdi-view-dashboard</v-icon>
             </v-list-item-action>-->
@@ -41,8 +41,8 @@
           </v-list-item-content>
         </v-list-item>-->
 
-        <router-link v-ripple to="/about">
-          <v-list-item @click>
+        <router-link to="/about">
+          <v-list-item v-ripple @click>
             <!-- <v-list-item-action>
             <v-icon>mdi-settings</v-icon>
             </v-list-item-action>-->
