@@ -65,7 +65,7 @@
               name="item"
               outlined
               v-model="itemname"
-              item-text="name"
+              item-text="host"
             ></v-select>
           </div>
         </v-row>
@@ -164,9 +164,19 @@ export default {
   },
   methods: {
     updateselect() {
-      this.item = this.items.find(item => item.host == this.itemname);
-      this.item.hostkey = this.defaultItem.hostkey;
-      this.item.portkey = this.defaultItem.portkey;
+      // let a = Object.assign(
+      //   (this.item = this.items.find(item => item.host == this.itemname)),
+      //   this.defaultItem
+      // );
+      // a.name = this.itemname;
+      // this.item = a;
+      // debugger;
+      let a = this.items.find(item => item.host == this.itemname);
+      a.hostkey = this.defaultItem.hostkey;
+      a.portkey = this.defaultItem.portkey;
+      a.name = this.itemname;
+      this.item = a;
+      console.log("redis selected item", item);
     },
     // updateenv() {
     //   console.log("update env", this.host, this.port);

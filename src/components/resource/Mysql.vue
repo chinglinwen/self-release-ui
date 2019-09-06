@@ -155,7 +155,7 @@ export default {
     }
   },
   created() {
-    // console.log("existItems", this.existItems);
+    console.log("mysql items", this.items);
   },
   methods: {
     updateselect() {
@@ -163,8 +163,6 @@ export default {
       // create new variable, avoid change to existItem.
       let a = Object.assign({}, this.defaultItem);
       a.name = this.itemname;
-      // this.item = this.defaultItem;
-      // this.item = this.itemname;
       this.item = a;
     },
     // updateenv() {

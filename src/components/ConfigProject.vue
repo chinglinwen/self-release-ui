@@ -13,7 +13,7 @@
           <v-icon>mdi-settings</v-icon>
         </v-btn>-->
         <!-- <v-btn color="primary" dark v-on="on">Open Dialog</v-btn> -->
-        <v-btn left color="primary" dark v-on="on">Set</v-btn>
+        <v-btn left color="primary" dark v-on="on" @click="opensetting">Set</v-btn>
       </template>
       <v-card>
         <v-btn @click="dialog = false">
@@ -42,21 +42,21 @@
 
           <Mysql
             :existItems="existMysql"
-            :items="mysqls"
+            :items="mysqlinfo"
             @add:item="mysqlSubmit"
             @delete:item="mysqlDelete"
           />
 
           <Redis
             :existItems="existRedis"
-            :items="Redises"
+            :items="redisinfo"
             @add:item="redisSubmit"
             @delete:item="redisDelete"
           />
 
           <Nfs
             :existItems="existNfs"
-            :items="nfses"
+            :items="nfsinfo"
             @add:item="nfsSubmit"
             @delete:item="nfsDelete"
           />
@@ -154,6 +154,8 @@ export default {
     showmysql: false,
     mysql: {},
     dialog: false,
+
+    infos: {},
     // existResource: {},
     existMysql: {},
     existEnvs: {},
@@ -170,60 +172,62 @@ export default {
     loading: false,
 
     envs: [],
-    mysqls: [
-      {
-        id: 0,
-        name: "10-107-3307-liuliang",
-        // the following are secret keys, not env value
-        host: "host1",
-        port: "port1",
-        database: "database",
-        username: "username",
-        password: "password"
-      },
-      {
-        id: 0,
-        name: "10-107-3307-liuliang2",
-        host: "host2",
-        port: "port2",
-        database: "database",
-        username: "username",
-        password: "password"
-      },
-      {
-        id: 0,
-        name: "10-107-3307-liuliang3",
-        host: "host2",
-        port: "port2",
-        database: "database",
-        username: "username",
-        password: "password"
-      },
-      {
-        id: 0,
-        name: "10-107-3307-liuliang4",
-        host: "host2",
-        port: "port2",
-        database: "database",
-        username: "username",
-        password: "password"
-      }
-      // {
-      //   id: 0,
-      //   name: "aa",
-      //   host: "",
-      //   port: ""
-      // }
-    ],
-    Redises: [
-      {
-        id: 0,
-        name: "Redis-proxy-flow-center-loanapi.Redis-cluster",
-        host: "Redis-proxy-flow-center-loanapi.Redis-cluster",
-        port: "19000"
-      }
-    ],
-    nfses: [
+    mysqlinfo: [],
+    // [
+    //   {
+    //     id: 0,
+    //     name: "10-107-3307-liuliang",
+    //     // the following are secret keys, not env value
+    //     host: "host1",
+    //     port: "port1",
+    //     database: "database",
+    //     username: "username",
+    //     password: "password"
+    //   },
+    //   {
+    //     id: 0,
+    //     name: "10-107-3307-liuliang2",
+    //     host: "host2",
+    //     port: "port2",
+    //     database: "database",
+    //     username: "username",
+    //     password: "password"
+    //   },
+    //   {
+    //     id: 0,
+    //     name: "10-107-3307-liuliang3",
+    //     host: "host2",
+    //     port: "port2",
+    //     database: "database",
+    //     username: "username",
+    //     password: "password"
+    //   },
+    //   {
+    //     id: 0,
+    //     name: "10-107-3307-liuliang4",
+    //     host: "host2",
+    //     port: "port2",
+    //     database: "database",
+    //     username: "username",
+    //     password: "password"
+    //   }
+    // {
+    //   id: 0,
+    //   name: "aa",
+    //   host: "",
+    //   port: ""
+    // }
+    // ],
+    redisinfo: [],
+    // [
+    //   {
+    //     id: 0,
+    //     name: "Redis-proxy-flow-center-loanapi.Redis-cluster",
+    //     host: "Redis-proxy-flow-center-loanapi.Redis-cluster",
+    //     port: "19000"
+    //   }
+    // ],
+    nfsinfo: [
       {
         name: "loanapi-public",
         path: "/data/staticfile_yjr/file_data/openapi",
@@ -234,77 +238,86 @@ export default {
   }),
   created() {
     if (!this.project.name) this.project.name = "unknown";
-    console.log("project", this.project);
 
-    let resources = this.getResource("projecta");
-    // mysql
-    this.existMysql = resources.mysql;
-    this.existMysql.forEach((element, i) => {
-      element.id = i + 1;
-    });
+    let namewithpath = this.project.name.split("/");
+    this.ns = namewithpath[0];
+    this.name = namewithpath[1];
 
-    // envs
-    let e = resources.envs;
-    let envsKeys = Object.keys(e);
-    let envs = [];
-    let a = {};
-    for (let i = 0; i < envsKeys.length; i++) {
-      a.name = envsKeys[i];
-      a.value = e[envsKeys[i]];
-      envs.push(a);
-    }
-
-    this.existEnvs = envs;
-    this.existEnvs.forEach((element, i) => {
-      element.id = i + 1;
-    });
-    console.log("exist envs", this.existEnvs);
-
-    // transform codis to array
-    let r = resources.codis;
-    let redisKeys = Object.keys(r);
-    let redis = [];
-    let a2 = {};
-    for (let i = 0; i < redisKeys.length; i++) {
-      if (i % 2 == 0) {
-        a2 = {};
-        a2.name = r[redisKeys[i]];
-        a2.host = r[redisKeys[i]];
-        a2.hostkey = redisKeys[i];
-      } else {
-        a2.port = r[redisKeys[i]];
-        a2.portkey = redisKeys[i];
-        redis.push(a2);
-      }
-    }
-
-    // console.log("redis", redis);
-    this.existRedis = redis;
-    this.existRedis.forEach((element, i) => {
-      element.id = i + 1;
-    });
-    console.log("exist redis", this.existRedis);
-
-    // nfs
-    this.existNfs = resources.nfs;
-    this.existNfs.forEach((element, i) => {
-      element.id = i + 1;
-    });
-
-    console.log("exist nfs", this.existNfs);
-
-    // this.existResource = resources;
-
-    // for later to compare
-    this._existMysql = Object.assign({}, this.existMysql);
-    this._existEnvs = Object.assign({}, this.existEnvs);
-    this._existRedis = Object.assign({}, this.existRedis);
-    this._existNfs = Object.assign({}, this.existNfs);
-
-    // debugger;
+    console.log("ns: ", this.ns, ", project: ", this.name);
   },
   // get projects exist resources
   methods: {
+    opensetting() {
+      this.getInfo();
+      console.log("infos: ", this.infos);
+
+      let resources = this.getResource(this.project);
+      // mysql
+      this.existMysql = resources.mysql;
+      this.existMysql.forEach((element, i) => {
+        element.id = i + 1;
+      });
+
+      // envs
+      let e = resources.envs;
+      let envsKeys = Object.keys(e);
+      let envs = [];
+      let a = {};
+      for (let i = 0; i < envsKeys.length; i++) {
+        a.name = envsKeys[i];
+        a.value = e[envsKeys[i]];
+        envs.push(a);
+      }
+
+      this.existEnvs = envs;
+      this.existEnvs.forEach((element, i) => {
+        element.id = i + 1;
+      });
+      console.log("exist envs", this.existEnvs);
+
+      // transform codis to array
+      let r = resources.codis;
+      let redisKeys = Object.keys(r);
+      let redis = [];
+      let a2 = {};
+      for (let i = 0; i < redisKeys.length; i++) {
+        if (i % 2 == 0) {
+          a2 = {};
+          a2.name = r[redisKeys[i]];
+          a2.host = r[redisKeys[i]];
+          a2.hostkey = redisKeys[i];
+        } else {
+          a2.port = r[redisKeys[i]];
+          a2.portkey = redisKeys[i];
+          redis.push(a2);
+        }
+      }
+
+      // console.log("redis", redis);
+      this.existRedis = redis;
+      this.existRedis.forEach((element, i) => {
+        element.id = i + 1;
+      });
+      console.log("exist redis", this.existRedis);
+
+      // nfs
+      this.existNfs = resources.nfs;
+      this.existNfs.forEach((element, i) => {
+        element.id = i + 1;
+      });
+
+      console.log("exist nfs", this.existNfs);
+
+      // this.existResource = resources;
+
+      // for later to compare
+      this._existMysql = Object.assign({}, this.existMysql);
+      this._existEnvs = Object.assign({}, this.existEnvs);
+      this._existRedis = Object.assign({}, this.existRedis);
+      this._existNfs = Object.assign({}, this.existNfs);
+
+      // debugger;
+    },
     mysqlDelete(item) {
       this.existMysql = this.existMysql.filter(value => {
         return value.id != item.id;
@@ -383,8 +396,35 @@ export default {
       this.updated = true;
       this._existNfs = this.existNfs;
     },
+    getInfo() {
+      console.log("fetching info in the background");
+      fetch("http://192.168.10.234:8089/api/resources/" + this.ns)
+        .then(response => response.json())
+        // .then(json => (this.infos = json))
+        .then(json => {
+          console.log("json", json);
+          this.infos = json;
+
+          this.mysqlinfo = json.mysql;
+          this.redisinfo = json.codis;
+        })
+        .catch(error => {
+          console.log("getProjects err", error);
+        });
+      return;
+    },
     // should be api call
     getResource(project) {
+      // let namewithpath = this.project.name.split("/");
+      // let ns = namewithpath[0];
+      // fetch("http://192.168.10.234:8089/api/resources/" + ns)
+      //   .then(response => response.json())
+      //   .then(json => (this.projects = json))
+      //   .catch(error => {
+      //     console.log("getProjects err", error);
+      //   });
+
+      // "http://192.168.10.234:8089/api/resources/xindaiquan"
       // return json array
       return JSON.parse(_existResource);
     },

@@ -158,7 +158,7 @@ var mockProjects = [
     username: "Dessie",
     avatar:
       "https://s3.amazonaws.com/uifaces/faces/twitter/ludwiczakpawel/128.jpg",
-    name: "yunwei/kubernetes",
+    name: "xindaiquan/kubernetes",
     git: "https://g.haodai.net/yunwei/kubernetes",
     state: false,
     color: "pink"
@@ -168,7 +168,7 @@ var mockProjects = [
     username: "config-deploy",
     avatar:
       "https://s3.amazonaws.com/uifaces/faces/twitter/ludwiczakpawel/128.jpg",
-    name: "yunwei/config-deploy",
+    name: "xindaiquan/config-deploy",
     git: "https://g.haodai.net/yunwei/config-deploy",
     state: true,
     color: "pink"
