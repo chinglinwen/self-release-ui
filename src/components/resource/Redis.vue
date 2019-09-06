@@ -72,15 +72,28 @@
 
         <v-container v-if="'name' in item">
           <v-row>
-            <v-text-field :label="hostkeylabel" v-model="item.hostkey"></v-text-field>
-            <v-text-field :label="hostlabel" v-model="item.host"></v-text-field>
-            <v-text-field :label="portkeylabel" v-model="item.portkey"></v-text-field>
-            <v-text-field :label="portlabel" v-model="item.port"></v-text-field>
+            <v-layout>
+              <v-flex md2 pa-2>
+                <v-text-field :label="hostkeylabel" v-model="item.hostkey"></v-text-field>
+              </v-flex>
+              <v-flex md5 pa-2>
+                <v-text-field :label="hostlabel" v-model="item.host"></v-text-field>
+              </v-flex>
+              <v-flex md2 pa-2>
+                <v-text-field :label="portkeylabel" v-model="item.portkey"></v-text-field>
+              </v-flex>
+              <v-flex md1 pa-2>
+                <v-text-field :label="portlabel" v-model="item.port"></v-text-field>
+              </v-flex>
+              <v-flex md2 py-5>
+                <v-btn text @click="cancelCreate(item)">cancel</v-btn>
+                <v-btn text @click="handleSubmit(item)">save</v-btn>
+              </v-flex>
+            </v-layout>
           </v-row>
-          <v-row class="float-right">
-            <v-btn text @click="cancelCreate(item)">cancel</v-btn>
-            <v-btn text @click="handleSubmit(item)">save</v-btn>
-          </v-row>
+          <!-- <v-row class="float-right">
+            
+          </v-row>-->
         </v-container>
       </div>
     </v-container>

@@ -76,20 +76,33 @@
 
         <v-container v-if="'name' in item">
           <v-row>
-            <v-text-field :label="hostlabel" v-model="item.host"></v-text-field>
+            <v-layout>
+              <v-flex md2 pa-2>
+                <v-text-field :label="hostlabel" v-model="item.host"></v-text-field>
+              </v-flex>
+              <v-flex md2 pa-2>
+                <v-text-field :label="portlabel" v-model="item.port"></v-text-field>
+              </v-flex>
+              <v-flex md2 pa-2>
+                <v-text-field :label="databaselabel" v-model="item.database"></v-text-field>
+              </v-flex>
+              <v-flex md2 pa-2>
+                <v-text-field :label="usernamelabel" v-model="item.username"></v-text-field>
+              </v-flex>
+              <v-flex md2 pa-2>
+                <v-text-field :label="passwordlabel" v-model="item.password"></v-text-field>
+              </v-flex>
 
-            <v-text-field :label="portlabel" v-model="item.port"></v-text-field>
-
-            <v-text-field :label="databaselabel" v-model="item.database"></v-text-field>
-
-            <v-text-field :label="usernamelabel" v-model="item.username"></v-text-field>
-
-            <v-text-field :label="passwordlabel" v-model="item.password"></v-text-field>
+              <v-flex md2 py-5>
+                <v-btn text @click="cancelCreate(item)">cancel</v-btn>
+                <v-btn text @click="handleSubmit(item)">save</v-btn>
+              </v-flex>
+            </v-layout>
           </v-row>
-          <v-row class="float-right">
+          <!-- <v-row class="float-right">
             <v-btn text @click="cancelCreate(item)">cancel</v-btn>
             <v-btn text @click="handleSubmit(item)">save</v-btn>
-          </v-row>
+          </v-row>-->
         </v-container>
       </div>
     </v-container>

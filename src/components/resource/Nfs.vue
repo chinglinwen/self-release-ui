@@ -67,11 +67,26 @@
 
         <v-container v-if="'name' in item">
           <v-row>
-            <v-text-field label="name" v-model="item.name"></v-text-field>
-            <v-text-field label="src path" v-model="item.path"></v-text-field>
-            <v-text-field label="server ip or hostname" v-model="item.server"></v-text-field>
-            <v-text-field label="mount path" v-model="item.mountPath"></v-text-field>
+            <v-layout>
+              <v-flex md2 pa-2>
+                <v-text-field label="name" v-model="item.name"></v-text-field>
+              </v-flex>
+              <v-flex md6 pa-2>
+                <v-text-field label="src path" v-model="item.path"></v-text-field>
+              </v-flex>
+              <v-flex md2 pa-2>
+                <v-text-field label="server ip or hostname" v-model="item.server"></v-text-field>
+              </v-flex>
+              <v-flex md6 pa-2>
+                <v-text-field label="mount path" v-model="item.mountPath"></v-text-field>
+              </v-flex>
+            </v-layout>
           </v-row>
+          <!-- <v-flex md2>
+            <v-btn text @click="cancelCreate(item)">cancel</v-btn>
+            <v-btn text @click="handleSubmit(item)">save</v-btn>
+          </v-flex>-->
+
           <v-row class="float-right">
             <v-btn text @click="cancelCreate(item)">cancel</v-btn>
             <v-btn text @click="handleSubmit(item)">save</v-btn>

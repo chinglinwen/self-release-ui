@@ -14,6 +14,7 @@
               <v-text-field label v-model="item.name"></v-text-field>
             </td>
             <td v-else>{{ item.name }}</td>
+
             <td v-if="editing === item.id">
               <v-text-field label v-model="item.value"></v-text-field>
             </td>
@@ -62,13 +63,24 @@
 
         <v-container>
           <v-row>
-            <v-text-field label="env key" v-model="item.name"></v-text-field>
-            <v-text-field label="env value" v-model="item.value"></v-text-field>
+            <v-layout>
+              <v-flex md2 pa-2>
+                <v-text-field label="env key" v-model="item.name"></v-text-field>
+              </v-flex>
+              <v-space></v-space>
+              <v-flex md2 pa-2>
+                <v-text-field label="env value" v-model="item.value"></v-text-field>
+              </v-flex>
+              <v-flex md2 py-5>
+                <v-btn text @click="cancelCreate(item)">cancel</v-btn>
+                <v-btn text @click="handleSubmit(item)">save</v-btn>
+              </v-flex>
+            </v-layout>
           </v-row>
-          <v-row class="float-right">
+          <!-- <v-row class="float-right">
             <v-btn text @click="cancelCreate(item)">cancel</v-btn>
             <v-btn text @click="handleSubmit(item)">save</v-btn>
-          </v-row>
+          </v-row>-->
         </v-container>
       </div>
     </v-container>
