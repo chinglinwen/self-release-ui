@@ -15,6 +15,10 @@
         <!-- <v-btn color="primary" dark v-on="on">Open Dialog</v-btn> -->
         <v-btn left color="primary" dark v-on="on" @click="opensetting">Set</v-btn>
       </template>
+
+      <!-- <v-tabs>
+      <v-tab v-for="item in envlist" :key="item" v-model="env">{{ item }}</v-tab>-->
+
       <v-card>
         <v-btn @click="dialog = false">
           <v-icon>arrow_back_ios</v-icon>
@@ -23,57 +27,83 @@
           <span class="headline">Resource Binding for project: {{ project.name }}</span>
         </v-card-title>
 
-        <v-card-text>
-          <!-- <v-row>
+        <v-tabs v-model="tab" background-color="deep-purple accent-2" class="elevation-0" dark>
+          <v-tabs-slider></v-tabs-slider>
+
+          <v-tab v-for="item in envlist" :key="item" v-model="tab" @click="changeTab(item)">
+            <!-- <div @click="changeTab1">{{ item }}</div> -->
+            {{ item }}
+            <!-- <v-icon v-if="icons">mdi-phone</v-icon> -->
+          </v-tab>
+
+          <v-tab-item v-model="tab">
+            <!-- <v-tab-item> -->
+            <v-card-text>
+              <!-- <v-row>
             <v-col v-for="resourceType in resourceTypes" :key="resourceType">
               <v-btn @click="selectedResource=resourceType">
                 <v-icon>add</v-icon>
                 {{ resourceType }}
               </v-btn>
             </v-col>
-          </v-row>-->
-          <!-- <v-container> -->
-          <Env
-            :existItems="existEnvs"
-            :items="envs"
-            @add:item="envsSubmit"
-            @delete:item="envsDelete"
-          />
+              </v-row>-->
+              <!-- <v-container> -->
 
-          <Mysql
-            :existItems="existMysql"
-            :items="mysqlinfo"
-            @add:item="mysqlSubmit"
-            @delete:item="mysqlDelete"
-          />
+              <!--           
+          <v-row>
+            <div class="d-flex">
+              <v-select
+                @change="updateselect"
+                :items="envlist"
+                label="deploy env select"
+                name="item"
+                outlined
+                v-model="env"
+              ></v-select>
+            </div>
+              </v-row>-->
 
-          <Redis
-            :existItems="existRedis"
-            :items="redisinfo"
-            @add:item="redisSubmit"
-            @delete:item="redisDelete"
-          />
+              <Env
+                :existItems="x.existEnvs"
+                :items="envs"
+                @add:item="envsSubmit"
+                @delete:item="envsDelete"
+              />
 
-          <Nfs
-            :existItems="existNfs"
-            :items="nfsinfo"
-            @add:item="nfsSubmit"
-            @delete:item="nfsDelete"
-          />
+              <Mysql
+                :existItems="x.existMysql"
+                :items="mysqlinfo"
+                @add:item="mysqlSubmit"
+                @delete:item="mysqlDelete"
+              />
 
-          <!-- <Redis :items="Redises" />
-          <Nfs :items="mysqls" />-->
-          <!-- <Mysql :mysqls="mysqls" />
-          <Mysql :mysqls="mysqls" />-->
+              <Redis
+                :existItems="x.existRedis"
+                :items="redisinfo"
+                @add:item="redisSubmit"
+                @delete:item="redisDelete"
+              />
 
-          <!-- <v-card class="d-flex pa-2" outlined tile>
+              <Nfs
+                :existItems="x.existNfs"
+                :items="nfsinfo"
+                @add:item="nfsSubmit"
+                @delete:item="nfsDelete"
+              />
+
+              <!-- <Redis :items="Redises" />
+              <Nfs :items="mysqls" />-->
+              <!-- <Mysql :mysqls="mysqls" />
+              <Mysql :mysqls="mysqls" />-->
+
+              <!-- <v-card class="d-flex pa-2" outlined tile>
               <div>Mysql</div>
-          </v-card>-->
+              </v-card>-->
 
-          <!-- <v-text-field :label="field.label" :value="field.model"></v-text-field>-->
+              <!-- <v-text-field :label="field.label" :value="field.model"></v-text-field>-->
 
-          <!-- show all mysql first -->
-          <!-- <v-row>
+              <!-- show all mysql first -->
+              <!-- <v-row>
               <v-col cols="12" sm="6" md="4">
                 <v-text-field label="Legal first name*" required></v-text-field>
               </v-col>
@@ -103,27 +133,35 @@
                   label="Interests"
                 ></v-autocomplete>
               </v-col>
-          </v-row>-->
-          <!-- </v-container> -->
-          <!-- <small>*indicates required field</small> -->
+              </v-row>-->
+              <!-- </v-container> -->
+              <!-- <small>*indicates required field</small> -->
 
-          <!-- <v-text-field v-if="loading" color="success" loading disabled></v-text-field> -->
+              <!-- <v-text-field v-if="loading" color="success" loading disabled></v-text-field> -->
 
-          <!-- <v-progress-linear
+              <!-- <v-progress-linear
           :active="loading"
           :indeterminate="loading"
           absolute
           bottom
           color="deep-purple accent-4"
-          ></v-progress-linear>-->
-          <v-card-actions>
-            <!-- <div class="flex-grow-1"></div> -->
-            <v-btn color="blue darken-1" text @click="dialog = false;loading=false">Close</v-btn>
-            <v-btn color="blue darken-1" text @click="submitall">Save All</v-btn>
-          </v-card-actions>
+              ></v-progress-linear>-->
+              <v-card-actions>
+                <!-- <div class="flex-grow-1"></div> -->
+                <v-btn color="blue darken-1" text @click="dialog = false;loading=false">Close</v-btn>
+                <v-btn color="blue darken-1" text @click="submitall">Save All</v-btn>
+              </v-card-actions>
 
-          <v-progress-linear v-if="loading" color="blue accent-4" indeterminate rounded height="2"></v-progress-linear>
-        </v-card-text>
+              <v-progress-linear
+                v-if="loading"
+                color="blue accent-4"
+                indeterminate
+                rounded
+                height="2"
+              ></v-progress-linear>
+            </v-card-text>
+          </v-tab-item>
+        </v-tabs>
       </v-card>
     </v-dialog>
   </v-row>
@@ -156,6 +194,10 @@ export default {
     dialog: false,
 
     infos: {},
+
+    x: {},
+    _x: {},
+
     // existResource: {},
     existMysql: {},
     existEnvs: {},
@@ -171,6 +213,10 @@ export default {
     updated: false,
     loading: false,
 
+    //deploy env
+    // env: 0,
+    tab: 0,
+    envlist: ["online", "pre", "test"],
     envs: [],
     mysqlinfo: [],
     // [
@@ -247,76 +293,38 @@ export default {
   },
   // get projects exist resources
   methods: {
+    changeTab(env) {
+      console.log("changed to env key: ", env);
+      console.log("changed to tab: ", this.tab, "env:", this.envlist[this.tab]);
+
+      this.x = convert(this.resources[env]);
+      console.log("got x: ", this.x);
+      // this._existEnvs = Object.assign({}, this.existEnvs);
+      this._x = Object.assign({}, this.x);
+
+      debugger;
+    },
+    // changeTab1(key) {
+    //   // console.log("changed to env key: ", key, this.envlist[key]);
+    //   console.log("func2 changed to env: ", this.env, this.envlist[this.env]);
+
+    //   this.x = convert(this.resources[this.envlist[this.env]]);
+    //   console.log("func2 got x: ", this.x);
+    //   // this._existEnvs = Object.assign({}, this.existEnvs);
+    //   this._x = Object.assign({}, this.x);
+
+    //   debugger;
+    // },
     opensetting() {
       this.getInfo();
       console.log("infos: ", this.infos);
 
-      let resources = this.getResource(this.project);
-      // mysql
-      this.existMysql = resources.mysql;
-      this.existMysql.forEach((element, i) => {
-        element.id = i + 1;
-      });
+      this.resources = this.getResource(this.project);
+      console.log("try get resource for env: ", this.envlist[this.tab]);
+      // this.x = convert(this.resources[this.env]);
+      this.x = convert(this.resources[this.envlist[this.tab]]);
 
-      // envs
-      let e = resources.envs;
-      let envsKeys = Object.keys(e);
-      let envs = [];
-      let a = {};
-      for (let i = 0; i < envsKeys.length; i++) {
-        a.name = envsKeys[i];
-        a.value = e[envsKeys[i]];
-        envs.push(a);
-      }
-
-      this.existEnvs = envs;
-      this.existEnvs.forEach((element, i) => {
-        element.id = i + 1;
-      });
-      console.log("exist envs", this.existEnvs);
-
-      // transform codis to array
-      let r = resources.codis;
-      let redisKeys = Object.keys(r);
-      let redis = [];
-      let a2 = {};
-      for (let i = 0; i < redisKeys.length; i++) {
-        if (i % 2 == 0) {
-          a2 = {};
-          a2.name = r[redisKeys[i]];
-          a2.host = r[redisKeys[i]];
-          a2.hostkey = redisKeys[i];
-        } else {
-          a2.port = r[redisKeys[i]];
-          a2.portkey = redisKeys[i];
-          redis.push(a2);
-        }
-      }
-
-      // console.log("redis", redis);
-      this.existRedis = redis;
-      this.existRedis.forEach((element, i) => {
-        element.id = i + 1;
-      });
-      console.log("exist redis", this.existRedis);
-
-      // nfs
-      this.existNfs = resources.nfs;
-      this.existNfs.forEach((element, i) => {
-        element.id = i + 1;
-      });
-
-      console.log("exist nfs", this.existNfs);
-
-      // this.existResource = resources;
-
-      // for later to compare
-      this._existMysql = Object.assign({}, this.existMysql);
-      this._existEnvs = Object.assign({}, this.existEnvs);
-      this._existRedis = Object.assign({}, this.existRedis);
-      this._existNfs = Object.assign({}, this.existNfs);
-
-      // debugger;
+      this._x = Object.assign({}, this.x);
     },
     mysqlDelete(item) {
       this.existMysql = this.existMysql.filter(value => {
@@ -483,33 +491,122 @@ export default {
   }
 };
 
+function convert(resources) {
+  console.log("try convert for resource", resources);
+  if (!resources) {
+    let x = {
+      existMysql: [{}],
+      existEnvs: [{}],
+      existRedis: [{}],
+      existNfs: [{}]
+    };
+    console.log("convert empty, return empty back", x);
+    return x;
+  }
+
+  let existMysql = resources.mysql;
+  existMysql.forEach((element, i) => {
+    element.id = i + 1;
+  });
+  console.log("exist mysql", existMysql);
+
+  // envs
+  let e = resources.envs;
+  let envsKeys = Object.keys(e);
+  let envs = [];
+  let a = {};
+  for (let i = 0; i < envsKeys.length; i++) {
+    a.name = envsKeys[i];
+    a.value = e[envsKeys[i]];
+    envs.push(a);
+  }
+
+  let existEnvs = envs;
+  existEnvs.forEach((element, i) => {
+    element.id = i + 1;
+  });
+  console.log("exist envs", existEnvs);
+
+  // transform codis to array
+  let r = resources.codis;
+  let redisKeys = Object.keys(r);
+  let redis = [];
+  let a2 = {};
+  for (let i = 0; i < redisKeys.length; i++) {
+    if (i % 2 == 0) {
+      a2 = {};
+      a2.name = r[redisKeys[i]];
+      a2.host = r[redisKeys[i]];
+      a2.hostkey = redisKeys[i];
+    } else {
+      a2.port = r[redisKeys[i]];
+      a2.portkey = redisKeys[i];
+      redis.push(a2);
+    }
+  }
+
+  // console.log("redis", redis);
+  let existRedis = redis;
+  existRedis.forEach((element, i) => {
+    element.id = i + 1;
+  });
+  console.log("exist redis", existRedis);
+
+  // nfs
+  let existNfs = resources.nfs;
+  existNfs.forEach((element, i) => {
+    element.id = i + 1;
+  });
+
+  console.log("exist nfs", existNfs);
+
+  // this.existResource = resources;
+
+  // for later to compare
+  // this._existMysql = Object.assign({}, this.existMysql);
+  // this._existEnvs = Object.assign({}, this.existEnvs);
+  // this._existRedis = Object.assign({}, this.existRedis);
+  // this._existNfs = Object.assign({}, this.existNfs);
+  // envResource
+
+  let x = {
+    existMysql: existMysql,
+    existEnvs: existEnvs,
+    existRedis: existRedis,
+    existNfs: existNfs
+  };
+  return x;
+}
+
 var _existResource = `{
-   "envs": {
-      "EXAMPLE-KEY": "EXAMPLE-value"
-   },
-   "mysql": [
-      {
-         "name": "10-107-3307-liuliang",
-         "host": "DB_HOST",
-         "port": "DB_PORT",
-         "database": "DB_DATABASE",
-         "username": "DB_USERNAME",
-         "password": "DB_PASSWORD"
-      }
-   ],
-   "codis": {
-      "SESSION_REDIS_HOST": "codis-proxy-flow-center-loanapi.codis-cluster",
-      "SESSION_REDIS_PORT": "19000",
-      "REDIS_HOST": "192.168.10.99",
-      "REDIS_PORT": "7201"
-   },
-   "nfs": [
-      {
-         "name": "loanapi-public",
-         "path": "/data/staticfile_yjr/file_data/openapi",
-         "server": "172.31.83.26",
-         "mountPath": "/apps/loanapi/www/Public"
-      }
-   ]
+  "online": {
+    "envs": {
+        "EXAMPLE-KEY": "EXAMPLE-value"
+    },
+    "mysql": [
+        {
+          "name": "10-107-3307-liuliang",
+          "host": "DB_HOST",
+          "port": "DB_PORT",
+          "database": "DB_DATABASE",
+          "username": "DB_USERNAME",
+          "password": "DB_PASSWORD"
+        }
+    ],
+    "codis": {
+        "SESSION_REDIS_HOST": "codis-proxy-flow-center-loanapi.codis-cluster",
+        "SESSION_REDIS_PORT": "19000",
+        "REDIS_HOST": "192.168.10.99",
+        "REDIS_PORT": "7201"
+    },
+    "nfs": [
+        {
+          "name": "loanapi-public",
+          "path": "/data/staticfile_yjr/file_data/openapi",
+          "server": "172.31.83.26",
+          "mountPath": "/apps/loanapi/www/Publicdemo"
+        }
+    ]
+  }
 }`;
 </script>
