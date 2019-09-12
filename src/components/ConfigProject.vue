@@ -29,6 +29,7 @@
         <v-tabs v-model="tab" background-color="deep-purple accent-2" class="elevation-0" dark>
           <v-tabs-slider></v-tabs-slider>
 
+          <!-- :href="`#tab-${item}`" -->
           <v-tab v-for="item in envlist" :key="item" v-model="tab" @click="changeTab(item)">
             <!-- <div @click="changeTab1">{{ item }}</div> -->
             {{ item }}
@@ -447,11 +448,32 @@ export default {
     getResource(project) {
       // let namewithpath = this.project.name.split("/");
       // let ns = namewithpath[0];
-      // fetch("http://192.168.10.234:8089/api/resources/" + ns)
+
+      // var a = {};
+      // fetch(
+      //   "http://192.168.10.234:8089/api/projects/" +
+      //     this.project.name +
+      //     "/values"
+      // )
       //   .then(response => response.json())
-      //   .then(json => (this.projects = json))
+      //   .then(json => {
+      //     a = json;
+      //     console.log("get resource a1: ", a);
+      //   })
       //   .catch(error => {
       //     console.log("getProjects err", error);
+      //   });
+
+      // let a = this.$GET(
+      //   "http://192.168.10.234:8089/api/projects/" +
+      //     this.project.name +
+      //     "/values"
+      // )
+      //   .then(res => {
+      //     this.resources = res;
+      //   })
+      //   .catch(e => {
+      //     console.log("getResource err", e);
       //   });
 
       // "http://192.168.10.234:8089/api/resources/xindaiquan"

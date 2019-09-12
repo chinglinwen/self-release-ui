@@ -32,7 +32,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 // 响应拦截器
 axios.interceptors.response.use(
     res => {
-        if (res.data.result_code == '-1') {
+        if (res.data.code == '-1') {
             router.replace({
                 path: '/passport/login',
                 query: { redirect: router.currentRoute.fullPath }
@@ -43,7 +43,7 @@ axios.interceptors.response.use(
     // defined by validateStatus()
     // status >= 200 && status < 300 default
     error => {
-        return Promise.reject({ result_code: -2, result_msg: '网络错误，请重试' });
+        return Promise.reject({ code: -2, message: '网络错误，请重试' });
     }
 );
 
@@ -59,19 +59,19 @@ export function get(url, params) {
                 params: params
             })
             .then(res => {
-                if (res.data.result_code == '0') {
+                if (res.data.code == '200') {
                     resolve(res.data);
                 } else {
                     // todo
                     if (res.data && res.data.data && res.data.data.error && res.data.data.error.length) {
-                        res.data.result_msg = res.data.data.error[0];
+                        res.data.message = res.data.data.error[0];
                     }
                     reject(res.data);
                 }
             })
             .catch(err => {
                 console.error(err);
-                reject({ result_code: -1, result_msg: '网络错误，请重试' });
+                reject({ code: -1, message: '网络错误，请重试' });
             });
     });
 }
@@ -87,19 +87,19 @@ export function post(url, data) {
         axios
             .post(url, data)
             .then(res => {
-                if (res.data.result_code == '0') {
+                if (res.data.code == '200') {
                     resolve(res.data);
                 } else {
                     // todo
                     if (res.data && res.data.data && res.data.data.error && res.data.data.error.length) {
-                        res.data.result_msg = res.data.data.error[0];
+                        res.data.message = res.data.data.error[0];
                     }
                     reject(res.data);
                 }
             })
             .catch(err => {
                 console.error(err);
-                reject({ result_code: -2, result_msg: '网络错误，请重试' });
+                reject({ code: -2, message: '网络错误，请重试' });
             });
     });
 }
