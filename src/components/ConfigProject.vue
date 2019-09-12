@@ -463,7 +463,7 @@ export default {
           this.redisinfo = json.codis;
         })
         .catch(error => {
-          console.log("getProjects err", error);
+          console.log("getinfos err", error);
         });
       return;
     },
@@ -710,59 +710,59 @@ function replacer(key, value) {
   if (key.indexOf("_") == 0) return undefined;
   else return value;
 }
-var _existResource = `{
-  "online": {
-    "envs": {
-        "EXAMPLE-KEYdemo": "EXAMPLE-valuedemo"
-    },
-    "mysql": [
-        {
-          "name": "10-107-3307-liuliang",
-          "host": "DB_HOSTdemo",
-          "port": "DB_PORT",
-          "database": "DB_DATABASE",
-          "username": "DB_USERNAME",
-          "password": "DB_PASSWORD"
-        }
-    ],
-    "codis": {
-        
-    },
-    "nfs": [
-      
-    ]
-  }
-}`;
+// var _existResource = `{
+//   "online": {
+//     "envs": {
+//         "EXAMPLE-KEYdemo": "EXAMPLE-valuedemo"
+//     },
+//     "mysql": [
+//         {
+//           "name": "10-107-3307-liuliang",
+//           "host": "DB_HOSTdemo",
+//           "port": "DB_PORT",
+//           "database": "DB_DATABASE",
+//           "username": "DB_USERNAME",
+//           "password": "DB_PASSWORD"
+//         }
+//     ],
+//     "codis": {
 
-var _existResource2 = `{
-  "online": {
-    "envs": {
-        "EXAMPLE-KEY": "EXAMPLE-value"
-    },
-    "mysql": [
-        {
-          "name": "10-107-3307-liuliang",
-          "host": "DB_HOST",
-          "port": "DB_PORT",
-          "database": "DB_DATABASE",
-          "username": "DB_USERNAME",
-          "password": "DB_PASSWORD"
-        }
-    ],
-    "codis": {
-        "SESSION_REDIS_HOST": "codis-proxy-flow-center-loanapi.codis-cluster",
-        "SESSION_REDIS_PORT": "19000",
-        "REDIS_HOST": "192.168.10.99",
-        "REDIS_PORT": "7201"
-    },
-    "nfs": [
-        {
-          "name": "loanapi-public",
-          "path": "/data/staticfile_yjr/file_data/openapi",
-          "server": "172.31.83.26",
-          "mountPath": "/apps/loanapi/www/Publicdemo"
-        }
-    ]
-  }
-}`;
+//     },
+//     "nfs": [
+
+//     ]
+//   }
+// }`;
+
+// var _existResource2 = `{
+//   "online": {
+//     "envs": {
+//         "EXAMPLE-KEY": "EXAMPLE-value"
+//     },
+//     "mysql": [
+//         {
+//           "name": "10-107-3307-liuliang",
+//           "host": "DB_HOST",
+//           "port": "DB_PORT",
+//           "database": "DB_DATABASE",
+//           "username": "DB_USERNAME",
+//           "password": "DB_PASSWORD"
+//         }
+//     ],
+//     "codis": {
+//         "SESSION_REDIS_HOST": "codis-proxy-flow-center-loanapi.codis-cluster",
+//         "SESSION_REDIS_PORT": "19000",
+//         "REDIS_HOST": "192.168.10.99",
+//         "REDIS_PORT": "7201"
+//     },
+//     "nfs": [
+//         {
+//           "name": "loanapi-public",
+//           "path": "/data/staticfile_yjr/file_data/openapi",
+//           "server": "172.31.83.26",
+//           "mountPath": "/apps/loanapi/www/Publicdemo"
+//         }
+//     ]
+//   }
+// }`;
 </script>
