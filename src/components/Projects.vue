@@ -158,13 +158,23 @@ var mockProjects = [
     username: "Dessie",
     avatar:
       "https://s3.amazonaws.com/uifaces/faces/twitter/ludwiczakpawel/128.jpg",
-    name: "xindaiquan/kubernetes",
+    name: "haodai/main",
     git: "https://g.haodai.net/yunwei/kubernetes",
     state: false,
     color: "pink"
   },
   {
     id: 2,
+    username: "Dessie",
+    avatar:
+      "https://s3.amazonaws.com/uifaces/faces/twitter/ludwiczakpawel/128.jpg",
+    name: "xindaiquan/kubernetes",
+    git: "https://g.haodai.net/yunwei/kubernetes",
+    state: false,
+    color: "pink"
+  },
+  {
+    id: 3,
     username: "config-deploy",
     avatar:
       "https://s3.amazonaws.com/uifaces/faces/twitter/ludwiczakpawel/128.jpg",

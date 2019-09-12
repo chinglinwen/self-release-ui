@@ -157,7 +157,9 @@ export default {
     }
   },
   created() {
-    console.log("existItems", this.existItems);
+    console.log("env existItems", this.existItems);
+    console.log("env items", this.items);
+    debugger;
   },
   methods: {
     // updateselect() {

@@ -317,18 +317,39 @@ export default {
       this.getInfo();
       console.log("infos: ", this.infos);
 
-      this.resources = this.getResource(this.project);
+      // this.resources = this.getResource(this.project)
+      // this.getResource(this.project)
 
-      this.all.online = convert(this.resources["online"]);
-      this.all.pre = convert(this.resources["pre"]);
-      this.all.test = convert(this.resources["test"]);
+      fetch(
+        "http://192.168.10.234:8089/api/projects/" +
+          this.project.name +
+          "/values"
+      )
+        .then(response => response.json())
 
-      // console.log("try get resource for env: ", this.envlist[this.tab]);
-      // this.x = convert(this.resources[this.env]);
-      // this.x = convert(this.resources[this.envlist[this.tab]]);
-      this.x = this.all.online;
+        .then(json => {
+          this.resources = json.data;
+          // a = json;
+          console.log("get resource: ", json.data);
 
-      this._x = Object.assign({}, this.x);
+          // await this.getResource(this.project);
+
+          this.all.online = convert(this.resources["online"]);
+          this.all.pre = convert(this.resources["pre"]);
+          this.all.test = convert(this.resources["test"]);
+
+          // console.log("try get resource for env: ", this.envlist[this.tab]);
+          // this.x = convert(this.resources[this.env]);
+          // this.x = convert(this.resources[this.envlist[this.tab]]);
+          this.x = this.all.online;
+
+          this._x = Object.assign({}, this.x);
+
+          debugger;
+        })
+        .catch(error => {
+          console.log("get resource err", error);
+        });
     },
     mysqlDelete(item) {
       this.x.existMysql = this.x.existMysql.filter(value => {
@@ -420,7 +441,7 @@ export default {
         .then(response => response.json())
         // .then(json => (this.infos = json))
         .then(json => {
-          console.log("json", json);
+          console.log("infos", json);
           this.infos = json;
 
           this.mysqlinfo = json.mysql;
@@ -436,20 +457,20 @@ export default {
       // let namewithpath = this.project.name.split("/");
       // let ns = namewithpath[0];
 
-      // var a = {};
-      // fetch(
-      //   "http://192.168.10.234:8089/api/projects/" +
-      //     this.project.name +
-      //     "/values"
-      // )
-      //   .then(response => response.json())
-      //   .then(json => {
-      //     a = json;
-      //     console.log("get resource a1: ", a);
-      //   })
-      //   .catch(error => {
-      //     console.log("getProjects err", error);
-      //   });
+      // let a = {};
+      return fetch(
+        "http://192.168.10.234:8089/api/projects/" +
+          this.project.name +
+          "/values"
+      ).then(response => response.json());
+      // .then(json => {
+      //   // this.resources = json;
+      //   a = json;
+      //   console.log("get resource: ", json);
+      // })
+      // .catch(error => {
+      //   console.log("get resource err", error);
+      // });
 
       // let a = this.$GET(
       //   "http://192.168.10.234:8089/api/projects/" +
@@ -465,7 +486,9 @@ export default {
 
       // "http://192.168.10.234:8089/api/resources/xindaiquan"
       // return json array
-      return JSON.parse(_existResource);
+      // return JSON.parse(_existResource);
+      // debugger;
+      // return a.data;
     },
     submitall() {
       // let a = {};
@@ -473,7 +496,8 @@ export default {
       // a.mysql = this.x.existMysql;
       // a.codis = this.x.existRedis;
       // a.nfs = this.x.existNfs;
-      let j = JSON.stringify(this.all, replacer, 2);
+      let a = convertback(this.all);
+      let j = JSON.stringify(a, replacer, 2);
       console.log("all:", j);
       console.log("need updateall:", this.updated);
 
@@ -524,7 +548,8 @@ export default {
 
 function convert(resources) {
   console.log("try convert for resource", resources);
-  if (!resources) {
+  // if (!resources) {
+  if (!resources || Object.keys(resources).length == 0) {
     let x = {
       existMysql: [],
       existEnvs: [],
@@ -536,9 +561,11 @@ function convert(resources) {
   }
 
   let existMysql = resources.mysql;
-  existMysql.forEach((element, i) => {
-    element.id = i + 1;
-  });
+  if (existMysql) {
+    existMysql.forEach((element, i) => {
+      element.id = i + 1;
+    });
+  }
   console.log("exist mysql", existMysql);
 
   // envs
@@ -553,9 +580,11 @@ function convert(resources) {
   }
 
   let existEnvs = envs;
-  existEnvs.forEach((element, i) => {
-    element.id = i + 1;
-  });
+  if (existEnvs) {
+    existEnvs.forEach((element, i) => {
+      element.id = i + 1;
+    });
+  }
   console.log("exist envs", existEnvs);
 
   // transform codis to array
@@ -578,17 +607,20 @@ function convert(resources) {
 
   // console.log("redis", redis);
   let existRedis = redis;
-  existRedis.forEach((element, i) => {
-    element.id = i + 1;
-  });
+  if (existRedis) {
+    existRedis.forEach((element, i) => {
+      element.id = i + 1;
+    });
+  }
   console.log("exist redis", existRedis);
 
   // nfs
   let existNfs = resources.nfs;
-  existNfs.forEach((element, i) => {
-    element.id = i + 1;
-  });
-
+  if (existNfs) {
+    existNfs.forEach((element, i) => {
+      element.id = i + 1;
+    });
+  }
   console.log("exist nfs", existNfs);
 
   // this.x.existResource = resources;
@@ -607,6 +639,40 @@ function convert(resources) {
     existNfs: existNfs
   };
   return x;
+}
+
+// may test,pre append to online?
+function convertback(all) {
+  let newall = {};
+  console.log("try convertback json for sumbit");
+  for (let x in all) {
+    let envs = {};
+    let redis = {};
+    let e = all[x]["existEnvs"];
+    if (e && e.length != 0) {
+      for (let i = 0; i < e.length; i++) {
+        envs[e[i].name] = e[i].value;
+      }
+      console.log("new envs", envs);
+    }
+    let r = all[x]["existRedis"];
+    if (r && r.length != 0) {
+      for (let i = 0; i < r.length; i++) {
+        redis[r[i].hostkey] = r[i].host;
+        redis[r[i].portkey] = r[i].port;
+      }
+      console.log("new redis", redis);
+    }
+    let a = {
+      envs: envs,
+      codis: redis,
+      mysql: all[x]["existMysql"],
+      nfs: all[x]["existNfs"]
+    };
+    newall[x] = a;
+  }
+  // console.log("newall:", newall);
+  return newall;
 }
 
 // ignore field start with underscore
