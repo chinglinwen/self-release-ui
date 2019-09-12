@@ -67,7 +67,6 @@
               <v-flex md2 pa-2>
                 <v-text-field label="env key" v-model="item.name"></v-text-field>
               </v-flex>
-              <v-space></v-space>
               <v-flex md2 pa-2>
                 <v-text-field label="env value" v-model="item.value"></v-text-field>
               </v-flex>

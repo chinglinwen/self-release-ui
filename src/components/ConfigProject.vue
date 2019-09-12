@@ -16,9 +16,6 @@
         <v-btn left color="primary" dark v-on="on" @click="opensetting">Set</v-btn>
       </template>
 
-      <!-- <v-tabs>
-      <v-tab v-for="item in envlist" :key="item" v-model="env">{{ item }}</v-tab>-->
-
       <v-card>
         <v-btn @click="dialog = false">
           <v-icon>arrow_back_ios</v-icon>
@@ -27,6 +24,8 @@
           <span class="headline">Resource Binding for project: {{ project.name }}</span>
         </v-card-title>
 
+        <!-- <v-tabs>
+        <v-tab v-for="item in envlist" :key="item" v-model="env">{{ item }}</v-tab>-->
         <v-tabs v-model="tab" background-color="deep-purple accent-2" class="elevation-0" dark>
           <v-tabs-slider></v-tabs-slider>
 
@@ -195,28 +194,34 @@ export default {
 
     infos: {},
 
-    x: {},
+    //deploy env
+    tab: 0,
+    envlist: ["online", "pre", "test"],
+
+    x: {
+      existMysql: {},
+      existEnvs: {},
+      existRedis: {},
+      existNfs: {},
+      _existMysql: {},
+      _existEnvs: {},
+      _existRedis: {},
+      _existNfs: {}
+    },
     _x: {},
 
+    online: {},
+    pre: {},
+    test: {},
+
     // existResource: {},
-    existMysql: {},
-    existEnvs: {},
-    existRedis: {},
-    existNfs: {},
+
     // cache
-    _existMysql: {},
-    _existEnvs: {},
-    _existRedis: {},
-    _existNfs: {},
 
     // see if need update
     updated: false,
     loading: false,
 
-    //deploy env
-    // env: 0,
-    tab: 0,
-    envlist: ["online", "pre", "test"],
     envs: [],
     mysqlinfo: [],
     // [
@@ -295,14 +300,19 @@ export default {
   methods: {
     changeTab(env) {
       console.log("changed to env key: ", env);
-      console.log("changed to tab: ", this.tab, "env:", this.envlist[this.tab]);
+      // console.log("changed to tab: ", this.tab, "env:", this.envlist[this.tab]);
 
-      this.x = convert(this.resources[env]);
-      console.log("got x: ", this.x);
-      // this._existEnvs = Object.assign({}, this.existEnvs);
+      console.log("online: ", this.online);
+      console.log("pre: ", this.pre);
+      console.log("test: ", this.test);
+
+      this.x = this[env];
+      console.log("got x: ", this.x, "for env: ", env);
+
+      // this.x._existEnvs = Object.assign({}, this.x.existEnvs);
       this._x = Object.assign({}, this.x);
 
-      debugger;
+      // debugger;
     },
     // changeTab1(key) {
     //   // console.log("changed to env key: ", key, this.envlist[key]);
@@ -310,7 +320,7 @@ export default {
 
     //   this.x = convert(this.resources[this.envlist[this.env]]);
     //   console.log("func2 got x: ", this.x);
-    //   // this._existEnvs = Object.assign({}, this.existEnvs);
+    //   // this.x._existEnvs = Object.assign({}, this.x.existEnvs);
     //   this._x = Object.assign({}, this.x);
 
     //   debugger;
@@ -320,14 +330,20 @@ export default {
       console.log("infos: ", this.infos);
 
       this.resources = this.getResource(this.project);
-      console.log("try get resource for env: ", this.envlist[this.tab]);
+
+      this.online = convert(this.resources["online"]);
+      this.pre = convert(this.resources["pre"]);
+      this.test = convert(this.resources["test"]);
+
+      // console.log("try get resource for env: ", this.envlist[this.tab]);
       // this.x = convert(this.resources[this.env]);
-      this.x = convert(this.resources[this.envlist[this.tab]]);
+      // this.x = convert(this.resources[this.envlist[this.tab]]);
+      this.x = this.online;
 
       this._x = Object.assign({}, this.x);
     },
     mysqlDelete(item) {
-      this.existMysql = this.existMysql.filter(value => {
+      this.x.existMysql = this.x.existMysql.filter(value => {
         return value.id != item.id;
       });
       this.updated = true;
@@ -335,74 +351,80 @@ export default {
     mysqlSubmit(item) {
       console.log("add mysql", item);
 
-      if (JSON.stringify(this._existMysql) == JSON.stringify(this.existMysql)) {
+      if (
+        JSON.stringify(this.x._existMysql) == JSON.stringify(this.x.existMysql)
+      ) {
         console.log("no need update mysql");
       }
-      let a = this.existMysql.find(e => e.id === item.id);
+      let a = this.x.existMysql.find(e => e.id === item.id);
       if (!a) {
-        this.existMysql.push(Object.assign({}, item));
+        this.x.existMysql.push(Object.assign({}, item));
       }
       a = item;
       this.updated = true;
-      this._existMysql = this.existMysql;
+      this.x._existMysql = this.x.existMysql;
     },
     envsDelete(item) {
-      this.existEnvs = this.existEnvs.filter(value => {
+      this.x.existEnvs = this.x.existEnvs.filter(value => {
         return value.id != item.id;
       });
       this.updated = true;
     },
     envsSubmit(item) {
       console.log("add envs", item);
-      if (JSON.stringify(this._existEnvs) == JSON.stringify(this.existEnvs)) {
+      if (
+        JSON.stringify(this.x._existEnvs) == JSON.stringify(this.x.existEnvs)
+      ) {
         console.log("no need update envs");
       }
-      let a = this.existEnvs.find(e => e.id === item.id);
+      let a = this.x.existEnvs.find(e => e.id === item.id);
       if (!a) {
-        this.existEnvs.push(Object.assign({}, item));
+        this.x.existEnvs.push(Object.assign({}, item));
       }
       a = item;
       this.updated = true;
-      this._existEnvs = this.existEnvs;
+      this.x._existEnvs = this.x.existEnvs;
     },
     redisDelete(item) {
-      this.existRedis = this.existRedis.filter(value => {
+      this.x.existRedis = this.x.existRedis.filter(value => {
         return value.id != item.id;
       });
       this.updated = true;
     },
     redisSubmit(item) {
       console.log("add redis", item);
-      if (JSON.stringify(this._existRedis) == JSON.stringify(this.existRedis)) {
+      if (
+        JSON.stringify(this.x._existRedis) == JSON.stringify(this.x.existRedis)
+      ) {
         console.log("no need update redis");
       }
-      let a = this.existRedis.find(e => e.id === item.id);
+      let a = this.x.existRedis.find(e => e.id === item.id);
       if (!a) {
-        this.existRedis.push(Object.assign({}, item));
+        this.x.existRedis.push(Object.assign({}, item));
       }
       a = item;
       this.updated = true;
-      this._existRedis = this.existRedis;
+      this.x._existRedis = this.x.existRedis;
     },
     nfsDelete(item) {
-      this.existNfs = this.existNfs.filter(value => {
+      this.x.existNfs = this.x.existNfs.filter(value => {
         return value.id != item.id;
       });
       this.updated = true;
     },
     nfsSubmit(item) {
       console.log("add nfs", item);
-      if (JSON.stringify(this._existNfs) == JSON.stringify(this.existNfs)) {
+      if (JSON.stringify(this.x._existNfs) == JSON.stringify(this.x.existNfs)) {
         console.log("no need update nfs");
       }
 
-      let a = this.existNfs.find(e => e.id === item.id);
+      let a = this.x.existNfs.find(e => e.id === item.id);
       if (!a) {
-        this.existNfs.push(Object.assign({}, item));
+        this.x.existNfs.push(Object.assign({}, item));
       }
       a = item;
       this.updated = true;
-      this._existNfs = this.existNfs;
+      this.x._existNfs = this.x.existNfs;
     },
     getInfo() {
       console.log("fetching info in the background");
@@ -438,10 +460,10 @@ export default {
     },
     submitall() {
       let a = {};
-      a.envs = this.existEnvs;
-      a.mysql = this.existMysql;
-      a.codis = this.existRedis;
-      a.nfs = this.existNfs;
+      a.envs = this.x.existEnvs;
+      a.mysql = this.x.existMysql;
+      a.codis = this.x.existRedis;
+      a.nfs = this.x.existNfs;
       let j = JSON.stringify(a);
       console.log("all", j);
       console.log("need updateall:", this.updated);
@@ -462,7 +484,7 @@ export default {
     }
     // getExistMysql() {
     //   let as = [];
-    //   let mysql = this.existResource.mysql;
+    //   let mysql = this.x.existResource.mysql;
     //   let name = "";
     //   console.log("existMysql", mysql, "length", mysql.length);
     //   for (let i = 0; i < mysql.length; i++) {
@@ -495,10 +517,10 @@ function convert(resources) {
   console.log("try convert for resource", resources);
   if (!resources) {
     let x = {
-      existMysql: [{}],
-      existEnvs: [{}],
-      existRedis: [{}],
-      existNfs: [{}]
+      existMysql: [],
+      existEnvs: [],
+      existRedis: [],
+      existNfs: []
     };
     console.log("convert empty, return empty back", x);
     return x;
@@ -560,13 +582,13 @@ function convert(resources) {
 
   console.log("exist nfs", existNfs);
 
-  // this.existResource = resources;
+  // this.x.existResource = resources;
 
   // for later to compare
-  // this._existMysql = Object.assign({}, this.existMysql);
-  // this._existEnvs = Object.assign({}, this.existEnvs);
-  // this._existRedis = Object.assign({}, this.existRedis);
-  // this._existNfs = Object.assign({}, this.existNfs);
+  // this.x._existMysql = Object.assign({}, this.x.existMysql);
+  // this.x._existEnvs = Object.assign({}, this.x.existEnvs);
+  // this.x._existRedis = Object.assign({}, this.x.existRedis);
+  // this.x._existNfs = Object.assign({}, this.x.existNfs);
   // envResource
 
   let x = {
