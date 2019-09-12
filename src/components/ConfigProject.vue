@@ -27,10 +27,12 @@
         <v-tabs v-model="tab" background-color="deep-purple accent-2" class="elevation-0" dark>
           <!-- <v-tabs-slider></v-tabs-slider> -->
 
-          <v-tab v-for="env in envlist" :key="env" @click="changeTab(env)" :href="`#${env}`">
-            {{ env }}
-            <v-icon v-if="icons">mdi-phone</v-icon>
-          </v-tab>
+          <v-tab
+            v-for="env in envlist"
+            :key="env"
+            @click="changeTab(env)"
+            :href="`#${env}`"
+          >{{ env }}</v-tab>
 
           <v-tab-item v-for="env in envlist" :key="env" :value="env">
             <v-card-text>
