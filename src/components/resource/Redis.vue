@@ -2,7 +2,13 @@
   <div>
     <v-card-title>Redis</v-card-title>
 
-    <v-data-table :headers="headers" :items="existItems" :search="search" hide-default-footer>
+    <v-data-table
+      v-if="existItems.length!=0"
+      :headers="headers"
+      :items="existItems"
+      :search="search"
+      hide-default-footer
+    >
       <template v-slot:body="{ items }">
         <tbody>
           <tr v-for="item in items" :key="item.id">

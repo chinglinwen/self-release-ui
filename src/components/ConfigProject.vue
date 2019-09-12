@@ -317,8 +317,30 @@ export default {
       this.getInfo();
       console.log("infos: ", this.infos);
 
-      // this.resources = this.getResource(this.project)
-      // this.getResource(this.project)
+      // this.resources = this.getResource(this.project);
+      // let a = this.getResource(this.project);
+
+      // this.all.online = convert(this.resources["online"]);
+      //   this.all.pre = convert(this.resources["pre"]);
+      //   this.all.test = convert(this.resources["test"]);
+      //   this.x = this.all.online;
+      //   this._x = Object.assign({}, this.x);
+
+      let x = {
+        existMysql: [],
+        existEnvs: [],
+        existRedis: [],
+        existNfs: []
+      };
+
+      // need to initialied
+      this.all.online = x;
+      this.all.pre = x;
+      this.all.test = x;
+      this.x = x;
+      this._x = Object.assign({}, this.x);
+
+      console.log("getResource: ", this.resources);
 
       fetch(
         "http://192.168.10.234:8089/api/projects/" +
@@ -330,25 +352,18 @@ export default {
         .then(json => {
           this.resources = json.data;
           // a = json;
-          console.log("get resource: ", json.data);
+          console.log("get resource api: ", json.data);
 
           // await this.getResource(this.project);
 
           this.all.online = convert(this.resources["online"]);
           this.all.pre = convert(this.resources["pre"]);
           this.all.test = convert(this.resources["test"]);
-
-          // console.log("try get resource for env: ", this.envlist[this.tab]);
-          // this.x = convert(this.resources[this.env]);
-          // this.x = convert(this.resources[this.envlist[this.tab]]);
           this.x = this.all.online;
-
           this._x = Object.assign({}, this.x);
-
-          debugger;
         })
         .catch(error => {
-          console.log("get resource err", error);
+          console.log("get resource api err", error);
         });
     },
     mysqlDelete(item) {
@@ -457,12 +472,22 @@ export default {
       // let namewithpath = this.project.name.split("/");
       // let ns = namewithpath[0];
 
-      // let a = {};
-      return fetch(
-        "http://192.168.10.234:8089/api/projects/" +
-          this.project.name +
-          "/values"
-      ).then(response => response.json());
+      // const json = await fetch(
+      //   "http://192.168.10.234:8089/api/projects/" +
+      //     this.project.name +
+      //     "/values"
+      // ).then(response => response.json());
+      // console.log(json);
+      // debugger;
+      // return json;
+
+      // // let a = {};
+      // return fetch(
+      //   "http://192.168.10.234:8089/api/projects/" +
+      //     this.project.name +
+      //     "/values"
+      // ).then(response => response.json());
+
       // .then(json => {
       //   // this.resources = json;
       //   a = json;
@@ -486,7 +511,7 @@ export default {
 
       // "http://192.168.10.234:8089/api/resources/xindaiquan"
       // return json array
-      // return JSON.parse(_existResource);
+      return JSON.parse(_existResource);
       // debugger;
       // return a.data;
     },
@@ -555,6 +580,11 @@ function convert(resources) {
       existEnvs: [],
       existRedis: [],
       existNfs: []
+
+      // existMysql: null,
+      // existEnvs: null,
+      // existRedis: null,
+      // existNfs: null
     };
     console.log("convert empty, return empty back", x);
     return x;
@@ -681,6 +711,30 @@ function replacer(key, value) {
   else return value;
 }
 var _existResource = `{
+  "online": {
+    "envs": {
+        "EXAMPLE-KEYdemo": "EXAMPLE-valuedemo"
+    },
+    "mysql": [
+        {
+          "name": "10-107-3307-liuliang",
+          "host": "DB_HOSTdemo",
+          "port": "DB_PORT",
+          "database": "DB_DATABASE",
+          "username": "DB_USERNAME",
+          "password": "DB_PASSWORD"
+        }
+    ],
+    "codis": {
+        
+    },
+    "nfs": [
+      
+    ]
+  }
+}`;
+
+var _existResource2 = `{
   "online": {
     "envs": {
         "EXAMPLE-KEY": "EXAMPLE-value"

@@ -2,7 +2,13 @@
   <div>
     <v-card-title>Environments</v-card-title>
 
-    <v-data-table :headers="headers" :items="existItems" :search="search" hide-default-footer>
+    <v-data-table
+      v-if="existItems.length!=0"
+      :headers="headers"
+      :items="existItems"
+      :search="search"
+      hide-default-footer
+    >
       <template v-slot:body="{ items }">
         <tbody>
           <tr v-for="item in items" :key="item.id">
@@ -159,7 +165,6 @@ export default {
   created() {
     console.log("env existItems", this.existItems);
     console.log("env items", this.items);
-    debugger;
   },
   methods: {
     // updateselect() {
