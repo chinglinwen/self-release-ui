@@ -210,10 +210,11 @@ export default {
     },
     _x: {},
 
-    online: {},
-    pre: {},
-    test: {},
-
+    all: {
+      online: {},
+      pre: {},
+      test: {}
+    },
     // existResource: {},
 
     // cache
@@ -302,11 +303,11 @@ export default {
       console.log("changed to env key: ", env);
       // console.log("changed to tab: ", this.tab, "env:", this.envlist[this.tab]);
 
-      console.log("online: ", this.online);
-      console.log("pre: ", this.pre);
-      console.log("test: ", this.test);
+      console.log("online: ", this.all.online);
+      console.log("pre: ", this.all.pre);
+      console.log("test: ", this.all.test);
 
-      this.x = this[env];
+      this.x = this.all[env];
       console.log("got x: ", this.x, "for env: ", env);
 
       // this.x._existEnvs = Object.assign({}, this.x.existEnvs);
@@ -318,14 +319,14 @@ export default {
 
       this.resources = this.getResource(this.project);
 
-      this.online = convert(this.resources["online"]);
-      this.pre = convert(this.resources["pre"]);
-      this.test = convert(this.resources["test"]);
+      this.all.online = convert(this.resources["online"]);
+      this.all.pre = convert(this.resources["pre"]);
+      this.all.test = convert(this.resources["test"]);
 
       // console.log("try get resource for env: ", this.envlist[this.tab]);
       // this.x = convert(this.resources[this.env]);
       // this.x = convert(this.resources[this.envlist[this.tab]]);
-      this.x = this.online;
+      this.x = this.all.online;
 
       this._x = Object.assign({}, this.x);
     },
@@ -467,13 +468,13 @@ export default {
       return JSON.parse(_existResource);
     },
     submitall() {
-      let a = {};
-      a.envs = this.x.existEnvs;
-      a.mysql = this.x.existMysql;
-      a.codis = this.x.existRedis;
-      a.nfs = this.x.existNfs;
-      let j = JSON.stringify(a);
-      console.log("all", j);
+      // let a = {};
+      // a.envs = this.x.existEnvs;
+      // a.mysql = this.x.existMysql;
+      // a.codis = this.x.existRedis;
+      // a.nfs = this.x.existNfs;
+      let j = JSON.stringify(this.all, replacer, 2);
+      console.log("all:", j);
       console.log("need updateall:", this.updated);
 
       // call api
@@ -608,6 +609,11 @@ function convert(resources) {
   return x;
 }
 
+// ignore field start with underscore
+function replacer(key, value) {
+  if (key.indexOf("_") == 0) return undefined;
+  else return value;
+}
 var _existResource = `{
   "online": {
     "envs": {
