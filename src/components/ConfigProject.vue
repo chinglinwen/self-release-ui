@@ -24,20 +24,15 @@
           <span class="headline">Resource Binding for project: {{ project.name }}</span>
         </v-card-title>
 
-        <!-- <v-tabs>
-        <v-tab v-for="item in envlist" :key="item" v-model="env">{{ item }}</v-tab>-->
         <v-tabs v-model="tab" background-color="deep-purple accent-2" class="elevation-0" dark>
-          <v-tabs-slider></v-tabs-slider>
+          <!-- <v-tabs-slider></v-tabs-slider> -->
 
-          <!-- :href="`#tab-${item}`" -->
-          <v-tab v-for="item in envlist" :key="item" v-model="tab" @click="changeTab(item)">
-            <!-- <div @click="changeTab1">{{ item }}</div> -->
-            {{ item }}
-            <!-- <v-icon v-if="icons">mdi-phone</v-icon> -->
+          <v-tab v-for="env in envlist" :key="env" @click="changeTab(env)" :href="`#${env}`">
+            {{ env }}
+            <v-icon v-if="icons">mdi-phone</v-icon>
           </v-tab>
 
-          <v-tab-item v-model="tab">
-            <!-- <v-tab-item> -->
+          <v-tab-item v-for="env in envlist" :key="env" :value="env">
             <v-card-text>
               <!-- <v-row>
             <v-col v-for="resourceType in resourceTypes" :key="resourceType">
@@ -196,7 +191,9 @@ export default {
     infos: {},
 
     //deploy env
-    tab: 0,
+    tab: "online",
+    // env: 0,
+    // tabs: 3,
     envlist: ["online", "pre", "test"],
 
     x: {
@@ -312,20 +309,7 @@ export default {
 
       // this.x._existEnvs = Object.assign({}, this.x.existEnvs);
       this._x = Object.assign({}, this.x);
-
-      // debugger;
     },
-    // changeTab1(key) {
-    //   // console.log("changed to env key: ", key, this.envlist[key]);
-    //   console.log("func2 changed to env: ", this.env, this.envlist[this.env]);
-
-    //   this.x = convert(this.resources[this.envlist[this.env]]);
-    //   console.log("func2 got x: ", this.x);
-    //   // this.x._existEnvs = Object.assign({}, this.x.existEnvs);
-    //   this._x = Object.assign({}, this.x);
-
-    //   debugger;
-    // },
     opensetting() {
       this.getInfo();
       console.log("infos: ", this.infos);
