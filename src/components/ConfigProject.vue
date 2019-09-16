@@ -156,6 +156,31 @@
                 rounded
                 height="2"
               ></v-progress-linear>
+
+              <v-flex ma="5">
+                <v-snackbar
+                  v-model="iserror"
+                  :bottom="true"
+                  color="error"
+                  :multi-line="true"
+                  :right="true"
+                  :timeout="5000"
+                >
+                  {{ error }}
+                  <v-btn dark text @click="iserror = false">Close</v-btn>
+                </v-snackbar>
+                <v-snackbar
+                  v-model="isokay"
+                  :bottom="true"
+                  color="success"
+                  :multi-line="true"
+                  :right="true"
+                  :timeout="5000"
+                >
+                  {{ okay }}
+                  <v-btn dark text @click="isokay = false">Close</v-btn>
+                </v-snackbar>
+              </v-flex>
             </v-card-text>
           </v-tab-item>
         </v-tabs>
@@ -165,6 +190,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 import Mysql from "./resource/Mysql";
 import Env from "./resource/Env";
 import Redis from "./resource/Redis";
@@ -191,6 +218,12 @@ export default {
     dialog: false,
 
     infos: {},
+
+    iserror: null,
+    error: null,
+
+    isokay: null,
+    okay: null,
 
     //deploy env
     tab: "online",
@@ -316,6 +349,8 @@ export default {
     opensetting() {
       this.getInfo();
       console.log("infos: ", this.infos);
+
+      debugger;
 
       // this.resources = this.getResource(this.project);
       // let a = this.getResource(this.project);
@@ -526,18 +561,86 @@ export default {
       console.log("all:", j);
       console.log("need updateall:", this.updated);
 
-      // call api
-      this.loading = true;
-      // update status
+      if (this.updated) {
+        // call api
+        this.loading = true;
+        // update status
 
-      setTimeout(function() {
-        // alert("hello");
-        this.loading = false;
-        this.dialog = false;
-      }, 3000);
+        debugger;
+        fetch(
+          "http://192.168.10.234:8089/api/projects/" +
+            this.project.name +
+            "/values",
+          {
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json"
+            },
+            method: "post",
+            body: j
+          }
+        )
+          .then(response => response.json())
+          // this.$POST(
+          //   "http://192.168.10.234:8089/api/projects/" +
+          //     this.project.name +
+          //     "/values"
+          // )
+
+          // axios
+          //   .post(
+          //     "http://192.168.10.234:8089/api/projects/" +
+          //       this.project.name +
+          //       "/values"
+          //   )
+          .then(res => {
+            console.log("done submit");
+            console.log("submit result", res);
+            this.loading = false;
+
+            if (res.code == 200) {
+              this.isokay = true;
+              this.okay = "all saved";
+              // this.dialog = false;
+            } else {
+              this.iserror = true;
+              this.error = res.message;
+            }
+          })
+          .catch(err => {
+            console.log(err.message);
+            this.iserror = true;
+            this.error = "unknown error: " + err;
+          });
+      } else {
+        this.iserror = true;
+        this.error = "no change";
+        // let that = this;
+        // setTimeout(function() {
+        //   // alert("hello");
+        //   // this.loading = false;
+        //   // this.dialog = false;
+        // }, 5000);
+      }
+      // // call api
+      // this.loading = true;
+      // // update status
+
+      // let that = this;
+      // setTimeout(function() {
+      //   // alert("hello");
+      //   // this.loading = false;
+      //   // this.dialog = false;
+      //   console.log(this.loading);
+      //   console.log(this.dialog);
+      //   that.loading = false;
+      //   that.dialog = false;
+
+      //   console.log("done submit");
+      // }, 6000);
 
       // this.dialog = false;
-      this.updated = false;
+      // this.updated = false;
       // this.loading = false;
     }
     // getExistMysql() {
@@ -602,8 +705,8 @@ function convert(resources) {
   let e = resources.envs;
   let envsKeys = Object.keys(e);
   let envs = [];
-  let a = {};
   for (let i = 0; i < envsKeys.length; i++) {
+    let a = {};
     a.name = envsKeys[i];
     a.value = e[envsKeys[i]];
     envs.push(a);

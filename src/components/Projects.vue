@@ -85,8 +85,8 @@ export default {
       iserror: false,
       error: "",
       loading: false,
-      projects: [],
-      // projects: mockProjects,
+      // projects: [],
+      projects: mockProjects,
       search: "",
       headers: [
         // {
@@ -107,17 +107,17 @@ export default {
     };
   },
   created() {
-    // return;
-    fetch(
-      // "http://fs.haodai.net/t/projects.json",
-      // "https://jsonplaceholder.typicode.com/users",
-      "http://192.168.10.234:8089/api/projects/"
-    )
-      .then(response => response.json())
-      .then(json => (this.projects = json))
-      .catch(error => {
-        console.log("getProjects err", error);
-      });
+    return;
+    // fetch(
+    //   // "http://fs.haodai.net/t/projects.json",
+    //   // "https://jsonplaceholder.typicode.com/users",
+    //   "http://192.168.10.234:8089/api/projects/"
+    // )
+    //   .then(response => response.json())
+    //   .then(json => (this.projects = json))
+    //   .catch(error => {
+    //     console.log("getProjects err", error);
+    //   });
   },
   methods: {
     // call project init
@@ -142,9 +142,9 @@ export default {
           console.log("called", res);
         })
         .catch(err => {
-          console.log(err.result_msg);
+          console.log(err.message);
           this.iserror = true;
-          this.error = err.result_msg;
+          this.error = err.message;
           project.state = false;
         });
     }

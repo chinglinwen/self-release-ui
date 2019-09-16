@@ -59,14 +59,15 @@ export function get(url, params) {
                 params: params
             })
             .then(res => {
-                if (res.data.code == '200') {
+                if (res.code == '200') {
                     resolve(res.data);
                 } else {
                     // todo
-                    if (res.data && res.data.data && res.data.data.error && res.data.data.error.length) {
-                        res.data.message = res.data.data.error[0];
-                    }
-                    reject(res.data);
+                    // if (res.data && res.data.data && res.data.data.error && res.data.data.error.length) {
+                    //     res.data.message = res.data.data.error[0];
+                    // }
+                    // reject(res.data);
+                    reject(res);
                 }
             })
             .catch(err => {
@@ -84,21 +85,28 @@ export function get(url, params) {
 export function post(url, data) {
     return new Promise((resolve, reject) => {
         console.log(url, data);
+        debugger;
         axios
             .post(url, data)
+            .then(function(response) {
+                // handle success
+                console.log(response);
+            })
             .then(res => {
-                if (res.data.code == '200') {
+                debugger;
+                if (res.code == '200') {
                     resolve(res.data);
                 } else {
                     // todo
-                    if (res.data && res.data.data && res.data.data.error && res.data.data.error.length) {
-                        res.data.message = res.data.data.error[0];
-                    }
-                    reject(res.data);
+                    // if (res.data && res.data.data && res.data.data.error && res.data.data.error.length) {
+                    //     res.data.message = res.data.data.error[0];
+                    // }
+                    // reject(res.data);
+                    reject(res);
                 }
             })
             .catch(err => {
-                console.error(err);
+                console.error("axios err", err);
                 reject({ code: -2, message: '网络错误，请重试' });
             });
     });

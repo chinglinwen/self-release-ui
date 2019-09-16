@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card-title>Environments</v-card-title>
+    <v-card-title>Environments Variables</v-card-title>
 
     <v-data-table
       v-if="existItems.length!=0"
