@@ -159,26 +159,16 @@
 
               <v-flex ma="5">
                 <v-snackbar
-                  v-model="iserror"
+                  v-if="notify"
+                  v-model="notify"
                   :bottom="true"
-                  color="error"
+                  :color="notify.color"
                   :multi-line="true"
                   :right="true"
                   :timeout="5000"
                 >
-                  {{ error }}
-                  <v-btn dark text @click="iserror = false">Close</v-btn>
-                </v-snackbar>
-                <v-snackbar
-                  v-model="isokay"
-                  :bottom="true"
-                  color="success"
-                  :multi-line="true"
-                  :right="true"
-                  :timeout="5000"
-                >
-                  {{ okay }}
-                  <v-btn dark text @click="isokay = false">Close</v-btn>
+                  {{ notify.msg }}
+                  <v-btn dark text @click="notify = false">Close</v-btn>
                 </v-snackbar>
               </v-flex>
             </v-card-text>
@@ -219,11 +209,14 @@ export default {
 
     infos: {},
 
-    iserror: null,
-    error: null,
+    notify: null,
+    // notify: {
+    //   color: null,
+    //   msg: null
+    // },
 
-    isokay: null,
-    okay: null,
+    // isokay: null,
+    // okay: null,
 
     //deploy env
     tab: "online",
@@ -349,8 +342,6 @@ export default {
     opensetting() {
       this.getInfo();
       console.log("infos: ", this.infos);
-
-      debugger;
 
       // this.resources = this.getResource(this.project);
       // let a = this.getResource(this.project);
@@ -551,97 +542,81 @@ export default {
       // return a.data;
     },
     submitall() {
-      // let a = {};
-      // a.envs = this.x.existEnvs;
-      // a.mysql = this.x.existMysql;
-      // a.codis = this.x.existRedis;
-      // a.nfs = this.x.existNfs;
       let a = convertback(this.all);
-      let j = JSON.stringify(a, replacer, 2);
-      console.log("all:", j);
-      console.log("need updateall:", this.updated);
+      let url =
+        // "http://192.168.10.234:8089/api/projects/${this.project.name}/values";
+        "http://192.168.10.234:8089/api/projects/" +
+        this.project.name +
+        "/values";
+      let data = JSON.stringify(a, replacer, 2);
+      // console.log("all:", j);
+      // console.log("need updateall:", this.updated);
 
-      if (this.updated) {
-        // call api
-        this.loading = true;
-        // update status
-
-        debugger;
-        fetch(
-          "http://192.168.10.234:8089/api/projects/" +
-            this.project.name +
-            "/values",
-          {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json"
-            },
-            method: "post",
-            body: j
-          }
-        )
-          .then(response => response.json())
-          // this.$POST(
-          //   "http://192.168.10.234:8089/api/projects/" +
-          //     this.project.name +
-          //     "/values"
-          // )
-
-          // axios
-          //   .post(
-          //     "http://192.168.10.234:8089/api/projects/" +
-          //       this.project.name +
-          //       "/values"
-          //   )
-          .then(res => {
-            console.log("done submit");
-            console.log("submit result", res);
-            this.loading = false;
-
-            if (res.code == 200) {
-              this.isokay = true;
-              this.okay = "all saved";
-              // this.dialog = false;
-            } else {
-              this.iserror = true;
-              this.error = res.message;
-            }
-          })
-          .catch(err => {
-            console.log(err.message);
-            this.iserror = true;
-            this.error = "unknown error: " + err;
-          });
-      } else {
-        this.iserror = true;
-        this.error = "no change";
-        // let that = this;
-        // setTimeout(function() {
-        //   // alert("hello");
-        //   // this.loading = false;
-        //   // this.dialog = false;
-        // }, 5000);
+      if (!this.updated) {
+        this.notify = { color: "orange", msg: "there's no change" };
+        return;
       }
-      // // call api
-      // this.loading = true;
-      // // update status
 
-      // let that = this;
-      // setTimeout(function() {
-      //   // alert("hello");
-      //   // this.loading = false;
-      //   // this.dialog = false;
-      //   console.log(this.loading);
-      //   console.log(this.dialog);
-      //   that.loading = false;
-      //   that.dialog = false;
+      // call api
+      this.loading = true;
+      // update status
 
-      //   console.log("done submit");
-      // }, 6000);
+      // fetch(
+      //   "http://192.168.10.234:8089/api/projects/" +
+      //     this.project.name +
+      //     "/values",
+      //   {
+      //     headers: {
+      //       Accept: "application/json",
+      //       "Content-Type": "application/json"
+      //     },
+      //     method: "post",
+      //     body: j
+      //   }
+      // )
+      //   .then(response => response.json())
 
-      // this.dialog = false;
-      // this.updated = false;
-      // this.loading = false;
+      this.$POST(url, data)
+
+        // console.log("done submit before err", this.err);
+
+        // axios
+        //   .post(
+        //     "http://192.168.10.234:8089/api/projects/" +
+        //       this.project.name +
+        //       "/values"
+        //   )
+
+        // .then(res => {
+        //   console.log("done submit");
+        //   console.log("submit result", res);
+        //   this.loading = false;
+
+        //   if (res.code == 200) {
+        //     this.notify = { color: "success", msg: "all saved" };
+
+        //     // this.dialog = false;
+        //   } else {
+        //     this.notify = { color: "error", msg: res.message };
+        //   }
+        // })
+        // .catch(err => {
+        //   this.notify = true;
+        //   // console.log(err.response.data);
+        //   // console.log(err.response);
+
+        //   this.notify = { color: "red", msg: "unknown errr " + err.message };
+        // });
+
+        .then(res => {
+          console.log("done submit");
+          console.log("submit result", res);
+          this.loading = false;
+          this.notify = { color: "success", msg: "all saved" };
+        })
+        .catch(err => {
+          this.notify = { color: "error", msg: err.message };
+        });
     }
     // getExistMysql() {
     //   let as = [];
