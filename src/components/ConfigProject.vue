@@ -404,14 +404,14 @@ export default {
 
 function convert(resources) {
   console.log("try convert for resource", resources);
-  // if (!resources) {
+  let x = {
+    existMysql: [],
+    existEnvs: [],
+    existRedis: [],
+    existNfs: []
+  };
+
   if (!resources || Object.keys(resources).length == 0) {
-    let x = {
-      existMysql: [],
-      existEnvs: [],
-      existRedis: [],
-      existNfs: []
-    };
     console.log("convert empty, return empty back", x);
     return x;
   }
@@ -421,70 +421,66 @@ function convert(resources) {
     existMysql.forEach((element, i) => {
       element.id = i + 1;
     });
+
+    console.log("exist mysql", existMysql);
+    x.existMysql = existMysql;
   }
-  console.log("exist mysql", existMysql);
 
   // envs
   let e = resources.envs;
-  let envsKeys = Object.keys(e);
-  let envs = [];
-  for (let i = 0; i < envsKeys.length; i++) {
-    let a = {};
-    a.name = envsKeys[i];
-    a.value = e[envsKeys[i]];
-    envs.push(a);
-  }
+  if (e && e.length != 0) {
+    let envsKeys = Object.keys(e);
+    let envs = [];
+    for (let i = 0; i < envsKeys.length; i++) {
+      let a = {};
+      a.name = envsKeys[i];
+      a.value = e[envsKeys[i]];
+      envs.push(a);
+    }
 
-  let existEnvs = envs;
-  if (existEnvs) {
-    existEnvs.forEach((element, i) => {
-      element.id = i + 1;
-    });
+    x.existEnvs = envs;
+    if (x.existEnvs) {
+      x.existEnvs.forEach((element, i) => {
+        element.id = i + 1;
+      });
+    }
+    console.log("exist envs", x.existEnvs);
   }
-  console.log("exist envs", existEnvs);
-
   // transform codis to array
   let r = resources.codis;
-  let redisKeys = Object.keys(r);
-  let redis = [];
-  let a2 = {};
-  for (let i = 0; i < redisKeys.length; i++) {
-    if (i % 2 == 0) {
-      a2 = {};
-      a2.name = r[redisKeys[i]];
-      a2.host = r[redisKeys[i]];
-      a2.hostkey = redisKeys[i];
-    } else {
-      a2.port = r[redisKeys[i]];
-      a2.portkey = redisKeys[i];
-      redis.push(a2);
+  if (r && r.length != 0) {
+    let redisKeys = Object.keys(r);
+    let redis = [];
+    let a2 = {};
+    for (let i = 0; i < redisKeys.length; i++) {
+      if (i % 2 == 0) {
+        a2 = {};
+        a2.name = r[redisKeys[i]];
+        a2.host = r[redisKeys[i]];
+        a2.hostkey = redisKeys[i];
+      } else {
+        a2.port = r[redisKeys[i]];
+        a2.portkey = redisKeys[i];
+        redis.push(a2);
+      }
     }
+    x.existRedis = redis;
+    if (x.existRedis) {
+      x.existRedis.forEach((element, i) => {
+        element.id = i + 1;
+      });
+    }
+    console.log("exist redis", x.existRedis);
   }
-
-  // console.log("redis", redis);
-  let existRedis = redis;
-  if (existRedis) {
-    existRedis.forEach((element, i) => {
-      element.id = i + 1;
-    });
-  }
-  console.log("exist redis", existRedis);
-
   // nfs
   let existNfs = resources.nfs;
   if (existNfs) {
     existNfs.forEach((element, i) => {
       element.id = i + 1;
     });
+    console.log("exist nfs", existNfs);
+    x.existNfs = existNfs;
   }
-  console.log("exist nfs", existNfs);
-
-  let x = {
-    existMysql: existMysql,
-    existEnvs: existEnvs,
-    existRedis: existRedis,
-    existNfs: existNfs
-  };
   return x;
 }
 
