@@ -1,30 +1,13 @@
 <template>
   <v-card>
-    <!-- <v-switch v-model="item.state" :loading="loading" label="sw ${item.state}"></v-switch> -->
-
     <v-toolbar dense color="transparent" flat>
       <v-toolbar-title>
         <h4>Projects</h4>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <!-- <v-text-field
-        prepend-inner-icon="search"
-        :label="search"
-        clearable
-        class="search"
-        v-model.lazy="searchkey"
-        @change="dosearch"
-      ></v-text-field>-->
       <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
-      <!-- <v-btn icon>
-        <v-icon>search</v-icon>
-      </v-btn>-->
-      <!-- <v-btn icon>
-        <v-icon>more_vert</v-icon>
-      </v-btn>-->
     </v-toolbar>
     <v-divider></v-divider>
-
     <v-card-text class="pa-0">
       <template>
         <v-data-table
@@ -51,7 +34,6 @@
                     slabel
                   ></v-switch>
                 </td>
-
                 <td class="text-xs-left">
                   <config-project :project="item" />
                 </td>
@@ -62,9 +44,6 @@
       </template>
       <v-divider></v-divider>
     </v-card-text>
-
-    <!-- <v-alert v-if="iserror" type="error">{{error}}</v-alert> -->
-
     <v-snackbar
       v-model="iserror"
       :bottom="true"
@@ -96,12 +75,6 @@ export default {
       // projects: mockProjects,
       search: "",
       headers: [
-        // {
-        //   text: "",
-        //   align: "center",
-        //   sortable: false,
-        //   value: "avatar"
-        // },
         {
           text: "Project",
           align: "left",
@@ -134,17 +107,10 @@ export default {
     // call project init
     enableProject(project) {
       console.log("enableProject4", project);
-      // + project.id
-
-      // fetch("http://192.168.10.234:8089/api/projects/" + project.id)
-      this.$POST(
-        "http://192.168.10.234:8089/api/projects/" + project.id,
-        { name: "foo", surname: "bar" }
-        //  {
-        //   name: "hello" //project.name
-        // }
-      )
-
+      this.$POST("http://192.168.10.234:8089/api/projects/" + project.id, {
+        name: "foo",
+        surname: "bar"
+      })
         // axios
         //   .post("http://192.168.10.234:8090/api/projects/" + project.id, {
         //     name: "hello" //project.name

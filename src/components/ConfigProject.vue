@@ -9,10 +9,6 @@
       transition="dialog-bottom-transition"
     >
       <template v-slot:activator="{ on }">
-        <!-- <v-btn left text icon color="grey">
-          <v-icon>mdi-settings</v-icon>
-        </v-btn>-->
-        <!-- <v-btn color="primary" dark v-on="on">Open Dialog</v-btn> -->
         <v-btn left color="primary" dark v-on="on" @click="opensetting">Set</v-btn>
       </template>
 
@@ -25,8 +21,6 @@
         </v-card-title>
 
         <v-tabs v-model="tab" background-color="deep-purple accent-2" class="elevation-0" dark>
-          <!-- <v-tabs-slider></v-tabs-slider> -->
-
           <v-tab
             v-for="env in envlist"
             :key="env"
@@ -36,36 +30,7 @@
 
           <v-tab-item v-for="env in envlist" :key="env" :value="env">
             <v-card-text>
-              <!-- <v-row>
-            <v-col v-for="resourceType in resourceTypes" :key="resourceType">
-              <v-btn @click="selectedResource=resourceType">
-                <v-icon>add</v-icon>
-                {{ resourceType }}
-              </v-btn>
-            </v-col>
-              </v-row>-->
-              <!-- <v-container> -->
-
-              <!--           
-          <v-row>
-            <div class="d-flex">
-              <v-select
-                @change="updateselect"
-                :items="envlist"
-                label="deploy env select"
-                name="item"
-                outlined
-                v-model="env"
-              ></v-select>
-            </div>
-              </v-row>-->
-
-              <Env
-                :existItems="x.existEnvs"
-                :items="envs"
-                @add:item="envsSubmit"
-                @delete:item="envsDelete"
-              />
+              <Env :existItems="x.existEnvs" @add:item="envsSubmit" @delete:item="envsDelete" />
 
               <Mysql
                 :existItems="x.existMysql"
@@ -88,63 +53,7 @@
                 @delete:item="nfsDelete"
               />
 
-              <!-- <Redis :items="Redises" />
-              <Nfs :items="mysqls" />-->
-              <!-- <Mysql :mysqls="mysqls" />
-              <Mysql :mysqls="mysqls" />-->
-
-              <!-- <v-card class="d-flex pa-2" outlined tile>
-              <div>Mysql</div>
-              </v-card>-->
-
-              <!-- <v-text-field :label="field.label" :value="field.model"></v-text-field>-->
-
-              <!-- show all mysql first -->
-              <!-- <v-row>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field label="Legal first name*" required></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field label="Legal middle name" hint="example of helper text only on focus"></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field
-                  label="Legal last name*"
-                  hint="example of persistent helper text"
-                  persistent-hint
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field label="Email*" required></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field label="Password*" type="password" required></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-select :items="['0-17', '18-29', '30-54', '54+']" label="Age*" required></v-select>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-autocomplete
-                  :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
-                  label="Interests"
-                ></v-autocomplete>
-              </v-col>
-              </v-row>-->
-              <!-- </v-container> -->
-              <!-- <small>*indicates required field</small> -->
-
-              <!-- <v-text-field v-if="loading" color="success" loading disabled></v-text-field> -->
-
-              <!-- <v-progress-linear
-          :active="loading"
-          :indeterminate="loading"
-          absolute
-          bottom
-          color="deep-purple accent-4"
-              ></v-progress-linear>-->
               <v-card-actions>
-                <!-- <div class="flex-grow-1"></div> -->
                 <v-btn color="blue darken-1" text @click="dialog = false;loading=false">Close</v-btn>
                 <v-btn color="blue darken-1" text @click="submitall">Save All</v-btn>
               </v-card-actions>
@@ -201,27 +110,13 @@ export default {
     }
   },
   data: () => ({
-    // resourceTypes: ["mysql", "Redis", "nfs"],
-    selectedResource: "",
-    showmysql: false,
-    mysql: {},
+    // mysql: {},
+
     dialog: false,
 
-    infos: {},
-
     notify: null,
-    // notify: {
-    //   color: null,
-    //   msg: null
-    // },
-
-    // isokay: null,
-    // okay: null,
-
     //deploy env
     tab: "online",
-    // env: 0,
-    // tabs: 3,
     envlist: ["online", "pre", "test"],
 
     x: {
@@ -249,70 +144,11 @@ export default {
     updated: false,
     loading: false,
 
-    envs: [],
+    infos: {},
+    // envsinfo: [],
     mysqlinfo: [],
-    // [
-    //   {
-    //     id: 0,
-    //     name: "10-107-3307-liuliang",
-    //     // the following are secret keys, not env value
-    //     host: "host1",
-    //     port: "port1",
-    //     database: "database",
-    //     username: "username",
-    //     password: "password"
-    //   },
-    //   {
-    //     id: 0,
-    //     name: "10-107-3307-liuliang2",
-    //     host: "host2",
-    //     port: "port2",
-    //     database: "database",
-    //     username: "username",
-    //     password: "password"
-    //   },
-    //   {
-    //     id: 0,
-    //     name: "10-107-3307-liuliang3",
-    //     host: "host2",
-    //     port: "port2",
-    //     database: "database",
-    //     username: "username",
-    //     password: "password"
-    //   },
-    //   {
-    //     id: 0,
-    //     name: "10-107-3307-liuliang4",
-    //     host: "host2",
-    //     port: "port2",
-    //     database: "database",
-    //     username: "username",
-    //     password: "password"
-    //   }
-    // {
-    //   id: 0,
-    //   name: "aa",
-    //   host: "",
-    //   port: ""
-    // }
-    // ],
     redisinfo: [],
-    // [
-    //   {
-    //     id: 0,
-    //     name: "Redis-proxy-flow-center-loanapi.Redis-cluster",
-    //     host: "Redis-proxy-flow-center-loanapi.Redis-cluster",
-    //     port: "19000"
-    //   }
-    // ],
-    nfsinfo: [
-      {
-        name: "loanapi-public",
-        path: "/data/staticfile_yjr/file_data/openapi",
-        server: "172.31.83.26",
-        mountPath: "/apps/loanapi/www/Public"
-      }
-    ]
+    nfsinfo: []
   }),
   created() {
     if (!this.project.name) this.project.name = "unknown";
@@ -336,21 +172,11 @@ export default {
       this.x = this.all[env];
       console.log("got x: ", this.x, "for env: ", env);
 
-      // this.x._existEnvs = Object.assign({}, this.x.existEnvs);
       this._x = Object.assign({}, this.x);
     },
     opensetting() {
       this.getInfo();
       console.log("infos: ", this.infos);
-
-      // this.resources = this.getResource(this.project);
-      // let a = this.getResource(this.project);
-
-      // this.all.online = convert(this.resources["online"]);
-      //   this.all.pre = convert(this.resources["pre"]);
-      //   this.all.test = convert(this.resources["test"]);
-      //   this.x = this.all.online;
-      //   this._x = Object.assign({}, this.x);
 
       let x = {
         existMysql: [],
@@ -366,8 +192,6 @@ export default {
       this.x = x;
       this._x = Object.assign({}, this.x);
 
-      // console.log("getResource: ", this.resources);
-
       fetch(
         "http://192.168.10.234:8089/api/projects/" +
           this.project.name +
@@ -377,11 +201,6 @@ export default {
 
         .then(json => {
           this.resources = json.data;
-          // a = json;
-          // console.log("get resource api: ", json.data);
-
-          // await this.getResource(this.project);
-
           this.all.online = convert(this.resources["online"]);
           this.all.pre = convert(this.resources["pre"]);
           this.all.test = convert(this.resources["test"]);
@@ -467,7 +286,6 @@ export default {
       if (JSON.stringify(this.x._existNfs) == JSON.stringify(this.x.existNfs)) {
         console.log("no need update nfs");
       }
-
       let a = this.x.existNfs.find(e => e.id === item.id);
       if (!a) {
         this.x.existNfs.push(Object.assign({}, item));
@@ -554,13 +372,10 @@ export default {
     submitall() {
       let a = convertback(this.all);
       let url =
-        // "http://192.168.10.234:8089/api/projects/${this.project.name}/values";
         "http://192.168.10.234:8089/api/projects/" +
         this.project.name +
         "/values";
       let data = JSON.stringify(a, replacer, 2);
-      // console.log("all:", j);
-      // console.log("need updateall:", this.updated);
 
       if (!this.updated) {
         this.notify = { color: "orange", msg: "there's no change" };
@@ -569,55 +384,7 @@ export default {
 
       // call api
       this.loading = true;
-      // update status
-
-      // fetch(
-      //   "http://192.168.10.234:8089/api/projects/" +
-      //     this.project.name +
-      //     "/values",
-      //   {
-      //     headers: {
-      //       Accept: "application/json",
-      //       "Content-Type": "application/json"
-      //     },
-      //     method: "post",
-      //     body: j
-      //   }
-      // )
-      //   .then(response => response.json())
-
       this.$POST(url, data)
-
-        // console.log("done submit before err", this.err);
-
-        // axios
-        //   .post(
-        //     "http://192.168.10.234:8089/api/projects/" +
-        //       this.project.name +
-        //       "/values"
-        //   )
-
-        // .then(res => {
-        //   console.log("done submit");
-        //   console.log("submit result", res);
-        //   this.loading = false;
-
-        //   if (res.code == 200) {
-        //     this.notify = { color: "success", msg: "all saved" };
-
-        //     // this.dialog = false;
-        //   } else {
-        //     this.notify = { color: "error", msg: res.message };
-        //   }
-        // })
-        // .catch(err => {
-        //   this.notify = true;
-        //   // console.log(err.response.data);
-        //   // console.log(err.response);
-
-        //   this.notify = { color: "red", msg: "unknown errr " + err.message };
-        // });
-
         .then(res => {
           console.log("done submit");
           console.log("submit result", res);
@@ -628,34 +395,6 @@ export default {
           this.notify = { color: "error", msg: err.message };
         });
     }
-    // getExistMysql() {
-    //   let as = [];
-    //   let mysql = this.x.existResource.mysql;
-    //   let name = "";
-    //   console.log("existMysql", mysql, "length", mysql.length);
-    //   for (let i = 0; i < mysql.length; i++) {
-    //     name = mysql[i].secret;
-    //     if (i == 0) {
-    //       let a = {};
-    //       a.name = name;
-    //     }
-    //     // console.log("mysql[i]:", );
-    //     // console.log("a[secret]:", a[secret]);
-    //     // console.log("a[mysql[i].secret]:", a[mysql[i].secret]);
-
-    //     let key = mysql[i].key;
-    //     // if (i == 0) {
-    //     //   a[secret] = {};
-    //     // }
-    //     // a[secret] = a[secret][key] ? {} : a[secret];
-    //     a[key] = mysql[i].name;
-    //     as.push(a);
-    //   }
-
-    //   console.log("as", as);
-    //   // debugger;
-    //   return as;
-    // }
   }
 };
 
@@ -668,11 +407,6 @@ function convert(resources) {
       existEnvs: [],
       existRedis: [],
       existNfs: []
-
-      // existMysql: null,
-      // existEnvs: null,
-      // existRedis: null,
-      // existNfs: null
     };
     console.log("convert empty, return empty back", x);
     return x;
@@ -741,15 +475,6 @@ function convert(resources) {
   }
   console.log("exist nfs", existNfs);
 
-  // this.x.existResource = resources;
-
-  // for later to compare
-  // this.x._existMysql = Object.assign({}, this.x.existMysql);
-  // this.x._existEnvs = Object.assign({}, this.x.existEnvs);
-  // this.x._existRedis = Object.assign({}, this.x.existRedis);
-  // this.x._existNfs = Object.assign({}, this.x.existNfs);
-  // envResource
-
   let x = {
     existMysql: existMysql,
     existEnvs: existEnvs,
@@ -798,59 +523,4 @@ function replacer(key, value) {
   if (key.indexOf("_") == 0) return undefined;
   else return value;
 }
-// var _existResource = `{
-//   "online": {
-//     "envs": {
-//         "EXAMPLE-KEYdemo": "EXAMPLE-valuedemo"
-//     },
-//     "mysql": [
-//         {
-//           "name": "10-107-3307-liuliang",
-//           "host": "DB_HOSTdemo",
-//           "port": "DB_PORT",
-//           "database": "DB_DATABASE",
-//           "username": "DB_USERNAME",
-//           "password": "DB_PASSWORD"
-//         }
-//     ],
-//     "codis": {
-
-//     },
-//     "nfs": [
-
-//     ]
-//   }
-// }`;
-
-// var _existResource2 = `{
-//   "online": {
-//     "envs": {
-//         "EXAMPLE-KEY": "EXAMPLE-value"
-//     },
-//     "mysql": [
-//         {
-//           "name": "10-107-3307-liuliang",
-//           "host": "DB_HOST",
-//           "port": "DB_PORT",
-//           "database": "DB_DATABASE",
-//           "username": "DB_USERNAME",
-//           "password": "DB_PASSWORD"
-//         }
-//     ],
-//     "codis": {
-//         "SESSION_REDIS_HOST": "codis-proxy-flow-center-loanapi.codis-cluster",
-//         "SESSION_REDIS_PORT": "19000",
-//         "REDIS_HOST": "192.168.10.99",
-//         "REDIS_PORT": "7201"
-//     },
-//     "nfs": [
-//         {
-//           "name": "loanapi-public",
-//           "path": "/data/staticfile_yjr/file_data/openapi",
-//           "server": "172.31.83.26",
-//           "mountPath": "/apps/loanapi/www/Publicdemo"
-//         }
-//     ]
-//   }
-// }`;
 </script>

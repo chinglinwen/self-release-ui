@@ -53,20 +53,6 @@
 
     <v-container>
       <div v-if="creating">
-        <!-- <v-row>
-          <div class="d-flex">
-            <v-select
-              @change="updateselect"
-              :items="items"
-              label="env select"
-              name="item"
-              outlined
-              v-model="itemname"
-              item-text="name"
-            ></v-select>
-          </div>
-        </v-row>-->
-
         <v-container>
           <v-row>
             <v-layout>
@@ -82,15 +68,9 @@
               </v-flex>
             </v-layout>
           </v-row>
-          <!-- <v-row class="float-right">
-            <v-btn text @click="cancelCreate(item)">cancel</v-btn>
-            <v-btn text @click="handleSubmit(item)">save</v-btn>
-          </v-row>-->
         </v-container>
       </div>
     </v-container>
-
-    <!-- <div class="flex-grow-1"></div> -->
   </div>
 </template>
 
@@ -98,7 +78,7 @@
 export default {
   props: {
     exist: false,
-    items: Array,
+    // items: Array,
     existItems: Array
   },
   data: () => ({
@@ -120,14 +100,6 @@ export default {
       portkey: "PORT"
     },
     itemname: ""
-    // default value
-    // defaultItem: {
-    //   host: "HOST",
-    //   port: "PORT",
-    //   database: "DATABASE",
-    //   username: "USERNAME",
-    //   password: "PASSWORD"
-    // }
   }),
   computed: {
     // itemlabel: item => {
@@ -142,11 +114,6 @@ export default {
     },
 
     hostkeylabel() {
-      // debugger;
-      // let t = "";
-      // if (!this.exist) {
-      //   t = "(default)";
-      // }
       return "host env name: ";
     },
     portkeylabel() {
@@ -170,25 +137,10 @@ export default {
     formIsValid(item) {
       return item.name && item.value;
     },
-    // updateselect() {
-    //   this.item = this.items.find(item => item.host == this.itemname);
-    //   this.item.hostkey = this.defaultItem.hostkey;
-    //   this.item.portkey = this.defaultItem.portkey;
-    // },
-    // updateenv() {
-    //   console.log("update env", this.host, this.port);
-    // },
     checkitem(item) {
       console.log("show detail div", this.itemname);
       return this.itemname != undefined && this.itemname != "";
     },
-    // itemExist(item) {
-    //   if (this.existItems.find(e => (e.name = item.id)) != undefined) {
-    //     return false;
-    //   }
-    //   return true;
-    // },
-
     editMode(item) {
       this.cacheditem = Object.assign({}, item);
       this.editing = item.id;
@@ -208,9 +160,6 @@ export default {
       this.$emit("edit:item", item.id, item);
       this.editing = null;
     },
-
-    // Duplicate keys detected: '10-107-3307-liuliang2'. This may cause an update error.
-    // this is why using id
     deleteItem(item) {
       if (item.id === "") return;
       console.log("delete", item);

@@ -88,11 +88,6 @@
               </v-flex>
             </v-layout>
           </v-row>
-          <!-- <v-flex md2>
-            <v-btn text @click="cancelCreate(item)">cancel</v-btn>
-            <v-btn text @click="handleSubmit(item)">save</v-btn>
-          </v-flex>-->
-
           <v-row class="float-right">
             <v-btn text @click="cancelCreate(item)">cancel</v-btn>
             <v-btn text :disabled="!formIsValid(item)" @click="handleSubmit(item)">save</v-btn>
@@ -100,7 +95,6 @@
         </v-container>
       </div>
     </v-container>
-    <!-- <div class="flex-grow-1"></div> -->
   </div>
 </template>
 
@@ -130,27 +124,12 @@ export default {
     ],
     item: {},
     defaultItem: {
-      // name: "?",
-      // path: "?",
-      // server: "?",
       mountPath: "/apps/? /www/Public"
     },
     itemname: ""
-    // default value
-    // defaultItem: {
-    //   host: "HOST",
-    //   port: "PORT",
-    //   database: "DATABASE",
-    //   username: "USERNAME",
-    //   password: "PASSWORD"
-    // }
   }),
   computed: {
-    // itemlabel: item => {
-    //   return item.name;
-    // },
     hostlabel() {
-      // debugger;
       let t = "";
       if (!this.exist) {
         t = "(default)";
@@ -181,9 +160,6 @@ export default {
       this.item = this.items.find(item => item.name == this.itemname);
       this.item.mountPath = this.defaultItem.mountPath;
     },
-    // updateenv() {
-    //   console.log("update env", this.host, this.port);
-    // },
     checkitem(item) {
       console.log("show detail div", this.itemname);
       return this.itemname != undefined && this.itemname != "";
@@ -215,16 +191,12 @@ export default {
       this.$emit("edit:item", item.id, item);
       this.editing = null;
     },
-
-    // Duplicate keys detected: '10-107-3307-liuliang2'. This may cause an update error.
-    // this is why using id
     deleteItem(item) {
       if (item.id === "" || item.name === "") return;
       console.log("delete", item);
       this.$emit("delete:item", item);
       this.editing = null;
     },
-
     // form
     handleSubmit(item, update) {
       this.clearStatus();
@@ -235,18 +207,15 @@ export default {
           item.id = this.existItems[this.existItems.length - 1].id + 1;
         }
       }
-
       if (item.name === "") {
         this.error = true;
         return;
       }
       this.$emit("add:item", item);
-
       this.success = true;
       this.error = false;
       this.submitting = false;
     },
-
     clearStatus() {
       this.success = false;
       this.error = false;
