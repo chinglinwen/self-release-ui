@@ -59,6 +59,7 @@
 </template>
 
 <script>
+var domain = "http://release.haodai.net";
 import axios from "axios";
 import ConfigProject from "./ConfigProject.vue";
 
@@ -90,9 +91,8 @@ export default {
     // return;
     this.loading = true;
     fetch(
-      // "http://fs.haodai.net/t/projects.json",
-      // "https://jsonplaceholder.typicode.com/users",
-      "http://192.168.10.234:8089/api/projects/"
+      // "http://192.168.10.234:8089/api/projects/"
+      domain + "/api/projects/"
     )
       .then(response => response.json())
       .then(json => {

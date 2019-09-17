@@ -86,6 +86,7 @@
 </template>
 
 <script>
+var domain = "http://release.haodai.net";
 import Mysql from "./resource/Mysql";
 import Env from "./resource/Env";
 import Redis from "./resource/Redis";
@@ -173,11 +174,7 @@ export default {
       // this._all = Object.assign({}, this.all);
       this._all = JSON.parse(JSON.stringify(this.all));
 
-      fetch(
-        "http://192.168.10.234:8089/api/projects/" +
-          this.project.name +
-          "/values"
-      )
+      fetch(domain + "/api/projects/" + this.project.name + "/values")
         .then(response => response.json())
 
         .then(json => {
@@ -250,7 +247,7 @@ export default {
     },
     getInfo() {
       console.log("fetching info in the background");
-      fetch("http://192.168.10.234:8089/api/resources/" + this.ns)
+      fetch(domain + "/api/resources/" + this.ns)
         .then(response => response.json())
         // .then(json => (this.infos = json))
         .then(json => {
@@ -264,7 +261,7 @@ export default {
           console.log("getinfos err", error);
         });
 
-      fetch("http://192.168.10.234:8006/api/")
+      fetch("http://nfssvc.newops.haodai.net/api/")
         .then(response => response.json())
         .then(json => {
           console.log("infos", json);
@@ -285,10 +282,7 @@ export default {
       this.submitting = true;
 
       let a = convertback(this.all);
-      let url =
-        "http://192.168.10.234:8089/api/projects/" +
-        this.project.name +
-        "/values";
+      let url = domain + "/api/projects/" + this.project.name + "/values";
       let data = JSON.stringify(a, replacer, 2);
 
       // call api
