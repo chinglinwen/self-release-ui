@@ -15,7 +15,7 @@
     </template>
 
     <v-card>
-      <v-btn @click="dialog = false">
+      <v-btn @click="close">
         <v-icon>arrow_back_ios</v-icon>
       </v-btn>
       <v-card-title outline>
@@ -51,7 +51,7 @@
             />
 
             <v-card-actions>
-              <v-btn color="blue darken-1" text @click="dialog = false;loading=false">Close</v-btn>
+              <v-btn color="blue darken-1" text @click="close">Close</v-btn>
               <v-btn :disabled="submitting" color="blue darken-1" text @click="submitall">Save All</v-btn>
             </v-card-actions>
 
@@ -193,6 +193,11 @@ export default {
         .catch(error => {
           console.log("get resource api err", error);
         });
+    },
+    close() {
+      this.notify = null;
+      this.dialog = false;
+      this.loading = false;
     },
     mysqlDelete(item) {
       this.x.existMysql = this.x.existMysql.filter(value => {
