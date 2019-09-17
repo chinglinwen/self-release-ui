@@ -26,14 +26,14 @@
                 <td class="text-xs-left">
                   <a :href="item.git" target="_blank">{{ item.git }}</a>
                 </td>
-                <td>
+                <!-- <td>
                   <v-switch
                     v-model="item.state"
                     :loading="loading"
                     @change="enableProject(item)"
                     slabel
                   ></v-switch>
-                </td>
+                </td>-->
                 <td class="text-xs-left">
                   <config-project :project="item" />
                 </td>
@@ -81,7 +81,7 @@ export default {
           value: "name"
         },
         { text: "Git Address", value: "git" },
-        { text: "State", value: "state" },
+        // { text: "State", value: "state" },
         { text: "Action", value: "action", align: "left" }
       ]
     };
@@ -104,9 +104,8 @@ export default {
       });
   },
   methods: {
-    // call project init
+    // call project init?
     enableProject(project) {
-      console.log("enableProject4", project);
       this.$POST("http://192.168.10.234:8089/api/projects/" + project.id, {
         name: "foo",
         surname: "bar"
