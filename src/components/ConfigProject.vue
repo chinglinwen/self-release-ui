@@ -366,7 +366,7 @@ export default {
       this.x = x;
       this._x = Object.assign({}, this.x);
 
-      console.log("getResource: ", this.resources);
+      // console.log("getResource: ", this.resources);
 
       fetch(
         "http://192.168.10.234:8089/api/projects/" +
@@ -378,7 +378,7 @@ export default {
         .then(json => {
           this.resources = json.data;
           // a = json;
-          console.log("get resource api: ", json.data);
+          // console.log("get resource api: ", json.data);
 
           // await this.getResource(this.project);
 
@@ -490,6 +490,16 @@ export default {
         })
         .catch(error => {
           console.log("getinfos err", error);
+        });
+
+      fetch("http://192.168.10.234:8006/api/")
+        .then(response => response.json())
+        .then(json => {
+          console.log("infos", json);
+          this.nfsinfo = json.data;
+        })
+        .catch(error => {
+          console.log("get nfs infos err", error);
         });
       return;
     },

@@ -1,75 +1,155 @@
 <template>
-  <div>
-    <v-tabs
-      v-model="tab"
-      background-color="deep-purple accent-4"
-      class="elevation-2"
-      dark
-      :centered="centered"
-      :grow="grow"
-      :vertical="vertical"
-      :right="right"
-      :prev-icon="prevIcon ? 'mdi-arrow-left-bold-box-outline' : undefined"
-      :next-icon="nextIcon ? 'mdi-arrow-right-bold-box-outline' : undefined"
-      :icons-and-text="icons"
-    >
-      <!-- <v-tabs-slider></v-tabs-slider> -->
-
-      <v-tab v-for="i in tabs" :key="i" :href="`#tab-${i}`">
-        Tab {{ i }}
-        <v-icon v-if="icons">mdi-phone</v-icon>
-      </v-tab>
-
-      <v-tab-item v-for="i in tabs" :key="i" :value="'tab-' + i">
-        <v-card flat tile>
-          <v-card-text>{{ text }} {{ i }}</v-card-text>
-
-          <v-container>
-            <v-row>
-              <v-layout>
-                <v-flex md2 pa-2>
-                  <v-text-field label="env key" v-model="item.name"></v-text-field>
-                </v-flex>
-                <v-flex md2 pa-2>
-                  <v-text-field label="env value" v-model="item.value"></v-text-field>
-                </v-flex>
-                <v-flex md2 py-5>
-                  <v-btn text>cancel</v-btn>
-                  <v-btn text>save</v-btn>
-                </v-flex>
-              </v-layout>
-            </v-row>
-            <!-- <v-row class="float-right">
-            <v-btn text @click="cancelCreate(item)">cancel</v-btn>
-            <v-btn text @click="handleSubmit(item)">save</v-btn>
-            </v-row>-->
-          </v-container>
-        </v-card>
-      </v-tab-item>
-    </v-tabs>
-  </div>
+  <v-card flat>
+    <v-snackbar v-model="snackbar" absolute top right color="success">
+      <span>Registration successful!</span>
+      <v-icon dark>mdi-checkbox-marked-circle</v-icon>
+    </v-snackbar>
+    <v-form ref="form" @submit.prevent="submit">
+      <v-container fluid>
+        <v-row>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              v-model="form.first"
+              :rules="rules.name"
+              color="purple darken-2"
+              label="First name"
+              required
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              v-model="form.last"
+              :rules="rules.name"
+              color="blue darken-2"
+              label="Last name"
+              required
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <v-textarea v-model="form.bio" color="teal">
+              <template v-slot:label>
+                <div>
+                  Bio
+                  <small>(optional)</small>
+                </div>
+              </template>
+            </v-textarea>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-select
+              v-model="form.favoriteAnimal"
+              :items="animals"
+              :rules="rules.animal"
+              color="pink"
+              label="Favorite animal"
+              required
+            ></v-select>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-slider
+              v-model="form.age"
+              :rules="rules.age"
+              color="orange"
+              label="Age"
+              hint="Be honest"
+              min="1"
+              max="100"
+              thumb-label
+            ></v-slider>
+          </v-col>
+          <v-col cols="12">
+            <v-checkbox v-model="form.terms" color="green">
+              <template v-slot:label>
+                <div @click.stop>
+                  Do you accept the
+                  <a href="javascript:;" @click.stop="terms = true">terms</a>
+                  and
+                  <a
+                    href="javascript:;"
+                    @click.stop="conditions = true"
+                  >conditions?</a>
+                </div>
+              </template>
+            </v-checkbox>
+          </v-col>
+        </v-row>
+      </v-container>
+      <v-card-actions>
+        <v-btn text @click="resetForm">Cancel</v-btn>
+        <div class="flex-grow-1"></div>
+        <v-btn :disabled="!formIsValid" text color="primary" type="submit">Register</v-btn>
+      </v-card-actions>
+    </v-form>
+    <v-dialog v-model="terms" width="70%">
+      <v-card>
+        <v-card-title class="title">Terms</v-card-title>
+        <v-card-text v-for="n in 5" :key="n">{{ content }}</v-card-text>
+        <v-card-actions>
+          <div class="flex-grow-1"></div>
+          <v-btn text color="purple" @click="terms = false">Ok</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="conditions" width="70%">
+      <v-card>
+        <v-card-title class="title">Conditions</v-card-title>
+        <v-card-text v-for="n in 5" :key="n">{{ content }}</v-card-text>
+        <v-card-actions>
+          <div class="flex-grow-1"></div>
+          <v-btn text color="purple" @click="conditions = false">Ok</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-card>
 </template>
-
 <script>
 export default {
   data() {
+    const defaultForm = Object.freeze({
+      first: "",
+      last: "",
+      bio: "",
+      favoriteAnimal: "",
+      age: null,
+      terms: false
+    });
+
     return {
-      item: {
-        name: "hel",
-        value: "val"
+      form: Object.assign({}, defaultForm),
+      rules: {
+        age: [val => val < 10 || `I don't believe you!`],
+        animal: [val => (val || "").length > 0 || "This field is required"],
+        name: [val => (val || "").length > 0 || "This field is required"]
       },
-      tab: null,
-      text:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-      icons: false,
-      centered: false,
-      grow: false,
-      vertical: false,
-      prevIcon: false,
-      nextIcon: false,
-      right: false,
-      tabs: 3
+      animals: ["Dog", "Cat", "Rabbit", "Turtle", "Snake"],
+      conditions: false,
+      content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta. Mauris massa. Vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur sodales ligula in libero. Sed dignissim lacinia nunc.`,
+      snackbar: false,
+      terms: false,
+      defaultForm
     };
+  },
+
+  computed: {
+    formIsValid() {
+      return (
+        this.form.first &&
+        this.form.last &&
+        this.form.favoriteAnimal &&
+        this.form.terms
+      );
+    }
+  },
+
+  methods: {
+    resetForm() {
+      this.form = Object.assign({}, this.defaultForm);
+      this.$refs.form.reset();
+    },
+    submit() {
+      this.snackbar = true;
+      this.resetForm();
+    }
   }
 };
 </script>

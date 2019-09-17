@@ -43,7 +43,7 @@
               <v-btn @click="cancelEdit(item)">
                 <v-icon outline>cancel</v-icon>
               </v-btn>
-              <v-btn @click="handleSubmit(item,true)">
+              <v-btn :disabled="!formIsValid(item)" @click="handleSubmit(item,true)">
                 <v-icon>save</v-icon>
               </v-btn>
             </td>
@@ -101,7 +101,7 @@
 
               <v-flex md2 py-5>
                 <v-btn text @click="cancelCreate(item)">cancel</v-btn>
-                <v-btn text @click="handleSubmit(item)">save</v-btn>
+                <v-btn :disabled="!formIsValid(item)" text @click="handleSubmit(item)">save</v-btn>
               </v-flex>
             </v-layout>
           </v-row>
@@ -177,6 +177,15 @@ export default {
     console.log("mysql items", this.items);
   },
   methods: {
+    formIsValid(item) {
+      return (
+        item.host &&
+        item.port &&
+        item.database &&
+        item.username &&
+        item.password
+      );
+    },
     updateselect() {
       // this.item = this.items.find(item => item.name == this.itemname);
       // create new variable, avoid change to existItem.

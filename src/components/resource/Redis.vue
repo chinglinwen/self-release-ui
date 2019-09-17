@@ -39,7 +39,7 @@
               <v-btn @click="cancelEdit(item)">
                 <v-icon outline>cancel</v-icon>
               </v-btn>
-              <v-btn @click="handleSubmit(item,true)">
+              <v-btn :disabled="!formIsValid(item)" @click="handleSubmit(item,true)">
                 <v-icon>save</v-icon>
               </v-btn>
             </td>
@@ -93,7 +93,7 @@
               </v-flex>
               <v-flex md2 py-5>
                 <v-btn text @click="cancelCreate(item)">cancel</v-btn>
-                <v-btn text @click="handleSubmit(item)">save</v-btn>
+                <v-btn text :disabled="!formIsValid(item)" @click="handleSubmit(item)">save</v-btn>
               </v-flex>
             </v-layout>
           </v-row>
@@ -182,6 +182,9 @@ export default {
     console.log("existItems", this.existItems);
   },
   methods: {
+    formIsValid(item) {
+      return item.hostkey && item.host && item.portkey && item.port;
+    },
     updateselect() {
       // let a = Object.assign(
       //   (this.item = this.items.find(item => item.host == this.itemname)),

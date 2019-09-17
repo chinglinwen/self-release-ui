@@ -27,7 +27,14 @@
 
     <v-card-text class="pa-0">
       <template>
-        <v-data-table :headers="headers" :items="projects" :search="search" class="elevation-0">
+        <v-data-table
+          :headers="headers"
+          :items="projects"
+          :search="search"
+          class="elevation-0"
+          :loading="loading"
+          loading-text="Loading... Please wait"
+        >
           <template v-slot:body="{ items }">
             <tbody>
               <tr v-for="item in items" :key="item.name">
@@ -85,8 +92,8 @@ export default {
       iserror: false,
       error: "",
       loading: false,
-      // projects: [],
-      projects: mockProjects,
+      projects: [],
+      // projects: mockProjects,
       search: "",
       headers: [
         // {
@@ -107,17 +114,21 @@ export default {
     };
   },
   created() {
-    return;
-    // fetch(
-    //   // "http://fs.haodai.net/t/projects.json",
-    //   // "https://jsonplaceholder.typicode.com/users",
-    //   "http://192.168.10.234:8089/api/projects/"
-    // )
-    //   .then(response => response.json())
-    //   .then(json => (this.projects = json))
-    //   .catch(error => {
-    //     console.log("getProjects err", error);
-    //   });
+    // return;
+    this.loading = true;
+    fetch(
+      // "http://fs.haodai.net/t/projects.json",
+      // "https://jsonplaceholder.typicode.com/users",
+      "http://192.168.10.234:8089/api/projects/"
+    )
+      .then(response => response.json())
+      .then(json => {
+        this.projects = json;
+        this.loading = false;
+      })
+      .catch(error => {
+        console.log("getProjects err", error);
+      });
   },
   methods: {
     // call project init

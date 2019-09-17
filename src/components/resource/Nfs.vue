@@ -34,7 +34,7 @@
               <v-btn @click="cancelEdit(item)">
                 <v-icon outline>cancel</v-icon>
               </v-btn>
-              <v-btn @click="handleSubmit(item,true)">
+              <v-btn :disabled="!formIsValid(item)" @click="handleSubmit(item,true)">
                 <v-icon>save</v-icon>
               </v-btn>
             </td>
@@ -95,7 +95,7 @@
 
           <v-row class="float-right">
             <v-btn text @click="cancelCreate(item)">cancel</v-btn>
-            <v-btn text @click="handleSubmit(item)">save</v-btn>
+            <v-btn text :disabled="!formIsValid(item)" @click="handleSubmit(item)">save</v-btn>
           </v-row>
         </v-container>
       </div>
@@ -174,6 +174,9 @@ export default {
     console.log("existItems", this.existItems);
   },
   methods: {
+    formIsValid(item) {
+      return item.name && item.path && item.server && item.mountPath;
+    },
     updateselect() {
       this.item = this.items.find(item => item.name == this.itemname);
       this.item.mountPath = this.defaultItem.mountPath;
