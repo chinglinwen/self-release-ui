@@ -16,15 +16,16 @@
               <v-text-field label v-model="item.id"></v-text-field>
             </td>-->
             <td>{{ item.name }}</td>
-            <td v-if="editing === item.id">
-              <v-text-field label v-model="item.path"></v-text-field>
+            <!-- <td v-if="editing === item.id">
+              <v-text-field disabled label v-model="item.path"></v-text-field>
             </td>
-            <td v-else>{{ item.path }}</td>
-            <td v-if="editing === item.id">
-              <v-text-field label v-model="item.server"></v-text-field>
+            <td v-else>{{ item.path }}</td>-->
+            <td>{{ item.path }}</td>
+            <!-- <td v-if="editing === item.id">
+              <v-text-field disabled label v-model="item.server"></v-text-field>
             </td>
-            <td v-else>{{ item.server }}</td>
-
+            <td v-else>{{ item.server }}</td>-->
+            <td>{{ item.server }}</td>
             <td v-if="editing === item.id">
               <v-text-field label v-model="item.mountPath"></v-text-field>
             </td>
@@ -75,13 +76,13 @@
           <v-row>
             <v-layout>
               <v-flex md2 pa-2>
-                <v-text-field label="name" v-model="item.name"></v-text-field>
+                <v-text-field disabled label="name" v-model="item.name"></v-text-field>
               </v-flex>
               <v-flex md6 pa-2>
-                <v-text-field label="src path" v-model="item.path"></v-text-field>
+                <v-text-field disabled label="src path" v-model="item.path"></v-text-field>
               </v-flex>
               <v-flex md2 pa-2>
-                <v-text-field label="server ip or hostname" v-model="item.server"></v-text-field>
+                <v-text-field disabled label="server ip or hostname" v-model="item.server"></v-text-field>
               </v-flex>
               <v-flex md6 pa-2>
                 <v-text-field label="mount path" v-model="item.mountPath"></v-text-field>

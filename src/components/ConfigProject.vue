@@ -55,7 +55,7 @@
 
               <v-card-actions>
                 <v-btn color="blue darken-1" text @click="dialog = false;loading=false">Close</v-btn>
-                <v-btn color="blue darken-1" text @click="submitall">Save All</v-btn>
+                <v-btn :disabled="submitting" color="blue darken-1" text @click="submitall">Save All</v-btn>
               </v-card-actions>
 
               <v-progress-linear
@@ -141,6 +141,7 @@ export default {
     // see if need update
     updated: false,
     loading: false,
+    submitting: false,
 
     infos: {},
     // envsinfo: [],
@@ -379,6 +380,7 @@ export default {
         this.notify = { color: "orange", msg: "there's no change" };
         return;
       }
+      this.submitting = true;
 
       // call api
       this.loading = true;
@@ -387,15 +389,20 @@ export default {
           console.log("done submit");
           console.log("submit result", res);
           this.loading = false;
+          this.submitting = false;
+          this.updated = false;
           this.notify = {
             color: "success",
             msg: "all saved",
             timeout: 50000
           };
+          this._x = this.x;
         })
         .catch(err => {
           console.log("submit all err", err);
           this.loading = false;
+          this.submitting = false;
+          this.updated = false;
           this.notify = { color: "error", msg: err.message, timeout: 86400 };
         });
     }

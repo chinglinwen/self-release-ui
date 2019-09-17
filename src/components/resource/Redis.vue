@@ -15,24 +15,25 @@
             <!-- <td v-if="editing === item.id">
               <v-text-field label v-model="item.id"></v-text-field>
             </td>-->
+            <!-- <td v-if="editing === item.id">
+              <v-text-field disabled label v-model="item.host"></v-text-field>
+            </td>
+            <td v-else>{{ item.host }}</td>-->
+            <td>{{ item.host }}</td>
             <td v-if="editing === item.id">
               <v-text-field label v-model="item.hostkey"></v-text-field>
             </td>
             <td v-else>{{ item.hostkey }}</td>
-            <td v-if="editing === item.id">
-              <v-text-field label v-model="item.host"></v-text-field>
-            </td>
-            <td v-else>{{ item.host }}</td>
 
+            <!-- <td v-if="editing === item.id">
+              <v-text-field disabled label v-model="item.port"></v-text-field>
+            </td>
+            <td v-else>{{ item.port }}</td>-->
+            <td>{{ item.port }}</td>
             <td v-if="editing === item.id">
               <v-text-field label v-model="item.portkey"></v-text-field>
             </td>
             <td v-else>{{ item.portkey }}</td>
-
-            <td v-if="editing === item.id">
-              <v-text-field label v-model="item.port"></v-text-field>
-            </td>
-            <td v-else>{{ item.port }}</td>
 
             <td v-if="editing === item.id">
               <v-btn @click="cancelEdit(item)">
@@ -78,18 +79,20 @@
         <v-container v-if="'name' in item">
           <v-row>
             <v-layout>
+              <v-flex md5 pa-2>
+                <v-text-field disabled :label="hostlabel" v-model="item.host"></v-text-field>
+              </v-flex>
               <v-flex md2 pa-2>
                 <v-text-field :label="hostkeylabel" v-model="item.hostkey"></v-text-field>
               </v-flex>
-              <v-flex md5 pa-2>
-                <v-text-field :label="hostlabel" v-model="item.host"></v-text-field>
+
+              <v-flex md1 pa-2>
+                <v-text-field disabled :label="portlabel" v-model="item.port"></v-text-field>
               </v-flex>
               <v-flex md2 pa-2>
                 <v-text-field :label="portkeylabel" v-model="item.portkey"></v-text-field>
               </v-flex>
-              <v-flex md1 pa-2>
-                <v-text-field :label="portlabel" v-model="item.port"></v-text-field>
-              </v-flex>
+
               <v-flex md2 py-5>
                 <v-btn text @click="cancelCreate(item)">cancel</v-btn>
                 <v-btn text :disabled="!formIsValid(item)" @click="handleSubmit(item)">save</v-btn>
@@ -118,10 +121,10 @@ export default {
     editing: null,
     search: "",
     headers: [
-      { text: "Host env", value: "hostkey", align: "left" },
       { text: "Host", value: "host" },
-      { text: "Port env", value: "portkey" },
+      { text: "Host env", value: "hostkey", align: "left" },
       { text: "Port", value: "port" },
+      { text: "Port env", value: "portkey" },
       { text: "action", value: "" }
     ],
     item: {},
