@@ -155,7 +155,7 @@ export default {
     }
   },
   created() {
-    console.log("existItems", this.existItems);
+    // console.log("existItems", this.existItems);
   },
   methods: {
     formIsValid(item) {

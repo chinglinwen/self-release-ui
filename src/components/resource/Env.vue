@@ -130,8 +130,8 @@ export default {
     }
   },
   created() {
-    console.log("env existItems", this.existItems);
-    console.log("env items", this.items);
+    // console.log("env existItems", this.existItems);
+    // console.log("env items", this.items);
   },
   methods: {
     formIsValid(item) {

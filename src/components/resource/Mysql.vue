@@ -168,9 +168,7 @@ export default {
       return "password env name: ";
     }
   },
-  created() {
-    console.log("mysql items", this.items);
-  },
+  created() {},
   methods: {
     formIsValid(item) {
       return (
