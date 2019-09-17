@@ -124,7 +124,7 @@ export default {
     ],
     item: {},
     defaultItem: {
-      mountPath: "/apps/? /www/Public"
+      mountPath: "/apps/?/www/Public"
     },
     itemname: ""
   }),

@@ -74,10 +74,10 @@
                   :color="notify.color"
                   :multi-line="true"
                   :right="true"
-                  :timeout="5000"
+                  :timeout="notify.timeout"
                 >
                   {{ notify.msg }}
-                  <v-btn dark text @click="notify = false">Close</v-btn>
+                  <v-btn pa="10" dark text @click="notify = false">Close</v-btn>
                 </v-snackbar>
               </v-flex>
             </v-card-text>
@@ -89,8 +89,6 @@
 </template>
 
 <script>
-import axios from "axios";
-
 import Mysql from "./resource/Mysql";
 import Env from "./resource/Env";
 import Redis from "./resource/Redis";
@@ -389,10 +387,16 @@ export default {
           console.log("done submit");
           console.log("submit result", res);
           this.loading = false;
-          this.notify = { color: "success", msg: "all saved" };
+          this.notify = {
+            color: "success",
+            msg: "all saved",
+            timeout: 50000
+          };
         })
         .catch(err => {
-          this.notify = { color: "error", msg: err.message };
+          console.log("submit all err", err);
+          this.loading = false;
+          this.notify = { color: "error", msg: err.message, timeout: 86400 };
         });
     }
   }
