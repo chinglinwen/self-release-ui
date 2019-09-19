@@ -1,0 +1,65 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: self-release-ui
+  namespace: yunwei
+spec:
+  ports:
+    - name: web
+      port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app: self-release-ui
+  sessionAffinity: ClientIP
+
+# Ingress
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: self-release-ui
+  namespace: yunwei
+  annotations:
+    # traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/frontend-entry-points: auth
+spec:
+  rules:
+    - host: projects.newops.haodai.net
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: self-release-ui
+              servicePort: web
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: self-release-ui
+  namespace: yunwei
+  labels:
+    app: self-release-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: self-release-ui
+  template:
+    metadata:
+      labels:
+        app: self-release-ui
+    spec:
+      containers:
+        - name: self-release-ui
+          image: harbor.haodai.net/ops/self-release-ui:v1
+          imagePullPolicy: Always
+          # command: ["/bin/sh","-c","sleep 3600000"]
+          #args:
+          ports:
+            - containerPort: 80
+      nodeSelector:
+        #kubernetes.io/hostname: 172.31.90.208
+        func: monitor
+        # env: yunwei
