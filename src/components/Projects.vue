@@ -75,7 +75,7 @@
 
 <script>
 var domain = "http://release.haodai.net";
-import axios from "axios";
+// import axios from "axios";
 import ConfigProject from "./ConfigProject.vue";
 
 export default {
@@ -84,6 +84,7 @@ export default {
   },
   data() {
     return {
+      user: {},
       notify: null,
       // iserror: false,
       // error: "",

@@ -57,6 +57,9 @@
     <v-app-bar app clipped-left>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>NewOps</v-toolbar-title>
+
+      <v-spacer></v-spacer>
+      <div>user: {{user.user}}</div>
     </v-app-bar>
 
     <!-- <v-content>
@@ -101,19 +104,37 @@
 </template>
 
 <script>
+var domain = "http://release.haodai.net";
 export default {
   name: "App",
-  data: () => ({
-    //
-  }),
   props: {
     source: String
   },
   data: () => ({
-    drawer: null
+    drawer: null,
+    user: {
+      user: null
+    }
   }),
   created() {
     this.$vuetify.theme.dark = false;
+
+    this.loading = true;
+    // fetch(
+    //   // "http://192.168.10.234:8089/api/projects/"
+    //   domain + "/api/projects/"
+    // )
+    this.$GET(domain + "/api/users/")
+      .then(res => {
+        this.user = res.data;
+        this.loading = false;
+        console.log("user: ", this.user);
+      })
+      .catch(err => {
+        this.loading = false;
+        console.log("getProjects err", err);
+        this.notify = { color: "error", msg: err.message, timeout: 86400 };
+      });
   }
 };
 </script>
