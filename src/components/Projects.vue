@@ -44,7 +44,7 @@
       </template>
       <v-divider></v-divider>
     </v-card-text>
-    <v-snackbar
+    <!-- <v-snackbar
       v-model="iserror"
       :bottom="true"
       color="red"
@@ -54,7 +54,22 @@
     >
       {{ error }}
       <v-btn dark text @click="iserror = false">Close</v-btn>
-    </v-snackbar>
+    </v-snackbar>-->
+
+    <v-flex ma="5">
+      <v-snackbar
+        v-if="notify"
+        v-model="notify"
+        :bottom="true"
+        :color="notify.color"
+        :multi-line="true"
+        :right="true"
+        :timeout="notify.timeout"
+      >
+        {{ notify.msg }}
+        <v-btn pa="10" dark text @click="notify = false">Close</v-btn>
+      </v-snackbar>
+    </v-flex>
   </v-card>
 </template>
 
@@ -69,8 +84,9 @@ export default {
   },
   data() {
     return {
-      iserror: false,
-      error: "",
+      notify: null,
+      // iserror: false,
+      // error: "",
       loading: false,
       projects: [],
       // projects: mockProjects,
@@ -90,17 +106,19 @@ export default {
   created() {
     // return;
     this.loading = true;
-    fetch(
-      // "http://192.168.10.234:8089/api/projects/"
-      domain + "/api/projects/"
-    )
-      .then(response => response.json())
-      .then(json => {
-        this.projects = json;
+    // fetch(
+    //   // "http://192.168.10.234:8089/api/projects/"
+    //   domain + "/api/projects/"
+    // )
+    this.$GET(domain + "/api/projects/")
+      .then(res => {
+        this.projects = res.data;
         this.loading = false;
       })
-      .catch(error => {
-        console.log("getProjects err", error);
+      .catch(err => {
+        this.loading = false;
+        console.log("getProjects err", err);
+        this.notify = { color: "error", msg: err.message, timeout: 86400 };
       });
   },
   methods: {
@@ -119,9 +137,11 @@ export default {
         })
         .catch(err => {
           console.log(err.message);
-          this.iserror = true;
-          this.error = err.message;
+          // this.iserror = true;
+          // this.error = err.message;
           project.state = false;
+
+          this.notify = { color: "error", msg: err.message, timeout: 86400 };
         });
     }
   }
