@@ -6,6 +6,13 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
+
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-icon v-on="on" @click="refreshProjects">refresh</v-icon>
+        </template>
+        <span>refresh projects list, takes 30 seconds for admin user</span>
+      </v-tooltip>
     </v-toolbar>
     <v-divider></v-divider>
     <v-card-text class="pa-0">
@@ -77,6 +84,7 @@
 var domain = "http://release.haodai.net";
 // import axios from "axios";
 import ConfigProject from "./ConfigProject.vue";
+import { timeout } from "q";
 
 export default {
   components: {
@@ -106,21 +114,11 @@ export default {
   },
   created() {
     // return;
-    this.loading = true;
     // fetch(
     //   // "http://192.168.10.234:8089/api/projects/"
     //   domain + "/api/projects/"
     // )
-    this.$GET(domain + "/api/projects/")
-      .then(res => {
-        this.projects = res.data;
-        this.loading = false;
-      })
-      .catch(err => {
-        this.loading = false;
-        console.log("getProjects err", err);
-        this.notify = { color: "error", msg: err.message, timeout: 86400 };
-      });
+    this.fetchProjects();
   },
   methods: {
     // call project init?
@@ -142,6 +140,33 @@ export default {
           // this.error = err.message;
           project.state = false;
 
+          this.notify = { color: "error", msg: err.message, timeout: 86400 };
+        });
+    },
+    refreshProjects() {
+      // debuggers;
+      console.log("try refresh projects lists");
+      this.fetchProjects("yes");
+    },
+    fetchProjects(refresh) {
+      if (!refresh) {
+        refresh = "no";
+      }
+      this.loading = true;
+      this.$GET(
+        domain + "/api/projects/",
+        {
+          refresh: refresh
+        },
+        30000
+      )
+        .then(res => {
+          this.projects = res.data;
+          this.loading = false;
+        })
+        .catch(err => {
+          this.loading = false;
+          console.log("getProjects err", err);
           this.notify = { color: "error", msg: err.message, timeout: 86400 };
         });
     }
