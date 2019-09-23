@@ -59,7 +59,24 @@
       <v-toolbar-title>NewOps</v-toolbar-title>
 
       <v-spacer></v-spacer>
+
       <div>user: {{user.user}}</div>
+      <v-menu bottom left>
+        <template v-slot:activator="{ on }">
+          <v-btn icon v-on="on">
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item @click="logout">
+            <!-- <v-icon>logout</v-icon> -->
+            logout
+          </v-list-item>
+          <!-- <v-list-item v-for="(item, i) in items" :key="i" @click="logout">
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>-->
+        </v-list>
+      </v-menu>
     </v-app-bar>
 
     <!-- <v-content>
@@ -135,6 +152,14 @@ export default {
         console.log("getProjects err", err);
         this.notify = { color: "error", msg: err.message, timeout: 86400 };
       });
+  },
+  methods: {
+    logout() {
+      document.cookie = "uuid=; expires=Thu, 01 Jan 1970 00:00:00 UTC ";
+      document.cookie =
+        "token=; path=/; domain=.haodai.net; expires=Thu, 01 Jan 1970 00:00:00 UTC ";
+      document.location = "/";
+    }
   }
 };
 </script>
