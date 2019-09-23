@@ -12,7 +12,7 @@
             <pre>{{ yaml }}</pre>
           </v-card-text>
           <v-card-actions>
-            <v-btn color="primary" text @click="yamldialog = false">Close</v-btn>
+            <v-btn color="primary" text @click="close">Close</v-btn>
           </v-card-actions>
           <v-snackbar
             v-if="notify"
@@ -64,6 +64,10 @@ export default {
           console.log("get yaml api err", error);
           this.notify = { color: "error", msg: err.message, timeout: 86400 };
         });
+    },
+    close() {
+      this.yamldialog = false;
+      this.yaml = "";
     }
   }
 };
