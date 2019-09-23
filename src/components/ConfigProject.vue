@@ -20,6 +20,8 @@
       </v-btn>
       <v-card-title outline>
         <span class="headline">Resource Binding for project: {{ project.name }}</span>
+        <v-spacer></v-spacer>
+        <Yaml :project="project" />
       </v-card-title>
 
       <v-tabs v-model="tab" background-color="deep-purple accent-2" class="elevation-0" dark>
@@ -91,13 +93,17 @@ import Mysql from "./resource/Mysql";
 import Env from "./resource/Env";
 import Redis from "./resource/Redis";
 import Nfs from "./resource/Nfs";
+
+import Yaml from "./Yaml";
+
 import { debuglog } from "util";
 export default {
   components: {
     Mysql,
     Redis,
     Nfs,
-    Env
+    Env,
+    Yaml
   },
   props: {
     project: {
