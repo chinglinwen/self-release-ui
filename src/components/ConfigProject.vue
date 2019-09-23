@@ -174,11 +174,9 @@ export default {
       // this._all = Object.assign({}, this.all);
       this._all = JSON.parse(JSON.stringify(this.all));
 
-      fetch(domain + "/api/projects/" + this.project.name + "/values")
-        .then(response => response.json())
-
-        .then(json => {
-          this.resources = json.data;
+      this.$GET(domain + "/api/projects/" + this.project.name + "/values")
+        .then(res => {
+          this.resources = res.data;
           this.all.online = convert(this.resources["online"]);
           this.all.pre = convert(this.resources["pre"]);
           this.all.test = convert(this.resources["test"]);
