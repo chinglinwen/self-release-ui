@@ -21,7 +21,7 @@
       <v-card-title outline>
         <span class="headline">Resource Binding for project: {{ project.name }}</span>
         <v-spacer></v-spacer>
-        <Yaml :project="project" />
+        <Yaml :project="project" :envlist="envlist" />
       </v-card-title>
 
       <v-tabs v-model="tab" background-color="deep-purple accent-2" class="elevation-0" dark>
@@ -160,6 +160,8 @@ export default {
 
       this.x = this.all[env];
       console.log("got x: ", this.x, "for env: ", env);
+
+      this.env = env;
     },
     opensetting() {
       this.getInfo();
