@@ -93,7 +93,6 @@
 </template>
 
 <script>
-var domain = "http://release.haodai.net";
 var nfssvcDomain = "http://nfssvc.newops.haodai.net";
 import Mysql from "./resource/Mysql";
 import Config from "./resource/Config";
@@ -166,22 +165,21 @@ export default {
   // get projects exist resources
   methods: {
     changeTab(env) {
-      console.log("changed to env key: ", env);
+      // console.log("changed to env key: ", env);
       // console.log("changed to tab: ", this.tab, "env:", this.envlist[this.tab]);
 
-      console.log("online: ", this.all.online);
-      console.log("pre: ", this.all.pre);
-      console.log("test: ", this.all.test);
+      // console.log("online: ", this.all.online);
+      // console.log("pre: ", this.all.pre);
+      // console.log("test: ", this.all.test);
 
       this.x = this.all[env];
-      console.log("got x: ", this.x, "for env: ", env);
+      // console.log("got x: ", this.x, "for env: ", env);
 
       this.env = env;
     },
     opensetting() {
       this.getInfo();
-      console.log("infos: ", this.infos);
-
+      // console.log("infos: ", this.infos);
       let x = {
         existMysql: [],
         existEnvs: [],
@@ -197,7 +195,7 @@ export default {
       // this._all = Object.assign({}, this.all);
       this._all = JSON.parse(JSON.stringify(this.all));
 
-      this.$GET(domain + "/api/projects/" + this.project.name + "/values")
+      this.$GET("/api/projects/" + this.project.name + "/values")
         .then(res => {
           this.resources = res.data;
           this.all.online = convert(this.resources["online"]);
@@ -309,11 +307,8 @@ export default {
       }
     },
     getInfo() {
-      console.log("fetching info in the background");
-      // fetch(domain + "/api/resources/" + this.ns)
-      //   .then(response => response.json())
-      // .then(json => (this.infos = json))
-      this.$GET(domain + "/api/resources/" + this.ns)
+      // console.log("fetching info in the background");
+      this.$GET("/api/resources/" + this.ns)
         .then(json => json.data)
         .then(json => {
           // this.infos = json;
@@ -349,7 +344,7 @@ export default {
       this.submitting = true;
 
       let a = convertback(this.all);
-      let url = domain + "/api/projects/" + this.project.name + "/values";
+      let url = "/api/projects/" + this.project.name + "/values";
       let data = JSON.stringify(a, replacer, 2);
 
       console.log("data:", data);
@@ -388,7 +383,8 @@ function convert(resources) {
     existMysql: [],
     existEnvs: [],
     existRedis: [],
-    existNfs: []
+    existNfs: [],
+    existConfig: resources.config
   };
 
   if (!resources || Object.keys(resources).length == 0) {

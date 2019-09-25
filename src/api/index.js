@@ -5,8 +5,9 @@ import router from '../router';
 
 // 环境的切换
 if (process.env.NODE_ENV == 'production') {
-    // axios.defaults.baseURL = 'http://www.hdyx.haodai.net/';
-    axios.defaults.baseURL = 'http://192.168.10.234:8089/';
+    axios.defaults.baseURL = 'http://release.newops.haodai.net';
+} else {
+    axios.defaults.baseURL = 'http://release-test.newops.haodai.net';
 }
 
 // 请求超时时间
@@ -69,7 +70,7 @@ export function get(url, params, timeout) {
                 }
             })
             .catch(err => {
-                console.error(url, param, "failed", err);
+                console.error(url, "params: ", params, "err: ", err);
                 reject({ code: -1, message: '网络错误，请重试' });
             });
     });
@@ -92,7 +93,7 @@ export function post(url, data) {
                 }
             })
             .catch(err => {
-                console.log(url, data, "failed", err);
+                console.log(url, "data: ", data, "err: ", err);
                 reject({ code: -2, message: '网络错误，请重试' });
             });
     });

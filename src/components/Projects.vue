@@ -81,7 +81,6 @@
 </template>
 
 <script>
-var domain = "http://release.haodai.net";
 // import axios from "axios";
 import ConfigProject from "./ConfigProject.vue";
 import { timeout } from "q";
@@ -113,36 +112,27 @@ export default {
     };
   },
   created() {
-    // return;
-    // fetch(
-    //   // "http://192.168.10.234:8089/api/projects/"
-    //   domain + "/api/projects/"
-    // )
     this.fetchProjects();
   },
   methods: {
     // call project init?
-    enableProject(project) {
-      this.$POST("http://192.168.10.234:8089/api/projects/" + project.id, {
-        name: "foo",
-        surname: "bar"
-      })
-        // axios
-        //   .post("http://192.168.10.234:8090/api/projects/" + project.id, {
-        //     name: "hello" //project.name
-        //   })
-        .then(res => {
-          console.log("called", res);
-        })
-        .catch(err => {
-          console.log(err.message);
-          // this.iserror = true;
-          // this.error = err.message;
-          project.state = false;
+    // enableProject(project) {
+    //   this.$POST("http://192.168.10.234:8089/api/projects/" + project.id, {
+    //     name: "foo",
+    //     surname: "bar"
+    //   })
+    //     .then(res => {
+    //       console.log("called", res);
+    //     })
+    //     .catch(err => {
+    //       console.log(err.message);
+    //       // this.iserror = true;
+    //       // this.error = err.message;
+    //       project.state = false;
 
-          this.notify = { color: "error", msg: err.message, timeout: 86400 };
-        });
-    },
+    //       this.notify = { color: "error", msg: err.message, timeout: 86400 };
+    //     });
+    // },
     refreshProjects() {
       // debuggers;
       console.log("try refresh projects lists");
@@ -154,7 +144,7 @@ export default {
       }
       this.loading = true;
       this.$GET(
-        domain + "/api/projects/",
+        "/api/projects/",
         {
           refresh: refresh
         },
@@ -172,38 +162,4 @@ export default {
     }
   }
 };
-
-// for dev phase
-var mockProjects = [
-  {
-    id: 1,
-    username: "Dessie",
-    avatar:
-      "https://s3.amazonaws.com/uifaces/faces/twitter/ludwiczakpawel/128.jpg",
-    name: "haodai/main",
-    git: "https://g.haodai.net/yunwei/kubernetes",
-    state: false,
-    color: "pink"
-  },
-  {
-    id: 2,
-    username: "Dessie",
-    avatar:
-      "https://s3.amazonaws.com/uifaces/faces/twitter/ludwiczakpawel/128.jpg",
-    name: "xindaiquan/kubernetes",
-    git: "https://g.haodai.net/yunwei/kubernetes",
-    state: false,
-    color: "pink"
-  },
-  {
-    id: 3,
-    username: "config-deploy",
-    avatar:
-      "https://s3.amazonaws.com/uifaces/faces/twitter/ludwiczakpawel/128.jpg",
-    name: "xindaiquan/config-deploy",
-    git: "https://g.haodai.net/yunwei/config-deploy",
-    state: true,
-    color: "pink"
-  }
-];
 </script>

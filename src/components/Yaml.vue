@@ -50,7 +50,6 @@
 </template>
 
 <script>
-var domain = "http://release.haodai.net";
 export default {
   props: {
     // env: String,
@@ -83,7 +82,7 @@ export default {
       this.env = env;
       this.loading = true;
       this.yamldialog = true;
-      this.$GET(domain + "/api/gen/" + this.project.name + "/" + env)
+      this.$GET("/api/gen/" + this.project.name + "/" + env)
         .then(res => {
           this.loading = false;
           this.yaml = unescape(res.data);

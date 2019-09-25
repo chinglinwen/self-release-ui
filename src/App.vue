@@ -121,7 +121,6 @@
 </template>
 
 <script>
-var domain = "http://release.haodai.net";
 export default {
   name: "App",
   props: {
@@ -137,11 +136,7 @@ export default {
     this.$vuetify.theme.dark = false;
 
     this.loading = true;
-    // fetch(
-    //   // "http://192.168.10.234:8089/api/projects/"
-    //   domain + "/api/projects/"
-    // )
-    this.$GET(domain + "/api/users/")
+    this.$GET("/api/users/")
       .then(res => {
         this.user = res.data;
         this.loading = false;
@@ -149,7 +144,7 @@ export default {
       })
       .catch(err => {
         this.loading = false;
-        console.log("getProjects err", err);
+        console.log("get user err", err);
         this.notify = { color: "error", msg: err.message, timeout: 86400 };
       });
   },

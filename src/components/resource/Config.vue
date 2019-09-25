@@ -3,7 +3,7 @@
     <v-card-title>Configs</v-card-title>
     <v-container v-if="config" width="600px">
       <v-form ref="form" v-model="valid">
-        <v-layout @change="formIsValid(config)">
+        <v-layout>
           <v-row>
             <v-flex v-if="env=='online'" md2 pa-2>
               <div v-if="editing === item.id">
@@ -81,7 +81,7 @@ export default {
         v => !!v || "must not empty",
         // v => v != "0" || "must not zero",
         v => v === "" && "must not empty string",
-        v => /^\w+$/.test(v) || "must be string",
+        // v => /^\w+$/.test(v) || "must be string",
         v => !/^\d+$/.test(v) || "must not be number",
         v => v.length <= 2 && "must be more than 2 characters"
       ],
@@ -108,12 +108,6 @@ export default {
   }),
   created() {
     // console.log("config env: ", this.env, this.existConfig);
-  },
-  watch: {
-    env: function(v, old) {
-      console.log("new env", v, "old", old);
-      this.clearStatus();
-    }
   },
   methods: {
     // formIsValid(item) {
