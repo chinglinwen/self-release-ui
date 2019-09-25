@@ -129,27 +129,6 @@ export default {
     },
     itemname: ""
   }),
-  computed: {
-    hostlabel() {
-      let t = "";
-      if (!this.exist) {
-        t = "(default)";
-      }
-      return "host env name: " + t;
-    },
-    portlabel() {
-      return "port env name: ";
-    },
-    databaselabel() {
-      return "database env name: ";
-    },
-    usernamelabel() {
-      return "username env name: ";
-    },
-    passwordlabel() {
-      return "password env name: ";
-    }
-  },
   created() {
     // console.log("existItems", this.existItems);
   },

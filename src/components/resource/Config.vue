@@ -116,23 +116,6 @@ export default {
     }
   },
   methods: {
-    // formIsValid(item) {
-    //   if (this.env == "online") {
-    //     if (
-    //       item.nodePort != "0" &&
-    //       item.domain != "" &&
-    //       item.deploy.replicas != "0" &&
-    //       item.monitor.address != ""
-    //     );
-    //   }
-    //   if (this.env == "pre") {
-    //     return item.deploy.replicas != "0";
-    //   }
-    //   if (this.env == "test") {
-    //     return item.deploy.replicas != "0";
-    //   }
-    //   // return false;
-    // },
     editMode(item) {
       this.cacheditem = Object.assign({}, item);
       this.editing = item.id;
@@ -142,26 +125,20 @@ export default {
       Object.assign(item, this.cacheditem);
       this.editing = null;
     },
-
-    // form
     handleSubmit(item) {
-      // if (this.$refs.form.validate()) {
-      //   this.snackbar = true;
-      //   console.log("not valid for config");
-      // }
-
       this.clearStatus();
       this.submitting = true;
 
+      // convert string to number
       item.nodePort = parseInt(item.nodePort, 10);
       item.deploy.replicas = parseInt(item.deploy.replicas, 10);
+
       this.$emit("add:item", item);
 
       this.success = true;
       this.error = false;
       this.submitting = false;
     },
-
     clearStatus() {
       this.success = false;
       this.error = false;

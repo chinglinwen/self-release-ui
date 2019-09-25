@@ -122,16 +122,11 @@ export default {
   data: () => ({
     dialog: false,
     notify: null,
+
     //deploy env
     tab: "online",
     envlist: ["online", "pre", "test"],
-    // existConfig: {
-    //   nodePort: "30000",
-    //   domain: "example.com",
-    //   deploy: {
-    //     replicas: 2
-    //   }
-    // },
+
     x: {
       existMysql: {},
       existEnvs: {},
@@ -156,32 +151,20 @@ export default {
   }),
   created() {
     if (!this.project.name) this.project.name = "unknown";
-
     let namewithpath = this.project.name.split("/");
     this.ns = namewithpath[0];
     this.name = namewithpath[1];
-
-    // console.log("ns: ", this.ns, ", project: ", this.name);
   },
-  // get projects exist resources
   methods: {
     changeTab(env) {
-      console.log("changed to env key: ", env);
-      // console.log("changed to tab: ", this.tab, "env:", this.envlist[this.tab]);
-
-      console.log("online: ", this.all.online);
-      console.log("pre: ", this.all.pre);
-      console.log("test: ", this.all.test);
-
+      // console.log("changed to env key: ", env);
       this.x = this.all[env];
-      console.log("got x: ", this.x, "for env: ", env);
-
+      // console.log("got x: ", this.x, "for env: ", env);
       this.env = env;
     },
     opensetting() {
       this.getInfo();
-      console.log("infos: ", this.infos);
-
+      // console.log("infos: ", this.infos);
       let x = {
         existMysql: [],
         existEnvs: [],
@@ -309,10 +292,7 @@ export default {
       }
     },
     getInfo() {
-      console.log("fetching info in the background");
-      // fetch(domain + "/api/resources/" + this.ns)
-      //   .then(response => response.json())
-      // .then(json => (this.infos = json))
+      // console.log("fetching info in the background");
       this.$GET(domain + "/api/resources/" + this.ns)
         .then(json => json.data)
         .then(json => {
@@ -323,13 +303,8 @@ export default {
           this.redisinfo = json.codis;
         })
         .catch(err => {
-          // console.log("getinfos err", err);
           this.notify = { color: "error", msg: err.message, timeout: 86400 };
         });
-
-      // fetch("http://nfssvc.newops.haodai.net/api/")
-      //   .then(response => response.json())
-
       this.$GET(nfssvcDomain + "/api/")
         .then(json => json.data)
         .then(json => {
@@ -337,7 +312,6 @@ export default {
           this.nfsinfo = json.data;
         })
         .catch(err => {
-          // console.log("get nfs infos err", err);
           this.notify = { color: "error", msg: err.message, timeout: 86400 };
         });
       return;
@@ -405,7 +379,7 @@ function convert(resources) {
       element.id = i + 1;
     });
 
-    console.log("exist mysql", existMysql);
+    // console.log("exist mysql", existMysql);
     x.existMysql = existMysql;
   }
 
@@ -427,7 +401,7 @@ function convert(resources) {
         element.id = i + 1;
       });
     }
-    console.log("exist envs", x.existEnvs);
+    // console.log("exist envs", x.existEnvs);
   }
   // transform codis to array
   let r = resources.codis;
@@ -453,7 +427,7 @@ function convert(resources) {
         element.id = i + 1;
       });
     }
-    console.log("exist redis", x.existRedis);
+    // console.log("exist redis", x.existRedis);
   }
   // nfs
   let existNfs = resources.nfs;
@@ -461,7 +435,7 @@ function convert(resources) {
     existNfs.forEach((element, i) => {
       element.id = i + 1;
     });
-    console.log("exist nfs", existNfs);
+    // console.log("exist nfs", existNfs);
     x.existNfs = existNfs;
   }
   return x;
