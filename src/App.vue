@@ -145,7 +145,7 @@ export default {
       .then(res => {
         this.user = res.data;
         this.loading = false;
-        console.log("user: ", this.user);
+        // console.log("user: ", this.user);
       })
       .catch(err => {
         this.loading = false;

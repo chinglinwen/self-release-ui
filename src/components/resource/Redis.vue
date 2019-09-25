@@ -170,7 +170,7 @@ export default {
       a.portkey = this.defaultItem.portkey;
       a.name = this.itemname;
       this.item = a;
-      console.log("redis selected item", item);
+      // console.log("redis selected item", item);
     },
     checkitem(item) {
       console.log("show detail div", this.itemname);

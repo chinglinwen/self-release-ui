@@ -316,9 +316,7 @@ export default {
       this.$GET(domain + "/api/resources/" + this.ns)
         .then(json => json.data)
         .then(json => {
-          console.log("infos", json);
-          this.infos = json;
-
+          // this.infos = json;
           this.mysqlinfo = json.mysql;
           this.redisinfo = json.codis;
         })
@@ -331,9 +329,8 @@ export default {
       //   .then(response => response.json())
 
       this.$GET(nfssvcDomain + "/api/")
-        .then(json => json.data)
+
         .then(json => {
-          console.log("infos", json);
           this.nfsinfo = json.data;
         })
         .catch(err => {

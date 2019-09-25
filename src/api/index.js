@@ -69,7 +69,7 @@ export function get(url, params, timeout) {
                 }
             })
             .catch(err => {
-                console.error(err);
+                console.error(url, param, "failed", err);
                 reject({ code: -1, message: '网络错误，请重试' });
             });
     });
@@ -82,7 +82,6 @@ export function get(url, params, timeout) {
  */
 export function post(url, data) {
     return new Promise((resolve, reject) => {
-        console.log(url, data);
         axios
             .post(url, data)
             .then(res => {
@@ -93,6 +92,7 @@ export function post(url, data) {
                 }
             })
             .catch(err => {
+                console.log(url, data, "failed", err);
                 reject({ code: -2, message: '网络错误，请重试' });
             });
     });
