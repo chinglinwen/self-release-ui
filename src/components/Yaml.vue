@@ -70,7 +70,7 @@ export default {
     };
   },
   created() {
-    console.log("envlist", this.envlist);
+    // console.log("envlist", this.envlist);
   },
   watch: {
     yamldialog: function(val, oldVal) {
@@ -91,7 +91,7 @@ export default {
         })
         .catch(err => {
           this.loading = false;
-          console.log("get yaml api err", err);
+          // console.log("get yaml api err", err);
           this.notify = { color: "error", msg: err.message, timeout: 86400 };
         });
     },

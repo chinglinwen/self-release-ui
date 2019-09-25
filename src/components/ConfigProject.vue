@@ -29,6 +29,11 @@
 
         <v-tab-item v-for="env in envlist" :key="env" :value="env">
           <v-card-text>
+            <!-- <v-row v-if="env=='online'">nodePort: 80</v-row> -->
+            <!-- <v-row>nodePort {{env}}</v-row> -->
+
+            <Config :env="env" :existConfig="x.existConfig" @add:item="configSubmit" />
+
             <Env :existItems="x.existEnvs" @add:item="envsSubmit" @delete:item="envsDelete" />
 
             <Mysql
@@ -90,6 +95,7 @@
 <script>
 var domain = "http://release.haodai.net";
 import Mysql from "./resource/Mysql";
+import Config from "./resource/Config";
 import Env from "./resource/Env";
 import Redis from "./resource/Redis";
 import Nfs from "./resource/Nfs";
@@ -103,7 +109,8 @@ export default {
     Redis,
     Nfs,
     Env,
-    Yaml
+    Yaml,
+    Config
   },
   props: {
     project: {
@@ -117,6 +124,13 @@ export default {
     //deploy env
     tab: "online",
     envlist: ["online", "pre", "test"],
+    // existConfig: {
+    //   nodePort: "30000",
+    //   domain: "example.com",
+    //   deploy: {
+    //     replicas: 2
+    //   }
+    // },
     x: {
       existMysql: {},
       existEnvs: {},
@@ -146,7 +160,7 @@ export default {
     this.ns = namewithpath[0];
     this.name = namewithpath[1];
 
-    console.log("ns: ", this.ns, ", project: ", this.name);
+    // console.log("ns: ", this.ns, ", project: ", this.name);
   },
   // get projects exist resources
   methods: {
@@ -190,11 +204,47 @@ export default {
           this.all.test = convert(this.resources["test"]);
           this.x = this.all.online;
 
+          // create default values for all env (if not set before)
+          if (!this.all.online.existConfig)
+            this.all.online.existConfig = {
+              nodePort: 0,
+              domain: "",
+              deploy: {
+                replicas: 0
+              },
+              monitor: {
+                address: ""
+              }
+            };
+          if (!this.all.pre.existConfig)
+            this.all.pre.existConfig = {
+              nodePort: 0,
+              domain: "",
+              deploy: {
+                replicas: 0
+              },
+              monitor: {
+                address: ""
+              }
+            };
+          if (!this.all.test.existConfig)
+            this.all.test.existConfig = {
+              nodePort: 0,
+              domain: "",
+              deploy: {
+                replicas: 0
+              },
+              monitor: {
+                address: ""
+              }
+            };
+
           // deep copy instead
           this._all = JSON.parse(JSON.stringify(this.all));
         })
-        .catch(error => {
-          console.log("get resource api err", error);
+        .catch(err => {
+          // console.log("get resource api err", err);
+          this.notify = { color: "error", msg: err.message, timeout: 86400 };
         });
     },
     close() {
@@ -215,6 +265,12 @@ export default {
         this.x.existMysql.push(Object.assign({}, item));
       }
     },
+    configSubmit(item) {
+      console.log("add config", item);
+      this.x.existConfig = item;
+      // console.log("config json", JSON.stringify(item));
+    },
+
     envsDelete(item) {
       this.x.existEnvs = this.x.existEnvs.filter(value => {
         return value.id != item.id;
@@ -263,8 +319,9 @@ export default {
           this.mysqlinfo = json.mysql;
           this.redisinfo = json.codis;
         })
-        .catch(error => {
-          console.log("getinfos err", error);
+        .catch(err => {
+          // console.log("getinfos err", err);
+          this.notify = { color: "error", msg: err.message, timeout: 86400 };
         });
 
       fetch("http://nfssvc.newops.haodai.net/api/")
@@ -273,8 +330,9 @@ export default {
           console.log("infos", json);
           this.nfsinfo = json.data;
         })
-        .catch(error => {
-          console.log("get nfs infos err", error);
+        .catch(err => {
+          // console.log("get nfs infos err", err);
+          this.notify = { color: "error", msg: err.message, timeout: 86400 };
         });
       return;
     },
@@ -290,6 +348,8 @@ export default {
       let a = convertback(this.all);
       let url = domain + "/api/projects/" + this.project.name + "/values";
       let data = JSON.stringify(a, replacer, 2);
+
+      console.log("data:", data);
 
       // call api
       this.loading = true;
@@ -427,7 +487,8 @@ function convertback(all) {
       envs: envs,
       codis: redis,
       mysql: all[x]["existMysql"],
-      nfs: all[x]["existNfs"]
+      nfs: all[x]["existNfs"],
+      config: all[x]["existConfig"]
     };
     newall[x] = a;
   }
