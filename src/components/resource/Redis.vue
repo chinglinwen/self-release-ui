@@ -134,6 +134,29 @@ export default {
     },
     itemname: ""
   }),
+  computed: {
+    hostlabel() {
+      return "host name: ";
+    },
+    portlabel() {
+      return "port name: ";
+    },
+    hostkeylabel() {
+      return "host env name: ";
+    },
+    portkeylabel() {
+      return "port env name: ";
+    },
+    databaselabel() {
+      return "database env name: ";
+    },
+    usernamelabel() {
+      return "username env name: ";
+    },
+    passwordlabel() {
+      return "password env name: ";
+    }
+  },
   created() {
     // console.log("existItems", this.existItems);
   },
@@ -147,10 +170,10 @@ export default {
       a.portkey = this.defaultItem.portkey;
       a.name = this.itemname;
       this.item = a;
-      // console.log("redis selected item", item);
+      console.log("redis selected item", item);
     },
     checkitem(item) {
-      // console.log("show detail div", this.itemname);
+      console.log("show detail div", this.itemname);
       return this.itemname != undefined && this.itemname != "";
     },
     editMode(item) {
@@ -173,7 +196,7 @@ export default {
     },
     deleteItem(item) {
       if (item.id === "" || item.name === "") return;
-      // console.log("delete", item);
+      console.log("delete", item);
       this.$emit("delete:item", item);
       this.editing = null;
     },

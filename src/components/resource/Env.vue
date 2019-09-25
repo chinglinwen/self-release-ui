@@ -101,6 +101,34 @@ export default {
     },
     itemname: ""
   }),
+  computed: {
+    // itemlabel: item => {
+    //   return item.host;
+    // },
+    hostlabel() {
+      // debugger;
+      return "host name: ";
+    },
+    portlabel() {
+      return "port name: ";
+    },
+
+    hostkeylabel() {
+      return "host env name: ";
+    },
+    portkeylabel() {
+      return "port env name: ";
+    },
+    databaselabel() {
+      return "database env name: ";
+    },
+    usernamelabel() {
+      return "username env name: ";
+    },
+    passwordlabel() {
+      return "password env name: ";
+    }
+  },
   created() {
     // console.log("env existItems", this.existItems);
     // console.log("env items", this.items);
