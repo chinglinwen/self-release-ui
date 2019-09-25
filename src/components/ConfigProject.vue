@@ -94,6 +94,7 @@
 
 <script>
 var domain = "http://release.haodai.net";
+var nfssvcDomain = "http://nfssvc.newops.haodai.net";
 import Mysql from "./resource/Mysql";
 import Config from "./resource/Config";
 import Env from "./resource/Env";
@@ -309,9 +310,11 @@ export default {
     },
     getInfo() {
       console.log("fetching info in the background");
-      fetch(domain + "/api/resources/" + this.ns)
-        .then(response => response.json())
-        // .then(json => (this.infos = json))
+      // fetch(domain + "/api/resources/" + this.ns)
+      //   .then(response => response.json())
+      // .then(json => (this.infos = json))
+      this.$GET(domain + "/api/resources/" + this.ns)
+        .then(json => json.data)
         .then(json => {
           console.log("infos", json);
           this.infos = json;
@@ -324,8 +327,11 @@ export default {
           this.notify = { color: "error", msg: err.message, timeout: 86400 };
         });
 
-      fetch("http://nfssvc.newops.haodai.net/api/")
-        .then(response => response.json())
+      // fetch("http://nfssvc.newops.haodai.net/api/")
+      //   .then(response => response.json())
+
+      this.$GET(nfssvcDomain + "/api/")
+        .then(json => json.data)
         .then(json => {
           console.log("infos", json);
           this.nfsinfo = json.data;
@@ -380,7 +386,7 @@ export default {
 };
 
 function convert(resources) {
-  console.log("try convert for resource", resources);
+  // console.log("try convert for resource", resources);
   let x = {
     existMysql: [],
     existEnvs: [],
@@ -464,7 +470,7 @@ function convert(resources) {
 // may test,pre append to online?
 function convertback(all) {
   let newall = {};
-  console.log("try convertback json for sumbit");
+  // console.log("try convertback json for sumbit");
   for (let x in all) {
     let envs = {};
     let redis = {};
