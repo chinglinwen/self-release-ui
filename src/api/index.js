@@ -12,7 +12,6 @@ if (process.env.NODE_ENV == 'production') {
 // 请求超时时间
 axios.defaults.timeout = 10000;
 
-// send credentials so, login user can access backend api
 axios.defaults.withCredentials = true
 
 // post请求头
