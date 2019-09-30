@@ -73,7 +73,7 @@ export default {
   },
   watch: {
     yamldialog: function(val, oldVal) {
-      console.log("new: %s, old: %s", val, oldVal);
+      // console.log("new: %s, old: %s", val, oldVal);
       this.yaml = null;
     }
   },

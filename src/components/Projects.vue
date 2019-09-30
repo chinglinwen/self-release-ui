@@ -42,7 +42,8 @@
                   ></v-switch>
                 </td>-->
                 <td class="text-xs-left">
-                  <config-project :project="item" />
+                  <project-resource :project="item" />
+                  <project-config :project="item" />
                 </td>
               </tr>
             </tbody>
@@ -82,12 +83,14 @@
 
 <script>
 // import axios from "axios";
-import ConfigProject from "./ConfigProject.vue";
+import ProjectConfig from "./ProjectConfig.vue";
+import ProjectResource from "./ProjectResource.vue";
 import { timeout } from "q";
 
 export default {
   components: {
-    ConfigProject
+    ProjectConfig,
+    ProjectResource
   },
   data() {
     return {
