@@ -62,9 +62,9 @@
                 </v-flex>
               </v-layout>
             </div>
-            <!-- <div v-else>
+            <div v-else>
               <v-layout column>
-                <v-flex md="6">Enable: {{ config.devBranch }}</v-flex>
+                <v-flex md="6">Enable: {{ config.enable }}</v-flex>
 
                 <v-flex md="6">Dev Branch: {{ config.devBranch }}</v-flex>
 
@@ -74,7 +74,7 @@
 
                 <v-flex md="6">Self-Release Version: {{ config.version }}</v-flex>
               </v-layout>
-            </div>-->
+            </div>
 
             <!-- <v-layout column>
                 <v-row>
