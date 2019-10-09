@@ -35,7 +35,7 @@ metadata:
     traefik.ingress.kubernetes.io/frontend-entry-points: auth
 spec:
   rules:
-    - host: projects-test.newops.haodai.net
+    - host: projects-test.haodai.net
       http:
         paths:
           - path: /
