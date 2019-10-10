@@ -6,7 +6,7 @@
       </template>
 
       <v-card>
-        <v-card-title>Project's Configs</v-card-title>
+        <v-card-title>Configs for project: {{ project.name }}</v-card-title>
         <v-container v-if="config">
           <v-form ref="form" v-model="valid">
             <div v-if="editing === config.id">

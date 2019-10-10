@@ -65,12 +65,19 @@ export default {
     env: null,
     existConfig: Object
   },
-  computed: {
-    config() {
-      return this.existConfig;
+  watch: {
+    existConfig: function(c, oldc) {
+      // this.config = c;
+      this.config = JSON.parse(JSON.stringify(c));
     }
   },
+  // computed: {
+  //   config() {
+  //     return this.existConfig;
+  //   }
+  // },
   data: () => ({
+    config: {},
     error: false,
     submitting: false,
     success: false,
@@ -82,8 +89,8 @@ export default {
         // v => v != "0" || "must not zero",
         v => v === "" && "must not empty string",
         // v => /^\w+$/.test(v) || "must be string",
-        v => !/^\d+$/.test(v) || "must not be number",
-        v => v.length <= 2 && "must be more than 2 characters"
+        v => !/^\d+$/.test(v) || "must not be number"
+        // v => v.length <= 2 && "must be more than 2 characters"
       ],
       notzero: [
         v => !!v || "must not empty",
@@ -108,6 +115,7 @@ export default {
   }),
   created() {
     // console.log("config env: ", this.env, this.existConfig);
+    this.config = this.existConfig;
   },
   methods: {
     // formIsValid(item) {
@@ -128,12 +136,17 @@ export default {
     //   // return false;
     // },
     editMode(item) {
-      this.cacheditem = Object.assign({}, item);
+      // this.cacheditem = Object.assign({}, item);
+      this.cacheditem = JSON.parse(JSON.stringify(item));
+
       this.editing = item.id;
       this.creating = false;
     },
     cancelEdit(item) {
-      Object.assign(item, this.cacheditem);
+      // Object.assign(item, this.cacheditem);
+      this.config = JSON.parse(JSON.stringify(this.cacheditem));
+      // this.existConfig = JSON.parse(JSON.stringify(this.cacheditem));
+
       this.editing = null;
     },
 

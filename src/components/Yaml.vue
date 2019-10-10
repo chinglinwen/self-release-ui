@@ -13,38 +13,44 @@
       </v-menu>
 
       <!-- <v-btn color="green" class="ma-2" @click="getyaml">See yaml</v-btn> -->
-      <v-dialog v-model="yamldialog" max-width="800px">
+      <v-dialog v-model="yamldialog" max-width="800px" hide-overlay>
         <v-card>
           <v-card-title>
             <span class="headline">{{ project.name }} kubernetes yaml (env: {{env}})</span>
           </v-card-title>
           <v-progress-linear v-if="loading" color="blue accent-4" indeterminate rounded height="2"></v-progress-linear>
+
           <v-card-text>
             <v-row v-if="yaml">
               <pre>{{ yaml }}</pre>
               <!-- {{ yaml }} -->
             </v-row>
 
-            <v-container justify="center">
-              <v-snackbar
-                v-if="notify"
-                v-model="notify"
-                :bottom="true"
-                :color="notify.color"
-                :multi-line="true"
-                :center="true"
-                :timeout="notify.timeout"
-              >
-                {{ notify.msg }}
-                <v-btn dark text @click="notify = false">Close</v-btn>
-              </v-snackbar>
-            </v-container>
+            <div v-if="notify">
+              <!-- <pre>error: {{ notify.msg }}</pre> -->
+              <div v-html="notify.msg"></div>
+              <!-- <pre>error: {{ notify.msg }}</pre> -->
+              <!-- error: {{ notify.msg }} -->
+            </div>
           </v-card-text>
           <v-card-actions>
             <v-btn color="primary" text @click="close">Close</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
+
+      <!-- <v-snackbar
+        v-if="notify"
+        v-model="notify"
+        :bottom="true"
+        :color="notify.color"
+        :multi-line="true"
+        :center="true"
+        :timeout="notify.timeout"
+      >
+        {{ notify.msg }}
+        <v-btn dark text @click="notify = false">Close</v-btn>
+      </v-snackbar>-->
     </v-row>
   </div>
 </template>
@@ -75,6 +81,7 @@ export default {
     yamldialog: function(val, oldVal) {
       // console.log("new: %s, old: %s", val, oldVal);
       this.yaml = null;
+      this.notify = null;
     }
   },
   methods: {
@@ -91,12 +98,15 @@ export default {
         .catch(err => {
           this.loading = false;
           // console.log("get yaml api err", err);
-          this.notify = { color: "error", msg: err.message, timeout: 86400 };
+          let msg = err.message.trim().replace(/(?:\r\n|\r|\n)/g, "<br>");
+          // let msg = err.message;
+          this.notify = { color: "error", msg: msg, timeout: 86400 };
         });
     },
     close() {
       this.yamldialog = false;
       this.yaml = "";
+      this.notify = null;
     }
   }
 };
