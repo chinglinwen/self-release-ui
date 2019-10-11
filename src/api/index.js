@@ -35,18 +35,18 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 // 响应拦截器
 axios.interceptors.response.use(
     res => {
-        if (res.data.code == '-1') {
-            router.replace({
-                path: '/passport/login',
-                query: { redirect: router.currentRoute.fullPath }
-            });
-        }
+        // if (res.data.code == '-1') {
+        //     router.replace({
+        //         path: '/passport/login',
+        //         query: { redirect: router.currentRoute.fullPath }
+        //     });
+        // }
         return res;
     },
     // defined by validateStatus()
     // status >= 200 && status < 300 default
     error => {
-        return Promise.reject({ code: -2, message: '网络错误，请重试' });
+        return Promise.reject({ code: -3, message: '后端服务访问失败' });
     }
 );
 
@@ -71,6 +71,9 @@ export function get(url, params, timeout) {
             })
             .catch(err => {
                 console.error(url, "params: ", params, "err: ", err);
+                if (err.code === -3) {
+                    reject(err)
+                }
                 reject({ code: -1, message: '网络错误，请重试' });
             });
     });
@@ -94,6 +97,9 @@ export function post(url, data) {
             })
             .catch(err => {
                 console.log(url, "data: ", data, "err: ", err);
+                if (err.code === -3) {
+                    reject(err)
+                }
                 reject({ code: -2, message: '网络错误，请重试' });
             });
     });
