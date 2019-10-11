@@ -33,17 +33,23 @@
                 <td class="text-xs-left">
                   <a :href="item.git" target="_blank">{{ item.git }}</a>
                 </td>
-                <!-- <td>
-                  <v-switch
+                <td class="text-xs-left">
+                  <!-- <v-switch
                     v-model="item.state"
                     :loading="loading"
                     @change="enableProject(item)"
                     slabel
-                  ></v-switch>
-                </td>-->
+                  ></v-switch>-->
+                  <!-- <div v-if="showConfig"> -->
+                  <project-config :project="item" />
+                  <!-- </div> -->
+                </td>
                 <td class="text-xs-left">
                   <project-resource :project="item" />
-                  <project-config :project="item" />
+                  <!-- <project-config pa="0" ma="0" :project="item" /> -->
+
+                  <!-- <v-chip color="blue" dark @click>Set</v-chip>
+                  <v-chip color="blue" dark @click>Set</v-chip>-->
                 </td>
               </tr>
             </tbody>
@@ -94,6 +100,7 @@ export default {
   },
   data() {
     return {
+      showConfig: false,
       user: {},
       notify: null,
       // iserror: false,
@@ -109,7 +116,7 @@ export default {
           value: "name"
         },
         { text: "Git Address", value: "git" },
-        // { text: "State", value: "state" },
+        { text: "Enable", value: "state", align: "left" },
         { text: "Action", value: "action", align: "left" }
       ]
     };
@@ -136,6 +143,9 @@ export default {
     //       this.notify = { color: "error", msg: err.message, timeout: 86400 };
     //     });
     // },
+    enableProject() {
+      this.showConfig = true;
+    },
     refreshProjects() {
       // debuggers;
       console.log("try refresh projects lists");

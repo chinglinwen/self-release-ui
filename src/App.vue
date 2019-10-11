@@ -15,22 +15,22 @@
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
   </v-app-bar>-->
-
-  <v-app id="inspire">
-    <v-navigation-drawer v-model="drawer" app clipped>
-      <v-list dense>
-        <router-link to="/">
-          <v-list-item v-ripple @click>
-            <!-- <v-list-item-action>
+  <div>
+    <v-app id="inspire">
+      <v-navigation-drawer v-model="drawer" app clipped>
+        <v-list dense>
+          <router-link to="/">
+            <v-list-item v-ripple>
+              <!-- <v-list-item-action>
               <v-icon>mdi-view-dashboard</v-icon>
-            </v-list-item-action>-->
-            <v-list-item-content>
-              <v-list-item-title>Dashboard</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </router-link>
+              </v-list-item-action>-->
+              <v-list-item-content>
+                <v-list-item-title>Dashboard</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </router-link>
 
-        <!-- <v-list-item @click>
+          <!-- <v-list-item @click>
           <v-list-item-action>
             <v-icon>mdi-settings</v-icon>
           </v-list-item-action>
@@ -39,47 +39,47 @@
               <router-link to="/about">Settings</router-link>
             </v-list-item-title>
           </v-list-item-content>
-        </v-list-item>-->
-
-        <router-link to="/about">
-          <v-list-item v-ripple @click>
-            <!-- <v-list-item-action>
-            <v-icon>mdi-settings</v-icon>
-            </v-list-item-action>-->
-            <v-list-item-content>
-              <v-list-item-title>About</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </router-link>
-      </v-list>
-    </v-navigation-drawer>
-
-    <v-app-bar app clipped-left>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>NewOps</v-toolbar-title>
-
-      <v-spacer></v-spacer>
-
-      <div>user: {{user.user}}</div>
-      <v-menu bottom left>
-        <template v-slot:activator="{ on }">
-          <v-btn icon v-on="on">
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item @click="logout">
-            <!-- <v-icon>logout</v-icon> -->
-            logout
-          </v-list-item>
-          <!-- <v-list-item v-for="(item, i) in items" :key="i" @click="logout">
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>-->
-        </v-list>
-      </v-menu>
-    </v-app-bar>
 
-    <!-- <v-content>
+          <router-link to="/about">
+            <v-list-item v-ripple>
+              <!-- <v-list-item-action>
+            <v-icon>mdi-settings</v-icon>
+              </v-list-item-action>-->
+              <v-list-item-content>
+                <v-list-item-title>About</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </router-link>
+        </v-list>
+      </v-navigation-drawer>
+
+      <v-app-bar app clipped-left>
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-toolbar-title>NewOps</v-toolbar-title>
+
+        <v-spacer></v-spacer>
+
+        <div>user: {{user.user}}</div>
+        <v-menu bottom left>
+          <template v-slot:activator="{ on }">
+            <v-btn icon v-on="on">
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item @click="logout">
+              <!-- <v-icon>logout</v-icon> -->
+              logout
+            </v-list-item>
+            <!-- <v-list-item v-for="(item, i) in items" :key="i" @click="logout">
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item>-->
+          </v-list>
+        </v-menu>
+      </v-app-bar>
+
+      <!-- <v-content>
       <v-container class="fill-height" fluid>
         <v-row align="center" justify="center">
           <v-col class="shrink">
@@ -108,16 +108,18 @@
           </v-col>
         </v-row>
       </v-container>
-    </v-content>-->
+      </v-content>-->
 
-    <v-content>
-      <router-view />
-    </v-content>
+      <v-content>
+        <router-view />
+      </v-content>
 
-    <v-footer app>
+      <!-- <v-footer app elevation="0">
       <div text-right>&copy; haodai.com 2019</div>
-    </v-footer>
-  </v-app>
+      </v-footer>-->
+    </v-app>
+    <div text-right>&copy; haodai.com 2019</div>
+  </div>
 </template>
 
 <script>
@@ -127,7 +129,7 @@ export default {
     source: String
   },
   data: () => ({
-    drawer: null,
+    drawer: false,
     user: {
       user: null
     }

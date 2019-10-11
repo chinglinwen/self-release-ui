@@ -1,8 +1,19 @@
 <template>
-  <v-row justify="center">
+  <div>
+    <!-- <v-row justify="center"> -->
     <v-dialog v-model="dialog" max-width="600">
       <template v-slot:activator="{ on }">
-        <v-btn color="blue" dark v-on="on" @click="getConfig">config</v-btn>
+        <!-- <v-btn color="blue" dark v-on="on" @click="getConfig">Config</v-btn> -->
+
+        <v-chip color="blue" dark v-on="on" @click="getConfig">配置</v-chip>
+
+        <!-- <v-switch v-model="dialog" @change="getConfig" slabel></v-switch> -->
+
+        <!-- <div>
+          <v-btn left class="d-inline" color="primary" dark v-on="on" @click="getConfig">Config</v-btn>
+        </div>-->
+
+        <!-- <div pa="0" ma="0" class="d-inline" v-on="on" @click="getConfig">Config</div> -->
       </template>
 
       <v-card>
@@ -11,18 +22,18 @@
           <v-form ref="form" v-model="valid">
             <div v-if="editing === config.id">
               <v-layout column>
-                <v-flex>
+                <div>
                   Enable:
                   <v-switch v-model="config.enable" @click="setdefault"></v-switch>
-                </v-flex>
+                </div>
 
-                <v-flex>
+                <div>
                   <div ma="12" pa="2">
                     Dev Branch:
                     <v-text-field v-if="editing === config.id" label v-model="config.devBranch"></v-text-field>
                   </div>
-                </v-flex>
-                <v-flex>
+                </div>
+                <div>
                   <div ma="12" pa="2">
                     Build Mode:
                     <!-- <v-text-field v-if="editing === config.id" label v-model="config.buildMode"></v-text-field> -->
@@ -33,8 +44,8 @@
                       label
                     ></v-select>
                   </div>
-                </v-flex>
-                <v-flex>
+                </div>
+                <div>
                   <div ma="12" pa="2">
                     K8s Template Version:
                     <!-- <v-text-field v-if="editing === config.id" label v-model="config.configVer"></v-text-field> -->
@@ -46,9 +57,9 @@
                       label
                     ></v-select>
                   </div>
-                </v-flex>
+                </div>
 
-                <v-flex>
+                <div>
                   <div ma="12" pa="2">
                     Self-Release Version:
                     <!-- <v-text-field v-if="editing === config.id" label v-model="config.version"></v-text-field> -->
@@ -59,20 +70,20 @@
                       label
                     ></v-select>
                   </div>
-                </v-flex>
+                </div>
               </v-layout>
             </div>
             <div v-else>
               <v-layout column>
-                <v-flex md="6">Enable: {{ config.enable }}</v-flex>
+                <div md="6">Enable: {{ config.enable }}</div>
 
-                <v-flex md="6">Dev Branch: {{ config.devBranch }}</v-flex>
+                <div md="6">Dev Branch: {{ config.devBranch }}</div>
 
-                <v-flex md="6">Build Mode: {{ config.buildMode }}</v-flex>
+                <div md="6">Build Mode: {{ config.buildMode }}</div>
 
-                <v-flex md="6">K8s Template Version: {{ config.configVer }}</v-flex>
+                <div md="6">K8s Template Version: {{ config.configVer }}</div>
 
-                <v-flex md="6">Self-Release Version: {{ config.version }}</v-flex>
+                <div md="6">Self-Release Version: {{ config.version }}</div>
               </v-layout>
             </div>
 
@@ -126,21 +137,20 @@
       </v-card>
     </v-dialog>
 
-    <v-flex>
-      <v-snackbar
-        v-if="notify"
-        v-model="notify"
-        :bottom="true"
-        :color="notify.color"
-        :multi-line="true"
-        :right="true"
-        :timeout="notify.timeout"
-      >
-        {{ notify.msg }}
-        <v-btn dark text @click="notify = false">Close</v-btn>
-      </v-snackbar>
-    </v-flex>
-  </v-row>
+    <v-snackbar
+      v-if="notify"
+      v-model="notify"
+      :bottom="true"
+      :color="notify.color"
+      :multi-line="true"
+      :right="true"
+      :timeout="notify.timeout"
+    >
+      {{ notify.msg }}
+      <v-btn dark text @click="notify = false">Close</v-btn>
+    </v-snackbar>
+  </div>
+  <!-- </v-row> -->
 </template>
 
 <script>
@@ -152,7 +162,13 @@ export default {
     }
     // existConfig: Object
   },
-
+  watch: {
+    dialog: function() {
+      if (!this.dialog) {
+        this.clearStatus();
+      }
+    }
+  },
   data() {
     return {
       config: {
@@ -300,6 +316,7 @@ export default {
       this.error = false;
       this.editing = null;
       this.creating = false;
+      this.notify = null;
     }
   }
 };

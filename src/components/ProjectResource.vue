@@ -11,7 +11,13 @@
     transition="dialog-bottom-transition"
   >
     <template v-slot:activator="{ on }">
-      <v-btn left color="primary" dark v-on="on" @click="opensetting">Set</v-btn>
+      <!-- <div>
+        <v-btn left class="d-inline" color="primary" dark v-on="on" @click="opensetting">Set</v-btn>
+      </div>-->
+
+      <v-chip color="blue" dark v-on="on" @click="opensetting">资源设置</v-chip>
+
+      <!-- <div pa="0" ma="0" class="d-inline" v-on="on" @click="opensetting">Set</div> -->
     </template>
 
     <v-card>
