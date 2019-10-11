@@ -1,6 +1,4 @@
 <template>
-  <!-- <v-row justify="center"> -->
-  <!-- <v-row >  -->
   <v-dialog
     justify="center"
     v-model="dialog"
@@ -14,9 +12,7 @@
       <!-- <div>
         <v-btn left class="d-inline" color="primary" dark v-on="on" @click="opensetting">Set</v-btn>
       </div>-->
-
       <v-chip color="blue" dark v-on="on" @click="opensetting">资源设置</v-chip>
-
       <!-- <div pa="0" ma="0" class="d-inline" v-on="on" @click="opensetting">Set</div> -->
     </template>
 

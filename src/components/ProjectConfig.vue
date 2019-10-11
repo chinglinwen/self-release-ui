@@ -1,19 +1,10 @@
 <template>
   <div>
-    <!-- <v-row justify="center"> -->
     <v-dialog v-model="dialog" max-width="600">
       <template v-slot:activator="{ on }">
         <!-- <v-btn color="blue" dark v-on="on" @click="getConfig">Config</v-btn> -->
-
         <v-chip color="blue" dark v-on="on" @click="getConfig">配置</v-chip>
-
         <!-- <v-switch v-model="dialog" @change="getConfig" slabel></v-switch> -->
-
-        <!-- <div>
-          <v-btn left class="d-inline" color="primary" dark v-on="on" @click="getConfig">Config</v-btn>
-        </div>-->
-
-        <!-- <div pa="0" ma="0" class="d-inline" v-on="on" @click="getConfig">Config</div> -->
       </template>
 
       <v-card>
@@ -36,7 +27,6 @@
                 <div>
                   <div ma="12" pa="2">
                     Build Mode:
-                    <!-- <v-text-field v-if="editing === config.id" label v-model="config.buildMode"></v-text-field> -->
                     <v-select
                       v-if="editing === config.id"
                       v-model="config.buildMode"
@@ -48,8 +38,6 @@
                 <div>
                   <div ma="12" pa="2">
                     K8s Template Version:
-                    <!-- <v-text-field v-if="editing === config.id" label v-model="config.configVer"></v-text-field> -->
-
                     <v-select
                       v-if="editing === config.id"
                       v-model="config.configVer"
@@ -62,7 +50,6 @@
                 <div>
                   <div ma="12" pa="2">
                     Self-Release Version:
-                    <!-- <v-text-field v-if="editing === config.id" label v-model="config.version"></v-text-field> -->
                     <v-select
                       v-if="editing === config.id"
                       v-model="config.version"
@@ -76,41 +63,12 @@
             <div v-else>
               <v-layout column>
                 <div md="6">Enable: {{ config.enable }}</div>
-
                 <div md="6">Dev Branch: {{ config.devBranch }}</div>
-
                 <div md="6">Build Mode: {{ config.buildMode }}</div>
-
                 <div md="6">K8s Template Version: {{ config.configVer }}</div>
-
                 <div md="6">Self-Release Version: {{ config.version }}</div>
               </v-layout>
             </div>
-
-            <!-- <v-layout column>
-                <v-row>
-                  <v-col>Enable:</v-col>
-                  <v-col>{{ config.enable }}</v-col>
-                </v-row>
-
-                <v-row>
-                  <v-col>Dev Branch:</v-col>
-                  <v-col>{{ config.devBranch }}</v-col>
-                </v-row>
-                <v-row>
-                  <v-col>Build Mode:</v-col>
-                  <v-col>{{ config.buildMode }}</v-col>
-                </v-row>
-                <v-row>
-                  <v-col>K8s Template Version:</v-col>
-                  <v-col>{{ config.configVer }}</v-col>
-                </v-row>
-                <v-row>
-                  <v-col>Self-Release Version:</v-col>
-                  <v-col>{{ config.version }}</v-col>
-                </v-row>
-            </v-layout>-->
-
             <v-card-actions>
               <div class="flex-grow-1"></div>
 
@@ -150,7 +108,6 @@
       <v-btn dark text @click="notify = false">Close</v-btn>
     </v-snackbar>
   </div>
-  <!-- </v-row> -->
 </template>
 
 <script>
@@ -160,7 +117,6 @@ export default {
       type: Object,
       required: true
     }
-    // existConfig: Object
   },
   watch: {
     dialog: function() {
@@ -205,9 +161,6 @@ export default {
       editing: null
     };
   },
-  created() {
-    // this.getConfig();
-  },
   methods: {
     getConfig() {
       let url = "/api/projects/" + this.project.name + "/config";
@@ -215,7 +168,6 @@ export default {
         .then(json => json.data)
         .then(json => {
           this.config = json.selfrelease;
-          // this.setdefault();
           this._config = JSON.parse(JSON.stringify(this.config));
         })
         .catch(err => {
@@ -243,30 +195,13 @@ export default {
       Object.assign(item, this.cacheditem);
       this.editing = null;
     },
-
-    // form
     handleSubmit(item) {
-      // if (this.enable) {
-      //   item.enable = "on";
-      // } else {
-      //   item.enable = "off";
-      // }
       let a = {
         selfrelease: item
       };
       let data = JSON.stringify(a);
-      // if (this.$refs.form.validate()) {
-      //   this.snackbar = true;
-      //   console.log("not valid for config");
-      // }
-
-      // item.nodePort = parseInt(item.nodePort, 10);
-      // item.deploy.replicas = parseInt(item.deploy.replicas, 10);
-      // this.$emit("add:item", item);
-
       if (JSON.stringify(this._config) == JSON.stringify(this.config)) {
         this.notify = { color: "orange", msg: "there's no change" };
-        console.log("no need update all");
         return;
       }
 
@@ -275,10 +210,7 @@ export default {
       // prevent submitting during submitting
       this.submitting = true;
 
-      // let a = convertback(this.all);
       let url = "/api/projects/" + this.project.name + "/config";
-      // let data = JSON.stringify(a, replacer, 2);
-
       console.log("data:", data);
 
       // call api

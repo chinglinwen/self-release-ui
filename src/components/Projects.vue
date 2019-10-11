@@ -46,29 +46,18 @@
                 </td>
                 <td class="text-xs-left">
                   <project-resource :project="item" />
-                  <!-- <project-config pa="0" ma="0" :project="item" /> -->
-
-                  <!-- <v-chip color="blue" dark @click>Set</v-chip>
-                  <v-chip color="blue" dark @click>Set</v-chip>-->
                 </td>
               </tr>
             </tbody>
+          </template>
+
+          <template v-slot:expanded-item="{ headers }">
+            <td :colspan="headers.length">Peek-a-boo!</td>
           </template>
         </v-data-table>
       </template>
       <v-divider></v-divider>
     </v-card-text>
-    <!-- <v-snackbar
-      v-model="iserror"
-      :bottom="true"
-      color="red"
-      :multi-line="true"
-      :right="true"
-      :timeout="5000"
-    >
-      {{ error }}
-      <v-btn dark text @click="iserror = false">Close</v-btn>
-    </v-snackbar>-->
 
     <v-flex ma="5">
       <v-snackbar
@@ -88,7 +77,6 @@
 </template>
 
 <script>
-// import axios from "axios";
 import ProjectConfig from "./ProjectConfig.vue";
 import ProjectResource from "./ProjectResource.vue";
 import { timeout } from "q";
@@ -100,14 +88,10 @@ export default {
   },
   data() {
     return {
-      showConfig: false,
       user: {},
       notify: null,
-      // iserror: false,
-      // error: "",
       loading: false,
       projects: [],
-      // projects: mockProjects,
       search: "",
       headers: [
         {
@@ -125,29 +109,7 @@ export default {
     this.fetchProjects();
   },
   methods: {
-    // call project init?
-    // enableProject(project) {
-    //   this.$POST("http://192.168.10.234:8089/api/projects/" + project.id, {
-    //     name: "foo",
-    //     surname: "bar"
-    //   })
-    //     .then(res => {
-    //       console.log("called", res);
-    //     })
-    //     .catch(err => {
-    //       console.log(err.message);
-    //       // this.iserror = true;
-    //       // this.error = err.message;
-    //       project.state = false;
-
-    //       this.notify = { color: "error", msg: err.message, timeout: 86400 };
-    //     });
-    // },
-    enableProject() {
-      this.showConfig = true;
-    },
     refreshProjects() {
-      // debuggers;
       console.log("try refresh projects lists");
       this.fetchProjects("yes");
     },
