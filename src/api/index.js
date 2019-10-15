@@ -5,9 +5,9 @@ import router from '../router';
 
 // 环境的切换
 if (process.env.NODE_ENV == 'production') {
-    axios.defaults.baseURL = 'http://release.newops.haodai.net';
+    axios.defaults.baseURL = 'http://release.haodai.net';
 } else {
-    axios.defaults.baseURL = 'http://release-test.newops.haodai.net';
+    axios.defaults.baseURL = 'http://release.haodai.net';
 }
 
 // 请求超时时间
