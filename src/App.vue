@@ -145,9 +145,23 @@ export default {
         // console.log("user: ", this.user);
       })
       .catch(err => {
-        this.loading = false;
-        console.log("get user err", err);
-        this.notify = { color: "error", msg: err.message, timeout: 86400 };
+        console.log("token expired, relogin now.");
+        this.logout();
+        this.$GET("/api/users/")
+          .then(res => {
+            this.user = res.data;
+            this.loading = false;
+            // console.log("user: ", this.user);
+          })
+          .catch(err => {
+            this.loading = false;
+            console.log("get user err", err);
+            this.notify = { color: "error", msg: err.message, timeout: 86400 };
+          });
+
+        // this.loading = false;
+        // console.log("get user err", err);
+        // this.notify = { color: "error", msg: err.message, timeout: 86400 };
       });
   },
   methods: {
