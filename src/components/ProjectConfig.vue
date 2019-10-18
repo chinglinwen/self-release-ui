@@ -85,7 +85,8 @@
               <div v-else>
                 <v-btn @click="editMode(config)">
                   <!-- <v-icon>edit</v-icon> -->
-                  edit
+                  <div v-if="configexist">edit</div>
+                  <div v-else>create</div>
                 </v-btn>
               </div>
             </v-card-actions>
@@ -133,6 +134,7 @@ export default {
       _config: null,
       dialog: false,
       notify: null,
+      configexist: false,
 
       buildmodes: ["auto", "on", "manual"],
       configvers: ["phpv1"],
@@ -172,10 +174,14 @@ export default {
         })
         .catch(err => {
           // console.log("getinfos err", err);
-          this.notify = { color: "error", msg: err.message, timeout: 86400 };
+          // this.notify = { color: "error", msg: err.message };
+          this.configexist = true;
         });
     },
     setdefault() {
+      if (!this.config.devBranch) {
+        this.config.devBranch = "develop";
+      }
       if (!this.config.version) {
         this.config.version = "v1.0.0";
       }
@@ -193,7 +199,9 @@ export default {
     },
     cancelEdit(item) {
       Object.assign(item, this.cacheditem);
-      this.editing = null;
+      // this.editing = null;
+
+      this.clearStatus();
     },
     handleSubmit(item) {
       let a = {
@@ -221,7 +229,9 @@ export default {
           console.log("submit result", res);
           this.loading = false;
           this.submitting = false;
-          this.updated = false;
+          this.updated = true;
+
+          this.configexist = true;
           this.notify = {
             color: "success",
             msg: "all saved",
@@ -249,6 +259,8 @@ export default {
       this.editing = null;
       this.creating = false;
       this.notify = null;
+
+      this.config = JSON.parse(JSON.stringify(this._config));
     }
   }
 };

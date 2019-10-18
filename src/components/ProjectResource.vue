@@ -61,7 +61,10 @@
 
             <v-card-actions>
               <v-btn color="blue darken-1" text @click="close">Close</v-btn>
-              <v-btn :disabled="submitting" color="blue darken-1" text @click="submitall">Save All</v-btn>
+              <v-btn :disabled="submitting" color="blue darken-1" text @click="submitall">
+                <div v-if="valuesexist">Save All</div>
+                <div v-else>create</div>
+              </v-btn>
             </v-card-actions>
 
             <v-progress-linear
@@ -121,6 +124,7 @@ export default {
     }
   },
   data: () => ({
+    valuesexist: false,
     dialog: false,
     notify: null,
     //deploy env
@@ -245,7 +249,8 @@ export default {
         })
         .catch(err => {
           // console.log("get resource api err", err);
-          this.notify = { color: "error", msg: err.message, timeout: 86400 };
+          // this.notify = { color: "error", msg: err.message, timeout: 86400 };
+          // this.valuesexist=false;
         });
     },
     close() {
