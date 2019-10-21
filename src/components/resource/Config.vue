@@ -1,7 +1,8 @@
 <template>
   <div>
     <v-card-title>Configs</v-card-title>
-    <v-container v-if="config" width="600px">
+    <!-- <v-container v-if="config" width="600px"> -->
+    <v-container width="600px">
       <v-form ref="form" v-model="valid">
         <v-layout>
           <v-row>
@@ -55,7 +56,7 @@
         </v-layout>
       </v-form>
     </v-container>
-    <v-container v-else>fetching...</v-container>
+    <!-- <v-container v-else>fetching...</v-container> -->
   </div>
 </template>
 
@@ -63,21 +64,91 @@
 export default {
   props: {
     env: null,
-    existConfig: Object
-  },
-  watch: {
-    existConfig: function(c, oldc) {
-      // this.config = c;
-      this.config = JSON.parse(JSON.stringify(c));
+    // existConfig: Object
+    existConfig: {
+      type: Object,
+      default: function() {
+        return {
+          deploy: {},
+          monitor: {}
+        };
+      }
     }
   },
+  // watch: {
+  //   existConfig: function(c, oldc) {
+  //     // // this.config = c;
+  //     console.log("enter configwatch");
+  //     if (c) {
+  //       // if (this.env == "online") {
+  //       // }
+  //       // if (c.nodePort != 0 || c.domain != "" ) {
+  //       //   this.config = JSON.parse(JSON.stringify(c));
+  //       // }
+  //       console.log("fetched config: ", JSON.stringify(c), "for: ", this.env);
+
+  //       this.config = JSON.parse(JSON.stringify(c));
+
+  //       console.log("cur config:", JSON.stringify(this.config));
+
+  //       // if (!this.config.deploy) {
+  //       //   console.log("init default deploy");
+  //       //   this.config.deploy = {
+  //       //     replicas: 0
+  //       //   };
+  //       // }
+  //       // if (!this.config.monitor) {
+  //       //   console.log("init default  monitor");
+  //       //   this.config.monitor = {
+  //       //     address: ""
+  //       //   };
+  //       // }
+  //     }
+  //     // console.log("watching existconfig change...");
+  //     // if (c) {
+  //     //   console.log("fetched config: ", JSON.stringify(c));
+  //     //   this.config = JSON.parse(JSON.stringify(c));
+
+  //     //   if (!this.config.deploy) {
+  //     //     console.log("init default deploy");
+  //     //     this.config.deploy = {
+  //     //       replicas: 0
+  //     //     };
+  //     //   }
+  //     //   if (!this.config.monitor) {
+  //     //     console.log("init default  monitor");
+  //     //     this.config.monitor = {
+  //     //       address: ""
+  //     //     };
+  //     //   }
+  //     // } else {
+  //     //   this.notcreateyet = true;
+  //     //   this.editing = true;
+  //     //   this.config = {
+  //     //     nodePort: 0,
+  //     //     domain: "",
+  //     //     monitor: {
+  //     //       address: ""
+  //     //     },
+  //     //     deploy: {
+  //     //       replicas: 0
+  //     //     }
+  //     //   };
+
+  //     //   console.log("set default config: ", JSON.stringify(c));
+  //     // }
+  //   }
+  // },
   // computed: {
   //   config() {
   //     return this.existConfig;
   //   }
   // },
   data: () => ({
-    config: {},
+    config: {
+      // deploy: {},
+      // monitor: {}
+    },
     error: false,
     submitting: false,
     success: false,
@@ -115,6 +186,38 @@ export default {
   }),
   created() {
     // console.log("config env: ", this.env, this.existConfig);
+    // console.log("config env: ", this.env, JSON.stringify(this.existConfig));
+    // console.log("config env: ", this.env, this.config);
+    console.log("config env(config): ", this.env, JSON.stringify(this.config));
+    console.log(
+      "config env(existConfig): ",
+      this.env,
+      JSON.stringify(this.existConfig)
+    );
+
+    // if (this.env === "online") {
+    //   this.config = {
+    //     nodePort: 0,
+    //     domain: "",
+    //     deploy: {
+    //       replicas: 0
+    //     },
+    //     monitor: {
+    //       address: ""
+    //     }
+    //   };
+    // } else {
+    //   this.config = {
+    //     deploy: {
+    //       replicas: 0
+    //     }
+    //   };
+    // }
+    // if (this.existConfig) {
+    //   this.config = this.existConfig;
+    // }
+
+    // let parents components to avoid underfine value
     this.config = this.existConfig;
   },
   methods: {
@@ -160,7 +263,9 @@ export default {
       this.clearStatus();
       this.submitting = true;
 
-      item.nodePort = parseInt(item.nodePort, 10);
+      if (this.env === "online") {
+        item.nodePort = parseInt(item.nodePort, 10);
+      }
       item.deploy.replicas = parseInt(item.deploy.replicas, 10);
       this.$emit("add:item", item);
 

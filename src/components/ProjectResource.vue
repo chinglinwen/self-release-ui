@@ -31,10 +31,10 @@
 
         <v-tab-item v-for="env in envlist" :key="env" :value="env">
           <v-card-text>
-            <!-- <v-row v-if="env=='online'">nodePort: 80</v-row> -->
-            <!-- <v-row>nodePort {{env}}</v-row> -->
-
-            <Config :env="env" :existConfig="x.existConfig" @add:item="configSubmit" />
+            <div v-if="showconfig">
+              <Config :env="env" :existConfig="x.existConfig" @add:item="configSubmit" />
+            </div>
+            <div v-else>fetching config....</div>
 
             <Env :existItems="x.existEnvs" @add:item="envsSubmit" @delete:item="envsDelete" />
 
@@ -143,6 +143,7 @@ export default {
       existRedis: {},
       existNfs: {}
     },
+    showconfig: false,
     all: {
       online: {},
       pre: {},
@@ -178,10 +179,17 @@ export default {
       // console.log("pre: ", this.all.pre);
       // console.log("test: ", this.all.test);
 
-      this.x = this.all[env];
-      // console.log("got x: ", this.x, "for env: ", env);
+      // this.x = this.all[env];
 
+      // backup exist change
+      this.all[this.tab] = JSON.parse(JSON.stringify(this.x));
+      // console.log("saved change for env: ", this.tab, "x: ", this.x);
+
+      this.x = JSON.parse(JSON.stringify(this.all[env]));
+      // console.log("got x: ", this.x, "for env: ", env);
       this.env = env;
+
+      // console.log("changed to new env: ", env, "x: ", this.x);
     },
     opensetting() {
       this.getInfo();
@@ -194,10 +202,40 @@ export default {
       };
 
       // need to initialied
-      this.all.online = x;
-      this.all.pre = x;
-      this.all.test = x;
-      this.x = x;
+      this.all.online = JSON.parse(JSON.stringify(x));
+      this.all.pre = JSON.parse(JSON.stringify(x));
+      this.all.test = JSON.parse(JSON.stringify(x));
+      this.x = JSON.parse(JSON.stringify(x));
+
+      // create default values for all env (if not set before)
+      if (!this.all.online.existConfig) {
+        console.log("init zero online");
+        this.all.online.existConfig = {
+          nodePort: 0,
+          domain: "",
+          deploy: {
+            replicas: 0
+          },
+          monitor: {
+            address: ""
+          }
+        };
+      }
+      if (!this.all.pre.existConfig)
+        this.all.pre.existConfig = {
+          deploy: {
+            replicas: 0
+          }
+        };
+      if (!this.all.test.existConfig)
+        this.all.test.existConfig = {
+          deploy: {
+            replicas: 0
+          }
+        };
+
+      // console.log("all:", JSON.stringify(this.all, null, 2));
+
       // this._all = Object.assign({}, this.all);
       this._all = JSON.parse(JSON.stringify(this.all));
 
@@ -207,10 +245,11 @@ export default {
           this.all.online = convert(this.resources["online"]);
           this.all.pre = convert(this.resources["pre"]);
           this.all.test = convert(this.resources["test"]);
-          this.x = this.all.online;
+          this.x = JSON.parse(JSON.stringify(this.all.online));
 
           // create default values for all env (if not set before)
-          if (!this.all.online.existConfig)
+          if (!this.all.online.existConfig) {
+            console.log("assign zero online");
             this.all.online.existConfig = {
               nodePort: 0,
               domain: "",
@@ -221,36 +260,63 @@ export default {
                 address: ""
               }
             };
+          }
           if (!this.all.pre.existConfig)
+            // console.log("assign zero pre")
             this.all.pre.existConfig = {
-              nodePort: 0,
-              domain: "",
               deploy: {
                 replicas: 0
-              },
-              monitor: {
-                address: ""
               }
             };
           if (!this.all.test.existConfig)
+            // console.log("assign zero test")
             this.all.test.existConfig = {
-              nodePort: 0,
-              domain: "",
               deploy: {
                 replicas: 0
-              },
-              monitor: {
-                address: ""
               }
             };
 
+          this.showconfig = true;
+
+          // console.log(
+          //   "showconfig for x.existConfig: ",
+          //   JSON.stringify(this.x.existConfig)
+          // );
+
+          console.log("fetch all:", JSON.stringify(this.all));
+
           // deep copy instead
           this._all = JSON.parse(JSON.stringify(this.all));
+
+          // console.log(
+          //   "init old:",
+          //   this._all[this.tab].existConfig.deploy.replicas
+          // );
+
+          // console.log(
+          //   "init new:",
+          //   this.all[this.tab].existConfig.deploy.replicas
+          // );
+
+          // this.all[this.tab].existConfig.deploy.replicas = 3;
+          // console.log(
+          //   "init old:",
+          //   this._all[this.tab].existConfig.deploy.replicas
+          // );
+
+          // console.log(
+          //   "init new:",
+          //   this.all[this.tab].existConfig.deploy.replicas
+          // );
         })
         .catch(err => {
-          // console.log("get resource api err", err);
+          this.showconfig = true;
+
+          console.log("get resource api err", err);
           // this.notify = { color: "error", msg: err.message, timeout: 86400 };
           // this.valuesexist=false;
+
+          // console.log("fetch all");
         });
     },
     close() {
@@ -272,9 +338,38 @@ export default {
       }
     },
     configSubmit(item) {
-      console.log("add config", item);
-      this.x.existConfig = item;
+      console.log("add config", JSON.stringify(item));
+
+      // console.log(
+      //   "env",
+      //   this.tab,
+      //   "old:",
+      //   this._all[this.tab].existConfig.deploy.replicas
+      // );
+      // console.log(
+      //   "env",
+      //   this.tab,
+      //   "new:",
+      //   this.all[this.tab].existConfig.deploy.replicas
+      // );
+
+      // this.x.existConfig = item;
+      // this.all[this.tab].existConfig = item;
+      this.all[this.tab].existConfig = JSON.parse(JSON.stringify(item));
       // console.log("config json", JSON.stringify(item));
+
+      // console.log(
+      //   "env",
+      //   this.tab,
+      //   "after old:",
+      //   this._all[this.tab].existConfig.deploy.replicas
+      // );
+      // console.log(
+      //   "env",
+      //   this.tab,
+      //   "after new:",
+      //   this.all[this.tab].existConfig.deploy.replicas
+      // );
     },
 
     envsDelete(item) {
@@ -342,6 +437,9 @@ export default {
       return;
     },
     submitall() {
+      // console.log("old:", this._all[this.tab].existConfig.deploy.replicas);
+      // console.log("new:", this.all[this.tab].existConfig.deploy.replicas);
+
       if (JSON.stringify(this._all) == JSON.stringify(this.all)) {
         this.notify = { color: "orange", msg: "there's no change" };
         console.log("no need update all");
