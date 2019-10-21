@@ -186,7 +186,6 @@ export default {
 
       // create default values for all env (if not set before)
       if (!this.all.online.existConfig) {
-        console.log("init zero online");
         this.all.online.existConfig = {
           nodePort: 0,
           domain: "",
@@ -254,7 +253,7 @@ export default {
             };
 
           this.showconfig = true;
-          console.log("fetch all:", JSON.stringify(this.all));
+          // console.log("fetch all:", JSON.stringify(this.all));
 
           // deep copy instead
           this._all = JSON.parse(JSON.stringify(this.all));
