@@ -27,10 +27,12 @@
 
         <v-tab-item v-for="env in envlist" :key="env" :value="env">
           <v-card-text>
-            <div v-if="showconfig">
-              <Config :env="env" :existConfig="x.existConfig" @add:item="configSubmit" />
+            <div v-if="env='online'">
+              <div v-if="showconfig">
+                <Config :env="env" :existConfig="x.existConfig" @add:item="configSubmit" />
+              </div>
+              <div v-else>fetching config....</div>
             </div>
-            <div v-else>fetching config....</div>
 
             <Env :existItems="x.existEnvs" @add:item="envsSubmit" @delete:item="envsDelete" />
 
