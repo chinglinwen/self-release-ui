@@ -9,11 +9,7 @@
     transition="dialog-bottom-transition"
   >
     <template v-slot:activator="{ on }">
-      <!-- <div>
-        <v-btn left class="d-inline" color="primary" dark v-on="on" @click="opensetting">Set</v-btn>
-      </div>-->
       <v-chip color="blue" dark v-on="on" @click="opensetting">资源设置</v-chip>
-      <!-- <div pa="0" ma="0" class="d-inline" v-on="on" @click="opensetting">Set</div> -->
     </template>
 
     <v-card>
@@ -94,7 +90,6 @@
       </v-tabs>
     </v-card>
   </v-dialog>
-  <!-- </v-row> -->
 </template>
 
 <script>
@@ -130,13 +125,6 @@ export default {
     //deploy env
     tab: "online",
     envlist: ["online", "pre", "test"],
-    // existConfig: {
-    //   nodePort: "30000",
-    //   domain: "example.com",
-    //   deploy: {
-    //     replicas: 2
-    //   }
-    // },
     x: {
       existMysql: {},
       existEnvs: {},
@@ -166,21 +154,10 @@ export default {
     let namewithpath = this.project.name.split("/");
     this.ns = namewithpath[0];
     this.name = namewithpath[1];
-
-    // console.log("ns: ", this.ns, ", project: ", this.name);
   },
   // get projects exist resources
   methods: {
     changeTab(env) {
-      // console.log("changed to env key: ", env);
-      // console.log("changed to tab: ", this.tab, "env:", this.envlist[this.tab]);
-
-      // console.log("online: ", this.all.online);
-      // console.log("pre: ", this.all.pre);
-      // console.log("test: ", this.all.test);
-
-      // this.x = this.all[env];
-
       // backup exist change
       this.all[this.tab] = JSON.parse(JSON.stringify(this.x));
       // console.log("saved change for env: ", this.tab, "x: ", this.x);
@@ -277,46 +254,16 @@ export default {
             };
 
           this.showconfig = true;
-
-          // console.log(
-          //   "showconfig for x.existConfig: ",
-          //   JSON.stringify(this.x.existConfig)
-          // );
-
           console.log("fetch all:", JSON.stringify(this.all));
 
           // deep copy instead
           this._all = JSON.parse(JSON.stringify(this.all));
-
-          // console.log(
-          //   "init old:",
-          //   this._all[this.tab].existConfig.deploy.replicas
-          // );
-
-          // console.log(
-          //   "init new:",
-          //   this.all[this.tab].existConfig.deploy.replicas
-          // );
-
-          // this.all[this.tab].existConfig.deploy.replicas = 3;
-          // console.log(
-          //   "init old:",
-          //   this._all[this.tab].existConfig.deploy.replicas
-          // );
-
-          // console.log(
-          //   "init new:",
-          //   this.all[this.tab].existConfig.deploy.replicas
-          // );
         })
         .catch(err => {
           this.showconfig = true;
-
-          console.log("get resource api err", err);
+          console.log("get resource api failed, try create new", err);
           // this.notify = { color: "error", msg: err.message, timeout: 86400 };
           // this.valuesexist=false;
-
-          // console.log("fetch all");
         });
     },
     close() {
@@ -340,36 +287,10 @@ export default {
     configSubmit(item) {
       console.log("add config", JSON.stringify(item));
 
-      // console.log(
-      //   "env",
-      //   this.tab,
-      //   "old:",
-      //   this._all[this.tab].existConfig.deploy.replicas
-      // );
-      // console.log(
-      //   "env",
-      //   this.tab,
-      //   "new:",
-      //   this.all[this.tab].existConfig.deploy.replicas
-      // );
-
       // this.x.existConfig = item;
       // this.all[this.tab].existConfig = item;
       this.all[this.tab].existConfig = JSON.parse(JSON.stringify(item));
       // console.log("config json", JSON.stringify(item));
-
-      // console.log(
-      //   "env",
-      //   this.tab,
-      //   "after old:",
-      //   this._all[this.tab].existConfig.deploy.replicas
-      // );
-      // console.log(
-      //   "env",
-      //   this.tab,
-      //   "after new:",
-      //   this.all[this.tab].existConfig.deploy.replicas
-      // );
     },
 
     envsDelete(item) {
@@ -422,9 +343,6 @@ export default {
           this.notify = { color: "error", msg: err.message, timeout: 86400 };
         });
 
-      // fetch("http://nfssvc.newops.haodai.net/api/")
-      //   .then(response => response.json())
-
       this.$GET(nfssvcDomain + "/api/")
 
         .then(json => {
@@ -437,9 +355,6 @@ export default {
       return;
     },
     submitall() {
-      // console.log("old:", this._all[this.tab].existConfig.deploy.replicas);
-      // console.log("new:", this.all[this.tab].existConfig.deploy.replicas);
-
       if (JSON.stringify(this._all) == JSON.stringify(this.all)) {
         this.notify = { color: "orange", msg: "there's no change" };
         console.log("no need update all");

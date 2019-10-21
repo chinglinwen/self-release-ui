@@ -185,15 +185,12 @@ export default {
     itemname: ""
   }),
   created() {
-    // console.log("config env: ", this.env, this.existConfig);
-    // console.log("config env: ", this.env, JSON.stringify(this.existConfig));
-    // console.log("config env: ", this.env, this.config);
-    console.log("config env(config): ", this.env, JSON.stringify(this.config));
-    console.log(
-      "config env(existConfig): ",
-      this.env,
-      JSON.stringify(this.existConfig)
-    );
+    // console.log("config env(config): ", this.env, JSON.stringify(this.config));
+    // console.log(
+    //   "config env(existConfig): ",
+    //   this.env,
+    //   JSON.stringify(this.existConfig)
+    // );
 
     // if (this.env === "online") {
     //   this.config = {
@@ -212,9 +209,6 @@ export default {
     //       replicas: 0
     //     }
     //   };
-    // }
-    // if (this.existConfig) {
-    //   this.config = this.existConfig;
     // }
 
     // let parents components to avoid underfine value
