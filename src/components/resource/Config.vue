@@ -8,7 +8,7 @@
           <v-row>
             <v-flex v-if="env=='online'" md2 pa-2>
               <div v-if="editing === item.id">
-                NodePort:
+                NodePort*:
                 <v-text-field label :rules="rules.notzero" v-model="config.nodePort"></v-text-field>
               </div>
               <div v-else>NodePort: {{ config.nodePort }}</div>
@@ -16,21 +16,21 @@
             <v-flex v-if="env=='online'" md2 pa-2>
               <div v-if="editing === item.id">
                 Domain:
-                <v-text-field label :rules="rules.notempty" v-model="config.domain"></v-text-field>
+                <v-text-field label v-model="config.domain"></v-text-field>
               </div>
               <div v-else>Domain: {{ config.domain }}</div>
             </v-flex>
             <v-flex v-if="env=='online'" md2 pa-2>
               <div v-if="editing === item.id">
                 Monitor address:
-                <v-text-field label :rules="rules.notempty" v-model="config.monitor.address"></v-text-field>
+                <v-text-field label v-model="config.monitor.address"></v-text-field>
               </div>
               <div v-else>Monitor address: {{ config.monitor.address }}</div>
             </v-flex>
 
             <v-flex v-if="config.deploy" md2 pa-2>
               <div v-if="editing === item.id">
-                Replicas:
+                Replicas*:
                 <v-text-field label :rules="rules.notzero" v-model="config.deploy.replicas"></v-text-field>
               </div>
               <div v-else>Replicas: {{ config.deploy.replicas }}</div>
