@@ -171,11 +171,14 @@ export default {
         .then(json => {
           this.config = json.selfrelease;
           this._config = JSON.parse(JSON.stringify(this.config));
+
+          if (this.config.enable) {
+            this.configexist = true;
+          }
         })
         .catch(err => {
           // console.log("getinfos err", err);
           // this.notify = { color: "error", msg: err.message };
-          this.configexist = true;
         });
     },
     setdefault() {
@@ -260,7 +263,9 @@ export default {
       this.creating = false;
       this.notify = null;
 
-      this.config = JSON.parse(JSON.stringify(this._config));
+      if (this._config) {
+        this.config = JSON.parse(JSON.stringify(this._config));
+      }
     }
   }
 };
