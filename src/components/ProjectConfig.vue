@@ -183,7 +183,7 @@ export default {
     },
     setdefault() {
       if (!this.config.devBranch) {
-        this.config.devBranch = "develop";
+        this.config.devBranch = "master";
       }
       if (!this.config.version) {
         this.config.version = "v1.0.0";
