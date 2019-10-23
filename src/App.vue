@@ -56,7 +56,11 @@
 
       <v-app-bar app clipped-left>
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-        <v-toolbar-title>NewOps</v-toolbar-title>
+        <v-toolbar-title>
+          NewOps
+          <sup>beta</sup>
+          <!-- <sup>v1</sup> -->
+        </v-toolbar-title>
 
         <v-spacer></v-spacer>
 
@@ -174,3 +178,8 @@ export default {
   }
 };
 </script>
+<style scoped>
+sup {
+  color: blueviolet;
+}
+</style>
