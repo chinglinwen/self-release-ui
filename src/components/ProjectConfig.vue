@@ -136,7 +136,7 @@ export default {
       notify: null,
       configexist: false,
 
-      buildmodes: ["auto", "on", "manual"],
+      buildmodes: ["auto", "manual"],
       configvers: ["phpv1"],
       vers: ["v1.0.0"],
 
