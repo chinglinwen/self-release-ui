@@ -1,5 +1,9 @@
 # NewOps
 
+## demo
+
+![gif](docs/project.gif)
+
 ## Project setup
 ```
 yarn install
