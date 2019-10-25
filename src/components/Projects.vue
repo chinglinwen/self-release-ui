@@ -27,32 +27,38 @@
         >
           <template v-slot:body="{ items }">
             <tbody>
-              <tr v-for="item in items" :key="item.name">
-                <td>{{ item.name }}</td>
+              <template v-for="item in items">
+                <tr :key="item.name+1">
+                  <td>{{ item.name }}</td>
+                  <td class="text-xs-left">
+                    <a :href="item.git" target="_blank">{{ item.git }}</a>
+                  </td>
+                  <td class="text-xs-left">
+                    <project-config :project="item" />
+                  </td>
+                  <td class="text-xs-left">
+                    <project-resource :project="item" />
+                  </td>
+                  <td>
+                    <div>
+                      <v-icon
+                        v-if="expanded!=item.name"
+                        v-model="expanded"
+                        @click="getpods(item)"
+                      >expand_more</v-icon>
+                      <v-icon v-else @click="expanded=''">expand_less</v-icon>
+                    </div>
+                  </td>
+                </tr>
 
-                <td class="text-xs-left">
-                  <a :href="item.git" target="_blank">{{ item.git }}</a>
-                </td>
-                <td class="text-xs-left">
-                  <!-- <v-switch
-                    v-model="item.state"
-                    :loading="loading"
-                    @change="enableProject(item)"
-                    slabel
-                  ></v-switch>-->
-                  <!-- <div v-if="showConfig"> -->
-                  <project-config :project="item" />
-                  <!-- </div> -->
-                </td>
-                <td class="text-xs-left">
-                  <project-resource :project="item" />
-                </td>
-              </tr>
+                <tr :key="item.name+2">
+                  <td v-if="expanded==item.name" :colspan="5">
+                    <div v-if="loading">fetching...</div>
+                    <div v-else>{{ pods }}</div>
+                  </td>
+                </tr>
+              </template>
             </tbody>
-          </template>
-
-          <template v-slot:expanded-item="{ headers }">
-            <td :colspan="headers.length">Peek-a-boo!</td>
           </template>
         </v-data-table>
       </template>
@@ -101,14 +107,40 @@ export default {
         },
         { text: "Git Address", value: "git" },
         { text: "Enable", value: "state", align: "left" },
-        { text: "Action", value: "action", align: "left" }
-      ]
+        { text: "Action", value: "action", align: "left" },
+        { text: "", value: "data-table-expand" }
+      ],
+      expanded: "",
+      pods: []
     };
   },
   created() {
     this.fetchProjects();
   },
   methods: {
+    getpods(item) {
+      this.expanded = item.name;
+      this.loading = true;
+      let url = "/api/projects/" + item.name + "/pods";
+      this.$GET(url)
+        .then(json => json.data)
+        .then(json => {
+          this.pods = json;
+          // this._config = JSON.parse(JSON.stringify(this.config));
+          this.notify = {
+            color: "success",
+            msg: "got " + this.pods.length + " pods ok"
+          };
+
+          console.log("got pods: ", JSON.stringify(this.pods, null, " "));
+          this.loading = false;
+        })
+        .catch(err => {
+          this.loading = false;
+          // console.log("getinfos err", err);
+          this.notify = { color: "error", msg: err.message };
+        });
+    },
     refreshProjects() {
       console.log("try refresh projects lists");
       this.fetchProjects("yes");
