@@ -46,15 +46,74 @@
                         v-model="expanded"
                         @click="getpods(item)"
                       >expand_more</v-icon>
-                      <v-icon v-else @click="expanded=''">expand_less</v-icon>
+                      <v-icon v-else @click="hidepods">expand_less</v-icon>
                     </div>
                   </td>
                 </tr>
 
                 <tr :key="item.name+2">
                   <td v-if="expanded==item.name" :colspan="5">
-                    <div v-if="loading">fetching...</div>
-                    <div v-else>{{ pods }}</div>
+                    <v-container>
+                      <!-- <v-card class="d-flex pa-2" outlined tile> -->
+                      <div v-if="loading">fetching...</div>
+                      <!-- <div v-else>{{ pods }}</div> -->
+                      <div v-else>
+                        <!-- <v-card
+                        v-for="pod in pods"
+                        :key="pod.pod_name"
+                        class="d-flex pa-2"
+                        outlined
+                        tile
+                        >-->
+                        <!-- <v-card md="2" class="d-flex justify-start pa-2" outlined>{{ pod.pod_name }}</v-card>
+                        <v-card md="2" class="d-flex justify-start pa-2" outlined>{{ pod.env }}</v-card>
+                        <v-card md="2" class="d-flex justify-start pa-2" outlined>{{ pod.node }}</v-card>-->
+
+                        <v-row
+                          v-for="pod in pods"
+                          :key="pod.pod_name"
+                          no-gutters
+                          style="flex-wrap: nowrap;"
+                          ma="2"
+                          pa="2"
+                        >
+                          <v-col cols="3" class="flex-grow-0 flex-shrink-0">
+                            <div>{{ pod.pod_name }}</div>
+                          </v-col>
+                          <v-col
+                            cols="2"
+                            style="min-width: 100px; max-width: 100%;"
+                            class="flex-grow-0 flex-shrink-0"
+                          >
+                            <div>{{ pod.phase }}</div>
+                          </v-col>
+                          <v-col v-if="pod.phase!='Running'">
+                            <div>Reason: {{pod.reason}}, Message: {{ pod.message}}</div>
+                          </v-col>
+                          <v-col
+                            cols="2"
+                            style="min-width: 100px; max-width: 100%;"
+                            class="flex-grow-0 flex-shrink-0"
+                          >
+                            <div>{{ pod.starttime }}</div>
+                          </v-col>
+                          <v-col>
+                            <div>
+                              <a
+                                :href="`http://k8spod.haodai.net/?git=${pod.git_name}&pod=${pod.pod_name}`"
+                                target="_blank"
+                              >Shell</a>
+                            </div>
+                          </v-col>
+
+                          <!-- <v-col cols="4" style="min-width: 100px;" class="flex-grow-1 flex-shrink-1">
+                          <div>{{ pod.node }}</div>
+                          </v-col>-->
+                        </v-row>
+                        <!-- </v-card> -->
+                      </div>
+                      <!-- </v-card> -->
+                    </v-container>
                   </td>
                 </tr>
               </template>
@@ -119,6 +178,7 @@ export default {
   },
   methods: {
     getpods(item) {
+      this.pods = null;
       this.expanded = item.name;
       this.loading = true;
       let url = "/api/projects/" + item.name + "/pods";
@@ -127,12 +187,12 @@ export default {
         .then(json => {
           this.pods = json;
           // this._config = JSON.parse(JSON.stringify(this.config));
-          this.notify = {
-            color: "success",
-            msg: "got " + this.pods.length + " pods ok"
-          };
+          // this.notify = {
+          //   color: "success",
+          //   msg: "got " + this.pods.length + " pods ok"
+          // };
 
-          console.log("got pods: ", JSON.stringify(this.pods, null, " "));
+          // console.log("got pods: ", JSON.stringify(this.pods, null, " "));
           this.loading = false;
         })
         .catch(err => {
@@ -140,6 +200,10 @@ export default {
           // console.log("getinfos err", err);
           this.notify = { color: "error", msg: err.message };
         });
+    },
+    hidepods() {
+      this.expanded = "";
+      this.pods = [];
     },
     refreshProjects() {
       console.log("try refresh projects lists");
