@@ -142,10 +142,21 @@ export default {
     user: {
       user: null
     },
-    tothememode: "darkmode"
+    tothememode: null
   }),
   created() {
-    this.$vuetify.theme.dark = false;
+    let tothememode = document.cookie.replace(
+      /(?:(?:^|.*;\s*)tothememode\s*\=\s*([^;]*).*$)|^.*$/,
+      "$1"
+    );
+    if (tothememode === "lightmode") {
+      this.$vuetify.theme.dark = true;
+      this.tothememode = "lightmode";
+    } else {
+      this.$vuetify.theme.dark = false;
+      this.tothememode = "darkmode";
+    }
+    // this.$vuetify.theme.dark = false;
 
     this.loading = true;
     this.$GET("/api/users/")
@@ -182,6 +193,7 @@ export default {
       } else {
         this.tothememode = "darkmode";
       }
+      document.cookie = "tothememode=" + this.tothememode;
     },
     logout() {
       document.cookie = "uuid=; expires=Thu, 01 Jan 1970 00:00:00 UTC ";
