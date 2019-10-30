@@ -72,6 +72,11 @@
             </v-btn>
           </template>
           <v-list>
+            <v-list-item @click="changetheme">
+              <!-- <v-icon>logout</v-icon> -->
+              {{ tothememode }}
+            </v-list-item>
+
             <v-list-item @click="logout">
               <!-- <v-icon>logout</v-icon> -->
               logout
@@ -136,7 +141,8 @@ export default {
     drawer: false,
     user: {
       user: null
-    }
+    },
+    tothememode: "darkmode"
   }),
   created() {
     this.$vuetify.theme.dark = false;
@@ -169,6 +175,14 @@ export default {
       });
   },
   methods: {
+    changetheme() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+      if (this.$vuetify.theme.dark) {
+        this.tothememode = "lightmode";
+      } else {
+        this.tothememode = "darkmode";
+      }
+    },
     logout() {
       document.cookie = "uuid=; expires=Thu, 01 Jan 1970 00:00:00 UTC ";
       document.cookie =
